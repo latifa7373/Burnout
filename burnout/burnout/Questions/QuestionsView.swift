@@ -6,16 +6,16 @@ struct QuestionsView: View {
     var body: some View {
         TabView(selection: $viewModel.currentPage) {
             if let daily = viewModel.todaysQuestions {
-                QuestionPageView(text: daily.emotionalQuestion.text, title: "الإرهاق العاطفي")
+                QuestionPageView(text: daily.emotionalQuestion.text, title: "Emotional Exhaustion")
                     .tag(0)
 
-                QuestionPageView(text: daily.depersonalizationQuestion.text, title: "التبلّد / الانفصال")
+                QuestionPageView(text: daily.depersonalizationQuestion.text, title: "Depersonalization / Detachment")
                     .tag(1)
 
-                QuestionPageView(text: daily.accomplishmentQuestion.text, title: "الإنجاز الشخصي")
+                QuestionPageView(text: daily.accomplishmentQuestion.text, title: "Personal Accomplishment")
                     .tag(2)
             } else {
-                Text("لا توجد أسئلة لليوم")
+                Text("No questions for today")
                     .tag(0)
             }
         }
