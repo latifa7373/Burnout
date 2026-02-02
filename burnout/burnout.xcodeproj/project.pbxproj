@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2FA3A0492F30D97C00540724 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2FA3A0452F30D97C00540724 /* Assets.xcassets */; };
+		2FA3A04A2F30D97C00540724 /* burnoutApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA3A0462F30D97C00540724 /* burnoutApp.swift */; };
+		2FA3A04B2F30D97C00540724 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA3A0472F30D97C00540724 /* ContentView.swift */; };
+		2FA3A04D2F30D9F800540724 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 2FA3A04C2F30D9F800540724 /* Localizable.xcstrings */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		F8BBACF82F30D0A900928290 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,17 +31,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2FA3A0452F30D97C00540724 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2FA3A0462F30D97C00540724 /* burnoutApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = burnoutApp.swift; sourceTree = "<group>"; };
+		2FA3A0472F30D97C00540724 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2FA3A04C2F30D9F800540724 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		F8BBACEA2F30D0A800928290 /* burnout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = burnout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8BBACF72F30D0A900928290 /* burnoutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = burnoutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8BBAD012F30D0A900928290 /* burnoutUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = burnoutUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		F8BBACEC2F30D0A800928290 /* burnout */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = burnout;
-			sourceTree = "<group>";
-		};
 		F8BBACFA2F30D0A900928290 /* burnoutTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = burnoutTests;
@@ -72,10 +78,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2FA3A0482F30D97C00540724 /* burnout */ = {
+			isa = PBXGroup;
+			children = (
+				2FA3A0452F30D97C00540724 /* Assets.xcassets */,
+				2FA3A0462F30D97C00540724 /* burnoutApp.swift */,
+				2FA3A0472F30D97C00540724 /* ContentView.swift */,
+				2FA3A04C2F30D9F800540724 /* Localizable.xcstrings */,
+			);
+			path = burnout;
+			sourceTree = "<group>";
+		};
 		F8BBACE12F30D0A800928290 = {
 			isa = PBXGroup;
 			children = (
-				F8BBACEC2F30D0A800928290 /* burnout */,
+				2FA3A0482F30D97C00540724 /* burnout */,
 				F8BBACFA2F30D0A900928290 /* burnoutTests */,
 				F8BBAD042F30D0A900928290 /* burnoutUITests */,
 				F8BBACEB2F30D0A800928290 /* Products */,
@@ -106,9 +123,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				F8BBACEC2F30D0A800928290 /* burnout */,
 			);
 			name = burnout;
 			packageProductDependencies = (
@@ -186,12 +200,13 @@
 					};
 				};
 			};
-			buildConfigurationList = F8BBACE52F30D0A800928290 /* Build configuration list for PBXProject "burnout" */;
+			buildConfigurationList = F8BBACE52F30D0A800928290 /* Build configuration list for PBXProject "Burnout" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ar,
 			);
 			mainGroup = F8BBACE12F30D0A800928290;
 			minimizedProjectReferenceProxies = 1;
@@ -212,6 +227,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FA3A04D2F30D9F800540724 /* Localizable.xcstrings in Resources */,
+				2FA3A0492F30D97C00540724 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +253,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FA3A04A2F30D97C00540724 /* burnoutApp.swift in Sources */,
+				2FA3A04B2F30D97C00540724 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +347,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -384,6 +404,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -533,7 +554,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F8BBACE52F30D0A800928290 /* Build configuration list for PBXProject "burnout" */ = {
+		F8BBACE52F30D0A800928290 /* Build configuration list for PBXProject "Burnout" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F8BBAD092F30D0A900928290 /* Debug */,
