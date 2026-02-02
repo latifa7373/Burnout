@@ -4,6 +4,8 @@ import Combine
 final class QuestionsViewModel: ObservableObject {
     @Published var currentPage: Int = 0
     @Published private(set) var todaysQuestions: DailyQuestions?
+    /// answers[dimension] = value from 1...5
+    @Published private(set) var answers: [QuestionDimension: Int] = [:]
 
     // مؤشرات لكل بُعد علشان ندور على بنك الأسئلة ونعيد من البداية لما يخلص
     private var emotionalIndex: Int = 0
@@ -59,7 +61,20 @@ final class QuestionsViewModel: ObservableObject {
             accomplishmentQuestion: accomplishment
         )
 
+        // نرجع نفضّي إجابات اليوم (تبدأ فاضية)
+        answers = [:]
         currentPage = 0
+    }
+
+    /// تخزين إجابة المستخدم لبعد معيّن (من 1 إلى 5)
+    func setAnswer(for dimension: QuestionDimension, value: Int) {
+        let clampedValue = max(1, min(5, value))
+        answers[dimension] = clampedValue
+    }
+
+    /// جلب الإجابة الحالية لبعد معيّن (إن وجدت)
+    func answer(for dimension: QuestionDimension) -> Int? {
+        answers[dimension]
     }
 
     /// يرجع السؤال التالي من قائمة بُعد معيّن، ويعيد من البداية لما يخلص البنك
