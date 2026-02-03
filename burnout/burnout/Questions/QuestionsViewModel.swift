@@ -14,33 +14,96 @@ final class QuestionsViewModel: ObservableObject {
 
     // بنك الأسئلة: ٣ أبعاد، كل واحد له اسئلته (بالإنجليزي)
     private lazy var emotionalQuestions: [Question] = [
-        Question(text: "By the end of the workday, I feel emotionally exhausted.", dimension: .emotionalExhaustion),
-        Question(text: "My job drains my mental and emotional energy.", dimension: .emotionalExhaustion),
-        Question(text: "I started my workday already feeling tired.", dimension: .emotionalExhaustion),
-        Question(text: "Today’s work stress feels more than I can handle.", dimension: .emotionalExhaustion),
-        Question(text: "I feel like I really need a long break from work today.", dimension: .emotionalExhaustion),
-        Question(text: "Even after resting, the feeling of fatigue comes back quickly.", dimension: .emotionalExhaustion),
-        Question(text: "My job is emotionally consuming me.", dimension: .emotionalExhaustion)
+        Question(
+            text: String(localized: "By the end of the workday, I feel emotionally exhausted.", comment: "Emotional exhaustion question 1"),
+            dimension: .emotionalExhaustion
+        ),
+        Question(
+            text: String(localized: "My job drains my mental and emotional energy.", comment: "Emotional exhaustion question 2"),
+            dimension: .emotionalExhaustion
+        ),
+        Question(
+            text: String(localized: "I started my workday already feeling tired.", comment: "Emotional exhaustion question 3"),
+            dimension: .emotionalExhaustion
+        ),
+        Question(
+            text: String(localized: "Today's work stress feels more than I can handle.", comment: "Emotional exhaustion question 4"),
+            dimension: .emotionalExhaustion
+        ),
+        Question(
+            text: String(localized: "I feel like I really need a long break from work today.", comment: "Emotional exhaustion question 5"),
+            dimension: .emotionalExhaustion
+        ),
+        Question(
+            text: String(localized: "Even after resting, the feeling of fatigue comes back quickly.", comment: "Emotional exhaustion question 6"),
+            dimension: .emotionalExhaustion
+        ),
+        Question(
+            text: String(localized: "My job is emotionally consuming me.", comment: "Emotional exhaustion question 7"),
+            dimension: .emotionalExhaustion
+        )
     ]
 
     private lazy var depersonalizationQuestions: [Question] = [
-        Question(text: "My enthusiasm for work today is lower than it used to be.", dimension: .depersonalization),
-        Question(text: "I’ve started dealing with my job in a cold, detached way.", dimension: .depersonalization),
-        Question(text: "I do my tasks without much feeling or care.", dimension: .depersonalization),
-        Question(text: "I don’t care as much about what happens at work anymore.", dimension: .depersonalization),
-        Question(text: "I feel emotionally detached from my job.", dimension: .depersonalization),
-        Question(text: "I work on autopilot just to get things done.", dimension: .depersonalization),
-        Question(text: "Work doesn’t mean as much to me as it used to.", dimension: .depersonalization)
+        Question(
+            text: String(localized: "My enthusiasm for work today is lower than it used to be.", comment: "Depersonalization question 1"),
+            dimension: .depersonalization
+        ),
+        Question(
+            text: String(localized: "I've started dealing with my job in a cold, detached way.", comment: "Depersonalization question 2"),
+            dimension: .depersonalization
+        ),
+        Question(
+            text: String(localized: "I do my tasks without much feeling or care.", comment: "Depersonalization question 3"),
+            dimension: .depersonalization
+        ),
+        Question(
+            text: String(localized: "I don't care as much about what happens at work anymore.", comment: "Depersonalization question 4"),
+            dimension: .depersonalization
+        ),
+        Question(
+            text: String(localized: "I feel emotionally detached from my job.", comment: "Depersonalization question 5"),
+            dimension: .depersonalization
+        ),
+        Question(
+            text: String(localized: "I work on autopilot just to get things done.", comment: "Depersonalization question 6"),
+            dimension: .depersonalization
+        ),
+        Question(
+            text: String(localized: "Work doesn't mean as much to me as it used to.", comment: "Depersonalization question 7"),
+            dimension: .depersonalization
+        )
     ]
 
     private lazy var accomplishmentQuestions: [Question] = [
-        Question(text: "I feel that I achieve important things in my job.", dimension: .personalAccomplishment),
-        Question(text: "I feel competent in the work I do.", dimension: .personalAccomplishment),
-        Question(text: "My job makes me feel proud of myself.", dimension: .personalAccomplishment),
-        Question(text: "My effort at work has real value.", dimension: .personalAccomplishment),
-        Question(text: "I feel that I make a real contribution where I work.", dimension: .personalAccomplishment),
-        Question(text: "I am satisfied with my performance at work.", dimension: .personalAccomplishment),
-        Question(text: "I can handle work challenges in a good and effective way.", dimension: .personalAccomplishment)
+        Question(
+            text: String(localized: "I feel that I achieve important things in my job.", comment: "Personal accomplishment question 1"),
+            dimension: .personalAccomplishment
+        ),
+        Question(
+            text: String(localized: "I feel competent in the work I do.", comment: "Personal accomplishment question 2"),
+            dimension: .personalAccomplishment
+        ),
+        Question(
+            text: String(localized: "My job makes me feel proud of myself.", comment: "Personal accomplishment question 3"),
+            dimension: .personalAccomplishment
+        ),
+        Question(
+            text: String(localized: "My effort at work has real value.", comment: "Personal accomplishment question 4"),
+            dimension: .personalAccomplishment
+        ),
+        Question(
+            text: String(localized: "I feel that I make a real contribution where I work.", comment: "Personal accomplishment question 5"),
+            dimension: .personalAccomplishment
+        ),
+        Question(
+            text: String(localized: "I am satisfied with my performance at work.", comment: "Personal accomplishment question 6"),
+            dimension: .personalAccomplishment
+        ),
+        Question(
+            text: String(localized: "I can handle work challenges in a good and effective way.", comment: "Personal accomplishment question 7"),
+            dimension: .personalAccomplishment
+        )
     ]
 
     init() {
@@ -94,4 +157,3 @@ final class QuestionsViewModel: ObservableObject {
         return question
     }
 }
-
