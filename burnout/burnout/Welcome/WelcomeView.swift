@@ -1,24 +1,41 @@
 import SwiftUI
 
 struct WelcomeView: View {
-    @StateObject private var viewModel = WelcomeViewModel()
-
     var body: some View {
-        TabView(selection: $viewModel.currentPage) {
-            Text("Welcome Page 1")
-                .tag(0)
-            Text("Welcome Page 2")
-                .tag(1)
-            Text("Welcome Page 3")
-                .tag(2)
+        ZStack {
+            // Background Color
+            Color("PrimaryColor")
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Title - positioned in upper third
+                Text("Let's get to know\nyou")
+                    .font(.system(size: 40, weight: .semibold))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 120)
+                
+                // Spacing between title and profile icon
+                Spacer()
+                    .frame(height: 55)
+                
+                // Profile Icon
+                Image(systemName: "person.crop.circle.fill")
+                    .font(.system(size: 50))
+                    .foregroundColor(.white)
+                
+                // Enter your name text - close to icon
+                Text("Enter your name")
+                    .font(.system(size: 22, weight: .regular))
+                    .foregroundColor(.white)
+                    .padding(.top, 20)
+                
+                Spacer()
+            }
         }
-        .tabViewStyle(.page)
     }
 }
 
 #Preview {
     WelcomeView()
 }
-
-
-
