@@ -9,26 +9,23 @@
 import SwiftData
 import Foundation
 
-
 @Model
-class User{
+class User {
     
     var Name: String
-    var WorkDays:String
+    var WorkDays: String
     var WorkEndTime: Date
+    
+    @Relationship(deleteRule: .cascade, inverse: \DailySession.User)
     var sessions: [DailySession]
-    var currentQuestionIndex : Int
     
+    var currentQuestionIndex: Int
     
-    init(Name: String , WorkDays: String , WorkEndTime: Date){
+    init(Name: String, WorkDays: String, WorkEndTime: Date) {
         self.Name = Name
         self.WorkDays = WorkDays
         self.WorkEndTime = WorkEndTime
         self.currentQuestionIndex = 0
         self.sessions = []
-        
-
-        
     }
-    
 }

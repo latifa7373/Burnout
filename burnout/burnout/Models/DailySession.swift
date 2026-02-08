@@ -8,9 +8,10 @@
 import SwiftData
 import Foundation
 
+@Model
 class DailySession {
     
-    var ID : UUID
+    var id : UUID
     var date : Date
     var IsCompleted: Bool
     var exhaustionScore:Int
@@ -30,20 +31,19 @@ class DailySession {
         efficacyScore: Int = 0,
         RiskScore: Double = 0 ,
         questionIndex: Int = 0 ,
-        dimension: String
+        dimension: String = ""){
         
-          
         
-    ) {
-        
-        self.ID = UUID()
+        self.id = UUID()
         self.date = date
         self.exhaustionScore = exhaustionScore
         self.cynicismScore = cynicismScore
         self.efficacyScore = efficacyScore
         self.questionIndex = questionIndex
         self.dimension = dimension
+        self.RiskScore = RiskScore
         self.IsCompleted = false
+        
     }
     
 
