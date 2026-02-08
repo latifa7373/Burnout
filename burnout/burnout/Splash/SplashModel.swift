@@ -21,7 +21,7 @@ struct SplashModel {
     let videoOffsetX: CGFloat = 0
     let videoOffsetY: CGFloat = 0
     let contentOffsetX: CGFloat = 0
-    let contentOffsetY: CGFloat = 0
+    let contentOffsetY: CGFloat = -80  // رفع اللوقو والنص قليلاً (قيمة سالبة = فوق)
     let subtitleOffsetY: CGFloat = 150
 }
 
