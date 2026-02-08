@@ -1,12 +1,15 @@
 import SwiftUI
-import SwiftData
 
-struct QuestionsView2: View {
-    
+struct QuestionView: View {
     @Environment(\.dismiss) private var dismiss
     
+    let dimension: Dimension // 👈 يحتوي على الصورة واللون
+    let question: String
+    let questionNumber: Int
+    let totalQuestions: Int
+    let onContinue: (Int) -> Void
+    
     @State private var sliderValue: Double = 3.0
-    @State private var isSubmitting = false
     
     private var sliderText: String {
         switch Int(sliderValue) {
@@ -21,21 +24,27 @@ struct QuestionsView2: View {
     
     var body: some View {
         ZStack {
-            Color(.primary)
-                .ignoresSafeArea()
+            // 🎨 الخلفية (لون مختلف لكل dimension)
+            Color(.primary)                .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                
-                Text("Today's Check")
-                    .font(.title)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .padding(.top, 10)
+                // MARK: - Header
+                VStack(spacing: 8) {
+                    Text("Today's Check")
+                        .font(.title)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                    
+                    Text("\(dimension.type.rawValue) • \(questionNumber) of \(totalQuestions)")
+                        .font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.8))
+                }
+                .padding(.top, 10)
                 
                 Spacer()
                 
-                VStack() {
-                    
+                // MARK: - Question Content
+                VStack {
                     Text("How much does this describe you?")
                         .font(.title3)
                         .foregroundStyle(.white)
@@ -43,12 +52,14 @@ struct QuestionsView2: View {
                         .padding(.horizontal)
                     
                     ZStack {
-                        Image("Oval_5")
+                        // 🖼️ الصورة (تتغير حسب الـ dimension)
+                        Image(dimension.imageName)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 370, height: 370)
                         
-                        Text("I'm just running on autopilot just to get it done")
+                        // 📝 السؤال
+                        Text(question)
                             .font(.title3)
                             .fontWeight(.medium)
                             .foregroundStyle(.white)
@@ -66,12 +77,14 @@ struct QuestionsView2: View {
                 Spacer()
                 
                 VStack(spacing: 20) {
+                    // Slider
                     Slider(value: $sliderValue, in: 1...5, step: 1)
                         .accentColor(.white)
                         .padding(.horizontal, 40)
                     
+                    // Continue Button
                     Button {
-                        print("Continue pressed")
+                        onContinue(Int(sliderValue))
                     } label: {
                         Text("Continue")
                             .font(.title3)
@@ -105,8 +118,5 @@ struct QuestionsView2: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        QuestionsView2()
-    }
-}
+
+

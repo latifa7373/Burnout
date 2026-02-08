@@ -18,20 +18,22 @@ class DailySession {
     var cynicismScore : Int
     var efficacyScore : Int
     var RiskScore : Double
-    var questionIndex : Int
-    var dimension : String
+//    var questionIndex : Int
+//    var dimension : String
     
     
     var User: User?
     
+    @Relationship(deleteRule: .cascade, inverse: \QuestionResponse.session)
+    
+    var responses: [QuestionResponse]
     
     init (date : Date = Date(),
-        exhaustionScore: Int = 0,
-        cynicismScore: Int = 0,
-        efficacyScore: Int = 0,
-        RiskScore: Double = 0 ,
-        questionIndex: Int = 0 ,
-        dimension: String = ""){
+          exhaustionScore: Int = 0,
+          cynicismScore: Int = 0,
+          efficacyScore: Int = 0,
+          RiskScore: Double = 0 ,
+          /*dimension: String = ""*/){
         
         
         self.id = UUID()
@@ -39,12 +41,13 @@ class DailySession {
         self.exhaustionScore = exhaustionScore
         self.cynicismScore = cynicismScore
         self.efficacyScore = efficacyScore
-        self.questionIndex = questionIndex
-        self.dimension = dimension
+//        self.dimension = dimension
         self.RiskScore = RiskScore
         self.IsCompleted = false
+        self.responses = []
+        
+        
         
     }
-    
 
 }

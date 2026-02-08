@@ -15,6 +15,7 @@ class User {
     var Name: String
     var WorkDays: String
     var WorkEndTime: Date
+    var lastCompletedDate: Date
     
     @Relationship(deleteRule: .cascade, inverse: \DailySession.User)
     var sessions: [DailySession]
@@ -27,5 +28,6 @@ class User {
         self.WorkEndTime = WorkEndTime
         self.currentQuestionIndex = 0
         self.sessions = []
+        self.lastCompletedDate = Date.distantPast
     }
 }
