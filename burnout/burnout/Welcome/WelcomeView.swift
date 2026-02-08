@@ -2,6 +2,8 @@ import SwiftUI
 
 struct WelcomeView: View {
     @State private var name: String = ""
+    @State private var currentPage: Int = 1 // 1 = first page, 2 = second page
+    @State private var selectedDays: Set<String> = [] // Selected work days
     
     // MARK: - Colors (عدل الألوان من هنا)
     private let textFieldBackgroundColor = Color.white.opacity(0.05)  // لون خلفية حقل الإدخال
@@ -13,6 +15,19 @@ struct WelcomeView: View {
             // Background Color
             Color("PrimaryColor")
                 .ignoresSafeArea()
+            
+            if currentPage == 1 {
+                // Page 1: Name Input
+                firstPageContent
+            } else {
+                // Page 2: Work Days Selection
+                secondPageContent
+            }
+        }
+    }
+    
+    // MARK: - Page 1 Content
+    private var firstPageContent: some View {
             
             VStack(spacing: 0) {
                 // Title - positioned in upper third
@@ -71,7 +86,9 @@ struct WelcomeView: View {
                 
                 // Continue Button
                 Button(action: {
-                    print("Continue tapped")
+                    withAnimation {
+                        currentPage = 2
+                    }
                 }) {
                     HStack(spacing: 0) {
                         Text("Continue")
@@ -103,6 +120,98 @@ struct WelcomeView: View {
                 
                 Spacer()
             }
+    }
+    
+    // MARK: - Page 2 Content
+    private var secondPageContent: some View {
+        VStack(spacing: 0) {
+            // Back Button
+            HStack {
+                Button(action: {
+                    withAnimation {
+                        currentPage = 1
+                    }
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(width: 44, height: 44)
+                }
+                .padding(.leading, 25)
+                .padding(.top, 10)
+                
+                Spacer()
+            }
+            
+            // Select work days title
+            Text("Select work days")
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundColor(.white)
+                .padding(.top, 25)
+            
+            // First row of day buttons (4 circles)
+            HStack(spacing: 40) {
+                ForEach(["Sun", "Mon", "Tue", "Wed"], id: \.self) { day in
+                    Circle()
+                        .stroke(
+                            selectedDays.contains(day)
+                            ? Color("LightPurple")
+                            : Color("LightPurple").opacity(0.3),
+                            lineWidth: 3
+                        )
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Text(day)
+                                .font(.system(size: 15, weight: .regular))
+                                .foregroundColor(
+                                    selectedDays.contains(day)
+                                    ? .white
+                                    : .white.opacity(0.3)
+                                )
+                        )
+                        .onTapGesture {
+                            if selectedDays.contains(day) {
+                                selectedDays.remove(day)
+                            } else {
+                                selectedDays.insert(day)
+                            }
+                        }
+                }
+            }
+            .padding(.top, 30)
+            
+            // Second row of day buttons (3 circles)
+            HStack(spacing: 40) {
+                ForEach(["Thu", "Fri", "Sat"], id: \.self) { day in
+                    Circle()
+                        .stroke(
+                            selectedDays.contains(day)
+                            ? Color("LightPurple")
+                            : Color("LightPurple").opacity(0.3),
+                            lineWidth: 3
+                        )
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Text(day)
+                                .font(.system(size: 15, weight: .regular))
+                                .foregroundColor(
+                                    selectedDays.contains(day)
+                                    ? .white
+                                    : .white.opacity(0.3)
+                                )
+                        )
+                        .onTapGesture {
+                            if selectedDays.contains(day) {
+                                selectedDays.remove(day)
+                            } else {
+                                selectedDays.insert(day)
+                            }
+                        }
+                }
+            }
+            .padding(.top, 20)
+            
+            Spacer()
         }
     }
 }
