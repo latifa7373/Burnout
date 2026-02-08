@@ -190,6 +190,111 @@ struct ProfileView: View {
                                     lineWidth: 1
                                 )
                         )
+                        
+                        // بطاقة أيام العمل الأسبوعية
+                        VStack(alignment: .leading, spacing: 15) {
+                            HStack(spacing: 15) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(
+                                            LinearGradient(
+                                                colors: [
+                                                    Color.white.opacity(0.25),
+                                                    Color.white.opacity(0.1)
+                                                ],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
+                                        .frame(width: viewModel.model.cardIconSize, height: viewModel.model.cardIconSize)
+                                    
+                                    Image(systemName: "calendar")
+                                        .font(.system(size: 22))
+                                        .foregroundColor(.white)
+                                }
+                                
+                                Text("Weekly Work Days")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.white.opacity(0.7))
+                                
+                                Spacer()
+                            }
+                            
+                            if viewModel.isEditing {
+                                VStack(spacing: 10) {
+                                    ForEach(Weekday.allCases, id: \.self) { day in
+                                        HStack {
+                                            Button(action: {
+                                                viewModel.toggleWorkDay(day)
+                                            }) {
+                                                HStack(spacing: 12) {
+                                                    Image(systemName: viewModel.tempSelectedWorkDays.contains(day) ? "checkmark.circle.fill" : "circle")
+                                                        .font(.system(size: 20))
+                                                        .foregroundColor(viewModel.tempSelectedWorkDays.contains(day) ? .green : .white.opacity(0.5))
+                                                    
+                                                    Text(day.rawValue)
+                                                        .font(.system(size: 16, weight: .medium))
+                                                        .foregroundColor(.white)
+                                                    
+                                                    Spacer()
+                                                }
+                                                .padding(.vertical, 8)
+                                                .padding(.horizontal, 12)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 12)
+                                                        .fill(viewModel.tempSelectedWorkDays.contains(day) ? Color.green.opacity(0.2) : Color.white.opacity(0.08))
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if viewModel.model.selectedWorkDays.isEmpty {
+                                    Text("No work days selected")
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white.opacity(0.6))
+                                        .padding(.leading, 65)
+                                } else {
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        ForEach(Array(viewModel.model.selectedWorkDays.sorted(by: { $0.rawValue < $1.rawValue })), id: \.self) { day in
+                                            HStack(spacing: 8) {
+                                                Image(systemName: "checkmark.circle.fill")
+                                                    .font(.system(size: 14))
+                                                    .foregroundColor(.green)
+                                                
+                                                Text(day.rawValue)
+                                                    .font(.system(size: 16, weight: .medium))
+                                                    .foregroundColor(.white)
+                                            }
+                                            .padding(.leading, 65)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .padding(20)
+                        .background(
+                            RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
+                                .fill(Color.white.opacity(0.12))
+                                .background(
+                                    RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
+                                        .fill(.ultraThinMaterial)
+                                )
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
+                                .stroke(
+                                    LinearGradient(
+                                        colors: [
+                                            Color.white.opacity(0.3),
+                                            Color.white.opacity(0.05)
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: 1
+                                )
+                        )
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 40)

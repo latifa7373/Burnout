@@ -20,10 +20,13 @@ final class ProfileViewModel: ObservableObject {
         return calendar.date(from: components) ?? Date()
     }()
     
+    @Published var tempSelectedWorkDays: Set<Weekday> = []
+    
     // استخدام UserDefaults بدلاً من @AppStorage
     private let userDefaults = UserDefaults.standard
     private let userNameKey = "userName"
     private let workEndTimeKey = "workEndTime"
+    private let workDaysKey = "workDays"
     
     private var userName: String {
         get {
@@ -43,6 +46,21 @@ final class ProfileViewModel: ObservableObject {
         }
     }
     
+    private var selectedWorkDays: Set<Weekday> {
+        get {
+            if let data = userDefaults.data(forKey: workDaysKey),
+               let decoded = try? JSONDecoder().decode(Set<Weekday>.self, from: data) {
+                return decoded
+            }
+            return [.sunday, .monday, .tuesday, .wednesday, .thursday]
+        }
+        set {
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                userDefaults.set(encoded, forKey: workDaysKey)
+            }
+        }
+    }
+    
     init() {
         loadUserData()
     }
@@ -51,7 +69,9 @@ final class ProfileViewModel: ObservableObject {
     func loadUserData() {
         model.userName = userName
         model.workEndTimeString = workEndTimeString
+        model.selectedWorkDays = selectedWorkDays
         tempUserName = userName
+        tempSelectedWorkDays = selectedWorkDays
         
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
@@ -68,9 +88,11 @@ final class ProfileViewModel: ObservableObject {
         formatter.dateFormat = "HH:mm"
         workEndTimeString = formatter.string(from: tempWorkEndTime)
         workEndTime = tempWorkEndTime
+        selectedWorkDays = tempSelectedWorkDays
         
         model.userName = userName
         model.workEndTimeString = workEndTimeString
+        model.selectedWorkDays = tempSelectedWorkDays
     }
     
     /// يبدأ/ينهي وضع التعديل (بدون withAnimation - سيتم في View)
@@ -80,8 +102,18 @@ final class ProfileViewModel: ObservableObject {
         } else {
             tempUserName = userName
             tempWorkEndTime = workEndTime
+            tempSelectedWorkDays = selectedWorkDays
         }
         isEditing.toggle()
+    }
+    
+    /// يبدّل حالة يوم معيّن (يضيفه أو يشيله)
+    func toggleWorkDay(_ day: Weekday) {
+        if tempSelectedWorkDays.contains(day) {
+            tempSelectedWorkDays.remove(day)
+        } else {
+            tempSelectedWorkDays.insert(day)
+        }
     }
     
     /// يرجع الوقت المنسق للعرض
