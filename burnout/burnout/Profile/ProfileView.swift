@@ -170,7 +170,7 @@ struct ProfileView: View {
                         .padding(20)
                         .background(
                             RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
-                                .fill(Color.white.opacity(0.12))
+                                .fill(Color.white.opacity(0.08))
                                 .background(
                                     RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
                                         .fill(.ultraThinMaterial)
@@ -275,7 +275,7 @@ struct ProfileView: View {
                         .padding(20)
                         .background(
                             RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
-                                .fill(Color.white.opacity(0.12))
+                                .fill(Color.white.opacity(0.09))
                                 .background(
                                     RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
                                         .fill(.ultraThinMaterial)
