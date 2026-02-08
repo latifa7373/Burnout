@@ -29,30 +29,9 @@
 		F8BBAD012F30D0A900928290 /* burnoutUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = burnoutUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4A9302492F34DEB800C3FCEA /* Exceptions for "burnout" folder in "burnoutTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Splash/bbb.mp4,
-			);
-			target = F8BBACF62F30D0A900928290 /* burnoutTests */;
-		};
-		4A93024A2F34DEB800C3FCEA /* Exceptions for "burnout" folder in "burnoutUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Splash/bbb.mp4,
-			);
-			target = F8BBAD002F30D0A900928290 /* burnoutUITests */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F8BBACEC2F30D0A800928290 /* burnout */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				4A9302492F34DEB800C3FCEA /* Exceptions for "burnout" folder in "burnoutTests" target */,
-				4A93024A2F34DEB800C3FCEA /* Exceptions for "burnout" folder in "burnoutUITests" target */,
-			);
 			path = burnout;
 			sourceTree = "<group>";
 		};
