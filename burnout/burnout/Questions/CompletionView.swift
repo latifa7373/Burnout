@@ -8,9 +8,11 @@ struct CompletionView: View {
 
     var body: some View {
         ZStack {
-            Color(.primary).ignoresSafeArea()
+            Color(.primary)
+                .ignoresSafeArea()
 
-            VStack(spacing: 40) {
+            VStack(spacing: 0) {
+                // Header
                 CheckHeader(title: "Today's Check", showBack: true) {
                     dismiss()
                 }
@@ -21,25 +23,39 @@ struct CompletionView: View {
                     Image("Oval_8")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 370, height: 370)
+                        .frame(width: 320, height: 320)
+                        .frame(maxWidth: .infinity, alignment: .center)
 
-                    VStack(spacing: 8) {
+                    VStack(spacing: 6) {
                         Text("All done !")
-                            .font(.system(size: 32, weight: .medium))
+                            .font(.system(size: 22, weight: .semibold))
                             .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.85)
 
                         Text("come back")
-                            .font(.system(size: 28, weight: .regular))
+                            .font(.system(size: 18, weight: .regular))
                             .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.85)
 
                         Text("tomorrow")
-                            .font(.system(size: 28, weight: .regular))
+                            .font(.system(size: 18, weight: .regular))
                             .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.85)
                     }
+                    .frame(width: 220) // ✅ يثبت النص داخل الدائرة
                 }
+                .frame(height: 320) // ✅ يمنع أي حركة
+                .padding(.vertical, 24)
 
                 Spacer()
 
+                // Button
                 Button { dismiss() } label: {
                     Text("Done")
                         .font(.title3)

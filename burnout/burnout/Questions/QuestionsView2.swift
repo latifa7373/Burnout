@@ -25,46 +25,53 @@ struct QuestionView: View {
 
     var body: some View {
         ZStack {
-            Color(.primary).ignoresSafeArea()
+            Color(.primary)
+                .ignoresSafeArea()
 
             VStack(spacing: 0) {
+                // Header
                 CheckHeader(title: "Today's Check", showBack: true) {
                     dismiss()
                 }
 
                 Spacer()
 
-                VStack {
+                // السؤال الثابت
+                VStack(spacing: 16) {
                     Text("How much does this describe you?")
                         .font(.title3)
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
 
+                    // ✅ دائرة ثابتة + سؤال داخلها
                     ZStack {
                         Image(dimension.imageName)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 370, height: 370)
+                            .frame(width: 320, height: 320) // ثبات الحجم
+                            .frame(maxWidth: .infinity, alignment: .center)
 
                         Text(question)
-                            .font(.title3)
-                            .fontWeight(.medium)
+                            .font(.system(size: 18, weight: .medium)) // أصغر
                             .foregroundStyle(.white)
                             .multilineTextAlignment(.center)
-                            .padding(40)
+                            .lineLimit(4)
+                            .minimumScaleFactor(0.75)
+                            .frame(width: 220) // يثبت النص داخل الدائرة
                     }
-                    .padding(.vertical, 30)
-
-                    Text(sliderText)
-                        .font(.title)
-                        .fontWeight(.regular)
-                        .foregroundStyle(.white)
+                    .frame(height: 320) // يمنع أي تحريك
                 }
 
                 Spacer()
 
+                // النص + السلايدر + الزر
                 VStack(spacing: 20) {
+                    Text(sliderText)
+                        .font(.title)
+                        .fontWeight(.regular)
+                        .foregroundStyle(.white)
+
                     CapsuleSlider(
                         value: $sliderValue,
                         range: 1...5,
@@ -76,8 +83,6 @@ struct QuestionView: View {
                         thumbColor: .white
                     )
                     .padding(.horizontal, 40)
-
-                    Spacer().frame(height: 0) // غيريها 16/24 لتنزيل الزر
 
                     Button {
                         onContinue(Int(sliderValue))
