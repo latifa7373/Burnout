@@ -168,28 +168,7 @@ struct ProfileView: View {
                             Spacer()
                         }
                         .padding(20)
-                        .background(
-                            RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
-                                .fill(Color.white.opacity(0.08))
-                                .background(
-                                    RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
-                                        .fill(.ultraThinMaterial)
-                                )
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
-                                .stroke(
-                                    LinearGradient(
-                                        colors: [
-                                            Color.white.opacity(0.3),
-                                            Color.white.opacity(0.05)
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 1
-                                )
-                        )
+                        .background(glassCard(RoundedRectangle(cornerRadius: 22)))
                         
                         // بطاقة أيام العمل الأسبوعية
                         VStack(alignment: .leading, spacing: 15) {
@@ -273,28 +252,7 @@ struct ProfileView: View {
                             }
                         }
                         .padding(20)
-                        .background(
-                            RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
-                                .fill(Color.white.opacity(0.09))
-                                .background(
-                                    RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
-                                        .fill(.ultraThinMaterial)
-                                )
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: viewModel.model.cardCornerRadius)
-                                .stroke(
-                                    LinearGradient(
-                                        colors: [
-                                            Color.white.opacity(0.3),
-                                            Color.white.opacity(0.05)
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 1
-                                )
-                        )
+                        .background(glassCard(RoundedRectangle(cornerRadius: 22)))
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 40)
@@ -305,6 +263,30 @@ struct ProfileView: View {
         .onAppear {
             viewModel.loadUserData()
         }
+    }
+}
+
+// MARK: - Glass Card Extension
+private extension ProfileView {
+    var glassFill: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color(red: 0.62, green: 0.58, blue: 0.70).opacity(0.32),
+                Color(red: 0.40, green: 0.34, blue: 0.52).opacity(0.28)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+    
+    var glassStroke: Color { .white.opacity(0.10) }
+    var glassShadow: Color { .black.opacity(0.18) }
+    
+    func glassCard<S: Shape>(_ shape: S) -> some View {
+        shape
+            .fill(glassFill)
+            .overlay(shape.stroke(glassStroke, lineWidth: 1))
+            .shadow(color: glassShadow, radius: 18, x: 0, y: 10)
     }
 }
 
