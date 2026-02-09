@@ -4,6 +4,7 @@ struct WelcomeView: View {
     @State private var name: String = ""
     @State private var currentPage: Int = 1 // 1 = first page, 2 = second page
     @State private var selectedDays: Set<String> = [] // Selected work days
+    @State private var workEndTime = Date() // Work end time
     
     // MARK: - Colors (عدل الألوان من هنا)
     private let textFieldBackgroundColor = Color.white.opacity(0.05)  // لون خلفية حقل الإدخال
@@ -41,43 +42,10 @@ struct WelcomeView: View {
                 Spacer()
                     .frame(height: 55)
                 
-                // صورة البروفايل
-                ZStack {
-                    // حلقة خارجية متوهجة
-                    Circle()
-                        .stroke(
-                            LinearGradient(
-                                colors: [
-                                    Color.white.opacity(0.8),
-                                    Color.white.opacity(0.3),
-                                    Color.white.opacity(0.1)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 4
-                        )
-                        .frame(width: 100, height: 100)
-                        .shadow(color: .white.opacity(0.3), radius: 10)
-                    
-                    // صورة البروفايل
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color.white.opacity(0.4),
-                                    Color.white.opacity(0.15)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 90, height: 90)
-                    
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 40))
-                        .foregroundColor(.white)
-                }
+                // Profile Icon
+                Image(systemName: "person.crop.circle.fill")
+                    .font(.system(size: 50))
+                    .foregroundColor(.white)
                 
                 // Enter your name text - close to icon
                 Text("Enter your name")
@@ -243,6 +211,20 @@ struct WelcomeView: View {
                 }
             }
             .padding(.top, 20)
+            
+            // Select work end time title
+            Text("Select work end time")
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundColor(.white)
+                .padding(.top, 60)
+            
+            // Time Picker
+            DatePicker("", selection: $workEndTime, displayedComponents: .hourAndMinute)
+                .datePickerStyle(.wheel)
+                .labelsHidden()
+                .colorScheme(.dark)
+                .frame(width: 304, height: 215)
+                .padding(.top, 20)
             
             Spacer()
         }
