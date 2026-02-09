@@ -5,6 +5,8 @@ struct BurnoutChartScreen: View {
 
     @StateObject private var vm = BurnoutViewModel()
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
+
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -307,12 +309,14 @@ According to ICD-11, burnout is characterized by:
                 .foregroundStyle(.white.opacity(0.88))
                 .lineSpacing(4)
 
-                Link(
-                    "Learn more — World Health Organization (ICD-11)",
-                    destination: URL(string: "https://www.who.int/standards/classifications/frequently-asked-questions/burn-out-an-occupational-phenomenon")!
-                )
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(.blue)
+                Button {
+                    openURL(URL(string: "https://www.who.int/standards/classifications/frequently-asked-questions/burn-out-an-occupational-phenomenon")!)
+                } label: {
+                    Text("Learn more — World Health Organization (ICD-11)")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.blue)
+                }
+
             }
             .padding(18)
             .background(glassCard(RoundedRectangle(cornerRadius: 22)))
