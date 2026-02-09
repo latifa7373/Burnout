@@ -7,4 +7,21 @@ class WelcomeViewModel: ObservableObject {
     @Published var currentPage: Int = 1
     @Published var selectedDays: Set<String> = []
     @Published var workEndTime = Date()
+    
+    // MARK: - Computed Properties
+    var isNameValid: Bool {
+        !name.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+    
+    var canProceedToNextPage: Bool {
+        isNameValid
+    }
+    
+    var hasSelectedDays: Bool {
+        !selectedDays.isEmpty
+    }
+    
+    var canCompleteOnboarding: Bool {
+        hasSelectedDays
+    }
 }
