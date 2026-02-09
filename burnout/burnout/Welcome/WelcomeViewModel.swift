@@ -1,10 +1,10 @@
-import Foundation
+import SwiftUI
 import Combine
 
-final class WelcomeViewModel: ObservableObject {
-    // هنا تقدر تضيف منطق الـ onboarding (التنقل بين الصفحات الثلاث مثلاً)
-    @Published var currentPage: Int = 0
+class WelcomeViewModel: ObservableObject {
+    // MARK: - Published Properties
+    @Published var name: String = ""
+    @Published var currentPage: Int = 1
+    @Published var selectedDays: Set<String> = []
+    @Published var workEndTime = Date()
 }
-
-
-
