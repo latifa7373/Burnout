@@ -1,14 +1,17 @@
+// =========================
+//  QuestionView.swift
+// =========================
 import SwiftUI
 
 struct QuestionView: View {
     @Environment(\.dismiss) private var dismiss
-    
+
     let dimension: Dimension
     let question: String
-//    let onContinue: (Int) -> Void
-    
-    @State private var sliderValue: Double =  3.0
-    
+    let onContinue: (Int) -> Void
+
+    @State private var sliderValue: Double = 3.0
+
     private var sliderText: String {
         switch Int(sliderValue) {
         case 1: return "Never"
@@ -19,36 +22,31 @@ struct QuestionView: View {
         default: return "Somewhat"
         }
     }
-    
+
     var body: some View {
         ZStack {
-            Color(.primary)
-                .ignoresSafeArea()
-            
+            Color(.primary).ignoresSafeArea()
+
             VStack(spacing: 0) {
-                VStack(spacing: 8) {
-                    Text("Today's Check")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.white)
+                CheckHeader(title: "Today's Check", showBack: true) {
+                    dismiss()
                 }
-                .padding(.top, 10)
-                
+
                 Spacer()
-                
+
                 VStack {
                     Text("How much does this describe you?")
                         .font(.title3)
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
-                    
+
                     ZStack {
                         Image(dimension.imageName)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 370, height: 370)
-                        
+
                         Text(question)
                             .font(.title3)
                             .fontWeight(.medium)
@@ -57,25 +55,32 @@ struct QuestionView: View {
                             .padding(40)
                     }
                     .padding(.vertical, 30)
-                    
+
                     Text(sliderText)
                         .font(.title)
                         .fontWeight(.regular)
                         .foregroundStyle(.white)
                 }
-                
+
                 Spacer()
-                
+
                 VStack(spacing: 20) {
-                    // Slider
-                    Slider(value: $sliderValue, in: 1...5, step: 1)
-                        .accentColor(.white)
-                        .padding(.horizontal, 40)
-                    
-                    // Continue Button
+                    CapsuleSlider(
+                        value: $sliderValue,
+                        range: 1...5,
+                        step: 1,
+                        trackHeight: 30,
+                        thumbSize: 30,
+                        trackColor: .white.opacity(0.25),
+                        fillColor: .white.opacity(0.0),
+                        thumbColor: .white
+                    )
+                    .padding(.horizontal, 40)
+
+                    Spacer().frame(height: 0) // غيريها 16/24 لتنزيل الزر
+
                     Button {
-//                        onContinue(Int(sliderValue))
-                        (Int(sliderValue))
+                        onContinue(Int(sliderValue))
                     } label: {
                         Text("Continue")
                             .font(.title3)
@@ -94,31 +99,15 @@ struct QuestionView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(.white)
-                        .fontWeight(.semibold)
-                        .imageScale(.large)
-                }
-            }
-        }
     }
 }
-
-
 
 #Preview {
     NavigationStack {
         QuestionView(
             dimension: DimensionsData.dimensions[0],
             question: DimensionsData.dimensions[0].questions[0],
-//            onContinue: { response in
-//                print("Response: \(response)")
-            
+            onContinue: { print("Response:", $0) }
         )
     }
 }

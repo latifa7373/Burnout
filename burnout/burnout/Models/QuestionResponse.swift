@@ -15,18 +15,21 @@ class QuestionResponse {
     var questionIndex: Int
     var response: Int
     var date: Date
+    var riskscore: Double
     
     
     init(
          dimensionType: String,
          questionIndex: Int,
          response: Int,
-         date: Date = Date()) {
+         date: Date = Date(),
+         riskscore: Double) {
         
         self.id = UUID()
         self.dimensionType = dimensionType
         self.questionIndex = questionIndex
         self.response = response
         self.date = date
+        self.riskscore = riskscore
     }
 }
