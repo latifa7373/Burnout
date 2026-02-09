@@ -24,4 +24,25 @@ class WelcomeViewModel: ObservableObject {
     var canCompleteOnboarding: Bool {
         hasSelectedDays
     }
+    
+    // MARK: - Actions
+    func goToNextPage() {
+        withAnimation {
+            currentPage = 2
+        }
+    }
+    
+    func goToPreviousPage() {
+        withAnimation {
+            currentPage = 1
+        }
+    }
+    
+    func toggleDay(_ day: String) {
+        if selectedDays.contains(day) {
+            selectedDays.remove(day)
+        } else {
+            selectedDays.insert(day)
+        }
+    }
 }
