@@ -227,6 +227,43 @@ struct WelcomeView: View {
                 .padding(.top, 20)
             
             Spacer()
+                .frame(height: 100)
+            
+            // Let's start Button
+            Button(action: {
+                print("Let's start tapped")
+            }) {
+                HStack(spacing: 0) {
+                    Text("Let's start")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.leading, 20)
+                    
+                    Rectangle()
+                        .fill(.white.opacity(0.2))
+                        .frame(width: 1.5)
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(width: 40)
+                }
+                .frame(width: 181, height: 44)
+            }
+            .disabled(selectedDays.isEmpty)
+            .buttonStyle(.plain)
+            .background {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(selectedDays.isEmpty ? buttonBackgroundColor.opacity(0.3) : buttonBackgroundColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(selectedDays.isEmpty ? buttonBorderColor.opacity(0.3) : buttonBorderColor, lineWidth: 1)
+                    )
+            }
+            .opacity(selectedDays.isEmpty ? 0.5 : 1.0)
+            
+            Spacer()
         }
     }
 }
