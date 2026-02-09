@@ -11,7 +11,7 @@ import Foundation
 struct Dimension {
     let type: DimensionType
     let questions: [String]
-    let imageName: String // 👈 اسم الصورة
+    let imageName: String
     
     enum DimensionType: String, CaseIterable {
         case Efficiency = "Efficiency"
@@ -20,10 +20,8 @@ struct Dimension {
     }
 }
 
-// MARK: - Dimensions Data
 struct DimensionsData {
     static let dimensions: [Dimension] = [
-        // 🔥 Burnout Dimension
         Dimension(
             type: .Efficiency,
             questions: [
@@ -48,10 +46,9 @@ struct DimensionsData {
                 "I struggle to complete tasks efficiently",
                 "I feel disconnected from my work purpose"
             ],
-            imageName: "Oval_5" // 👈 صورة Burnout
+            imageName: "Oval_5"
         ),
         
-        // 💚 Engagement Dimension
         Dimension(
             type: .Boredom,
             questions: [
@@ -76,10 +73,9 @@ struct DimensionsData {
                 "I am fully focused when working",
                 "I experience a sense of flow in my work"
             ],
-            imageName: "Oval_6" // 👈 صورة Engagement (غيّرها لو تبين)
+            imageName: "Oval_6"
         ),
         
-        // 💜 Wellbeing Dimension
         Dimension(
             type: .Exhaustion,
             questions: [
@@ -104,11 +100,10 @@ struct DimensionsData {
                 "I feel emotionally stable",
                 "I have a positive outlook on life"
             ],
-            imageName: "Oval_7" // 👈 صورة Wellbeing (غيّرها لو تبين)
+            imageName: "Oval_7"
         )
     ]
     
-    // 👇 دالة تجيب 3 أسئلة اليوم (واحد من كل dimension)
     static func getTodaysQuestions(questionIndex: Int) -> [(dimension: Dimension, question: String)] {
         var todaysQuestions: [(Dimension, String)] = []
         
@@ -121,3 +116,4 @@ struct DimensionsData {
         return todaysQuestions
     }
 }
+ 
