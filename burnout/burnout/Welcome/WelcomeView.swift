@@ -4,6 +4,7 @@ struct WelcomeView: View {
     @State private var name: String = ""
     @State private var currentPage: Int = 1 // 1 = first page, 2 = second page
     @State private var selectedDays: Set<String> = [] // Selected work days
+    @State private var workEndTime = Date() // Work end time
     
     // MARK: - Colors (عدل الألوان من هنا)
     private let textFieldBackgroundColor = Color.white.opacity(0.05)  // لون خلفية حقل الإدخال
@@ -41,10 +42,43 @@ struct WelcomeView: View {
                 Spacer()
                     .frame(height: 55)
                 
-                // Profile Icon
-                Image(systemName: "person.crop.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundColor(.white)
+                // صورة البروفايل
+                ZStack {
+                    // حلقة خارجية متوهجة
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.8),
+                                    Color.white.opacity(0.3),
+                                    Color.white.opacity(0.1)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 4
+                        )
+                        .frame(width: 100, height: 100)
+                        .shadow(color: .white.opacity(0.3), radius: 10)
+                    
+                    // صورة البروفايل
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.4),
+                                    Color.white.opacity(0.15)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 90, height: 90)
+                    
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 40))
+                        .foregroundColor(.white)
+                }
                 
                 // Enter your name text - close to icon
                 Text("Enter your name")
@@ -56,7 +90,7 @@ struct WelcomeView: View {
                 ZStack {
                     // Background with glass effect
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(textFieldBackgroundColor)
+                        .fill(Color("LightPurple").opacity(0.2))
                         .background {
                             RoundedRectangle(cornerRadius: 20)
                                 .glassEffect()
@@ -210,6 +244,57 @@ struct WelcomeView: View {
                 }
             }
             .padding(.top, 20)
+            
+            // Select work end time title
+            Text("Select work end time")
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundColor(.white)
+                .padding(.top, 60)
+            
+            // Time Picker
+            DatePicker("", selection: $workEndTime, displayedComponents: .hourAndMinute)
+                .datePickerStyle(.wheel)
+                .labelsHidden()
+                .colorScheme(.dark)
+                .frame(width: 304, height: 215)
+                .padding(.top, 20)
+            
+            Spacer()
+                .frame(height: 100)
+            
+            // Let's start Button
+            Button(action: {
+                print("Let's start tapped")
+            }) {
+                HStack(spacing: 0) {
+                    Text("Let's start")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.leading, 20)
+                    
+                    Rectangle()
+                        .fill(.white.opacity(0.2))
+                        .frame(width: 1.5)
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(width: 40)
+                }
+                .frame(width: 181, height: 44)
+            }
+            .disabled(selectedDays.isEmpty)
+            .buttonStyle(.plain)
+            .background {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(selectedDays.isEmpty ? buttonBackgroundColor.opacity(0.3) : buttonBackgroundColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(selectedDays.isEmpty ? buttonBorderColor.opacity(0.3) : buttonBorderColor, lineWidth: 1)
+                    )
+            }
+            .opacity(selectedDays.isEmpty ? 0.5 : 1.0)
             
             Spacer()
         }
