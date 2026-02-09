@@ -45,4 +45,16 @@ class WelcomeViewModel: ObservableObject {
             selectedDays.insert(day)
         }
     }
+    
+    func completeOnboarding() {
+        // Save user data
+        UserDefaults.standard.set(name, forKey: "userName")
+        UserDefaults.standard.set(Array(selectedDays), forKey: "workDays")
+        UserDefaults.standard.set(workEndTime, forKey: "workEndTime")
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+        
+        print("Onboarding completed for \(name)")
+        print("Work days: \(selectedDays)")
+        print("Work end time: \(workEndTime)")
+    }
 }
