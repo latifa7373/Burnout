@@ -42,10 +42,43 @@ struct WelcomeView: View {
                 Spacer()
                     .frame(height: 55)
                 
-                // Profile Icon
-                Image(systemName: "person.crop.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundColor(.white)
+                // صورة البروفايل
+                ZStack {
+                    // حلقة خارجية متوهجة
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.8),
+                                    Color.white.opacity(0.3),
+                                    Color.white.opacity(0.1)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 4
+                        )
+                        .frame(width: 100, height: 100)
+                        .shadow(color: .white.opacity(0.3), radius: 10)
+                    
+                    // صورة البروفايل
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.4),
+                                    Color.white.opacity(0.15)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 90, height: 90)
+                    
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 40))
+                        .foregroundColor(.white)
+                }
                 
                 // Enter your name text - close to icon
                 Text("Enter your name")
@@ -57,7 +90,7 @@ struct WelcomeView: View {
                 ZStack {
                     // Background with glass effect
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(textFieldBackgroundColor)
+                        .fill(Color("LightPurple").opacity(0.2))
                         .background {
                             RoundedRectangle(cornerRadius: 20)
                                 .glassEffect()
