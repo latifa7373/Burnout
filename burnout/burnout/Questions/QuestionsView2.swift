@@ -3,13 +3,11 @@ import SwiftUI
 struct QuestionView: View {
     @Environment(\.dismiss) private var dismiss
     
-    let dimension: Dimension // 👈 يحتوي على الصورة واللون
+    let dimension: Dimension
     let question: String
-    let questionNumber: Int
-    let totalQuestions: Int
-    let onContinue: (Int) -> Void
+//    let onContinue: (Int) -> Void
     
-    @State private var sliderValue: Double = 3.0
+    @State private var sliderValue: Double =  3.0
     
     private var sliderText: String {
         switch Int(sliderValue) {
@@ -24,26 +22,20 @@ struct QuestionView: View {
     
     var body: some View {
         ZStack {
-            // 🎨 الخلفية (لون مختلف لكل dimension)
-            Color(.primary)                .ignoresSafeArea()
+            Color(.primary)
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // MARK: - Header
                 VStack(spacing: 8) {
                     Text("Today's Check")
                         .font(.title)
                         .fontWeight(.semibold)
                         .foregroundStyle(.white)
-                    
-                    Text("\(dimension.type.rawValue) • \(questionNumber) of \(totalQuestions)")
-                        .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.8))
                 }
                 .padding(.top, 10)
                 
                 Spacer()
                 
-                // MARK: - Question Content
                 VStack {
                     Text("How much does this describe you?")
                         .font(.title3)
@@ -52,13 +44,11 @@ struct QuestionView: View {
                         .padding(.horizontal)
                     
                     ZStack {
-                        // 🖼️ الصورة (تتغير حسب الـ dimension)
                         Image(dimension.imageName)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 370, height: 370)
                         
-                        // 📝 السؤال
                         Text(question)
                             .font(.title3)
                             .fontWeight(.medium)
@@ -84,7 +74,8 @@ struct QuestionView: View {
                     
                     // Continue Button
                     Button {
-                        onContinue(Int(sliderValue))
+//                        onContinue(Int(sliderValue))
+                        (Int(sliderValue))
                     } label: {
                         Text("Continue")
                             .font(.title3)
@@ -120,3 +111,14 @@ struct QuestionView: View {
 
 
 
+#Preview {
+    NavigationStack {
+        QuestionView(
+            dimension: DimensionsData.dimensions[0],
+            question: DimensionsData.dimensions[0].questions[0],
+//            onContinue: { response in
+//                print("Response: \(response)")
+            
+        )
+    }
+}
