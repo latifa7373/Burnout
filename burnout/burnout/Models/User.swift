@@ -15,17 +15,11 @@ class User {
     var Name: String
     var WorkDays: String
     var WorkEndTime: Date
-    var lastCompletedDate: Date
-    var sessions: [DailySession]
     
-    var currentQuestionIndex: Int
     
     init(Name: String, WorkDays: String, WorkEndTime: Date) {
         self.Name = Name
         self.WorkDays = WorkDays
         self.WorkEndTime = WorkEndTime
-        self.currentQuestionIndex = 0
-        self.sessions = []
-        self.lastCompletedDate = Date.distantPast
     }
 }

@@ -16,7 +16,6 @@ class QuestionResponse {
     var response: Int
     var date: Date
     
-    var session: DailySession?
     
     init(
          dimensionType: String,
