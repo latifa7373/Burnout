@@ -27,9 +27,6 @@ struct QuestionsFlowView: View {
             } else {
                 ProgressView()
                     .tint(.white)
-                    .onAppear {
-                        setupDailyQuestions()
-                    }
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -42,6 +39,11 @@ struct QuestionsFlowView: View {
                         .foregroundStyle(.white)
                         .fontWeight(.semibold)
                 }
+            }
+        }
+        .onAppear {
+            if todaysQuestions.isEmpty {
+                setupDailyQuestions()
             }
         }
     }

@@ -14,9 +14,11 @@ struct SplashView: View {
             if viewModel.isFinished {
                 // بعد Splash: إذا أول مرة نعرض Welcome، وإلا homeView
                 if hasCompletedOnboarding {
-                    homeView()
-                        .transition(.opacity)
-                        .zIndex(1)
+                    NavigationStack {
+                        homeView()
+                    }
+                    .transition(.opacity)
+                    .zIndex(1)
                 } else {
                     WelcomeView(onComplete: {
                         hasCompletedOnboarding = true
