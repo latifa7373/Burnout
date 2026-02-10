@@ -10,22 +10,9 @@ import SwiftData
 
 @main
 struct burnoutApp: App {
-    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding: Bool = false
-
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                if hasCompletedOnboarding {
-                    NavigationStack {
-                        homeView()
-                    }
-                    .transition(.opacity.combined(with: .move(edge: .trailing)))
-                } else {
-                    SplashView()
-                        .transition(.opacity)
-                }
-            }
-            .animation(.easeInOut(duration: 0.6), value: hasCompletedOnboarding)
+            SplashView()
         }
         .modelContainer(for: [QuestionResponse.self, DailyRiskScore.self])
     }
