@@ -372,7 +372,6 @@ private extension homeView {
                 }
                 .padding(16)
             }
-            .frame(height: 170)
         }
         
         private var cardGradient: LinearGradient {
