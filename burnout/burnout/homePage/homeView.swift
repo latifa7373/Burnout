@@ -5,36 +5,34 @@ struct homeView: View {
     @State private var gaugeValue: Double = 0.0
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.18, green: 0.12, blue: 0.22),
-                        Color(red: 0.14, green: 0.10, blue: 0.18)
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color(red: 0.18, green: 0.12, blue: 0.22),
+                    Color(red: 0.14, green: 0.10, blue: 0.18)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
 
-                ScrollView(showsIndicators: false) {
-                    VStack(alignment: .center, spacing: 22) {
-                        topBar
-                        header
-                        gaugeSection
-                        infoCards
-                        insightsCard
-                    }
-                    .padding(.horizontal, 25)
-                    .padding(.top, 10)
-                    .padding(.bottom, 30)
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .center, spacing: 22) {
+                    topBar
+                    header
+                    gaugeSection
+                    infoCards
+                    insightsCard
                 }
+                .padding(.horizontal, 25)
+                .padding(.top, 10)
+                .padding(.bottom, 30)
             }
-            .onAppear {
-                viewModel.calculateAverageLast3Days()
-                withAnimation(.easeOut(duration: 1.2)) {
-                    gaugeValue = viewModel.model.riskIndex
-                }
+        }
+        .onAppear {
+            viewModel.calculateAverageLast3Days()
+            withAnimation(.easeOut(duration: 1.2)) {
+                gaugeValue = viewModel.model.riskIndex
             }
         }
     }
@@ -60,16 +58,13 @@ private enum LogoPalette {
 
 // MARK: - Sections
 private extension homeView {
+
     var topBar: some View {
         HStack {
-            NavigationLink(destination: ProfileView()) {
-                Image(systemName: "person.circle")
-                    .font(.system(size: 40, weight: .regular))
-                    .foregroundColor(.white.opacity(0.85))
-                    .offset(x: 0, y: 8)
-            }
-            .buttonStyle(.plain)
-            Spacer()
+            Image(systemName: "person.circle")
+                .font(.system(size: 40, weight: .regular))
+                .foregroundColor(.white.opacity(0.85))
+                .offset(x: 0, y: 8)
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .padding(.top, 4)
@@ -117,52 +112,57 @@ private extension homeView {
     
     var infoCards: some View {
         HStack(spacing: 16) {
-            SmallInfoCard(
-                title: viewModel.model.statusCard.title,
-                actionText: viewModel.model.statusCard.actionText,
-                badgeTitle: viewModel.model.statusCard.badgeTitle,
-                bodyText: viewModel.model.statusCard.bodyText
-            )
-            .frame(width: 165, height: 165)
 
-            NavigationLink(destination: QuestionsFlowView()) {
+            // ✅ Status يفتح صفحة StatusDetailView
+            NavigationLink {
+                StatusDetailView()
+            } label: {
                 SmallInfoCard(
-                    title: viewModel.model.todayCard.title,
-                    actionText: viewModel.model.todayCard.actionText,
-                    badgeTitle: viewModel.model.todayCard.badgeTitle,
-                    bodyText: viewModel.model.todayCard.bodyText
+                    title: viewModel.model.statusCard.title,
+                    actionText: viewModel.model.statusCard.actionText,
+                    badgeTitle: viewModel.model.statusCard.badgeTitle,
+                    bodyText: viewModel.model.statusCard.bodyText
                 )
                 .frame(width: 165, height: 165)
             }
             .buttonStyle(.plain)
+
+            // ✅ Today’s Check زي ما هو (بدون تنقّل)
+            SmallInfoCard(
+                title: viewModel.model.todayCard.title,
+                actionText: viewModel.model.todayCard.actionText,
+                badgeTitle: viewModel.model.todayCard.badgeTitle,
+                bodyText: viewModel.model.todayCard.bodyText
+            )
+            .frame(width: 165, height: 165)
         }
         .frame(maxWidth: .infinity, alignment: .center)
         .padding(.top, 4)
     }
 
 
+
     
     var insightsCard: some View {
-        NavigationLink(destination: BurnoutChartScreen()) {
-            ZStack(alignment: .topLeading) {
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .fill(cardGradient)
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    HStack {
-                        Text("Burnout Insights")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.white)
-                        Spacer()
-                        HStack(spacing: 2) {
-                            Text("View details")
-                                .font(.system(size: 10))
-                                .foregroundColor(.white.opacity(0.55))
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundColor(.white.opacity(0.55))
-                        }
+        ZStack(alignment: .topLeading) {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(cardGradient)
+            
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Text("Burnout Insights")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.white)
+                    Spacer()
+                    HStack(spacing: 2) {
+                        Text("View details")
+                            .font(.system(size: 10))
+                            .foregroundColor(.white.opacity(0.55))
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.55))
                     }
+                }
                 
                 HStack(alignment: .bottom, spacing: 20) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -190,8 +190,6 @@ private extension homeView {
         }
         .frame(height: 140)
         .padding(.top, 10)
-        }
-        .buttonStyle(.plain)
     }
     
     private var cardGradient: LinearGradient {
@@ -366,6 +364,7 @@ private extension homeView {
 }
 
 #Preview {
-    homeView()
+    NavigationStack {
+        homeView()
+    }
 }
-
