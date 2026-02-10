@@ -110,8 +110,8 @@ struct QuestionView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Header
-                CheckHeader(title: "Today's Check", showBack: true) {
+                // Header بدون back button (QuestionsFlowView لديه toolbar)
+                CheckHeader(title: "Today's Check", showBack: false) {
                     dismiss()
                 }
 

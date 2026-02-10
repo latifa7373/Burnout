@@ -14,14 +14,6 @@ struct ProfileView: View {
                 VStack(spacing: 0) {
                     // Header
                     HStack {
-                        Button(action: {
-                            dismiss()
-                        }) {
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                        
                         Spacer()
                         
                         Text("Profile")
@@ -259,7 +251,18 @@ struct ProfileView: View {
                 }
             }
         }
-        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+            }
+        }
         .onAppear {
             viewModel.loadUserData()
         }

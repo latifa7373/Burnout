@@ -18,8 +18,11 @@ struct StatusDetailView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
-
-                    topBar
+                    // Title
+                    Text("Status")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.top, 4)
 
                     ExpandableInfoCard(
                         title: "How is this calculated?",
@@ -61,29 +64,17 @@ High: Strong warning—consider reducing workload and seeking support.
             }
         }
         .navigationBarBackButtonHidden(true)
-    }
-
-    private var topBar: some View {
-        HStack(spacing: 12) {
-            Button { dismiss() } label: {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.95))
-                    .frame(width: 36, height: 36)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(Color.white.opacity(0.10))
-                    )
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
             }
-            .buttonStyle(.plain)
-
-            Text("Status")
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(.white)
-
-            Spacer()
         }
-        .padding(.top, 4)
     }
 }
 

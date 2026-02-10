@@ -9,8 +9,12 @@ struct BurnoutChartScreen: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-
-            topBar
+            // Title
+            Text("Burnout Insights")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.95))
+                .padding(.top, 4)
+            
             filterMenu
             chartCard
             aboutSection
@@ -20,6 +24,17 @@ struct BurnoutChartScreen: View {
         .padding()
         .background(appBackground)
         .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+            }
+        }
     }
 }
 
@@ -73,28 +88,6 @@ private extension BurnoutChartScreen {
             .shadow(color: glassShadow, radius: 18, x: 0, y: 10)
     }
 
-    // MARK: - Top Bar
-    var topBar: some View {
-        ZStack {
-            Text("Burnout Insights")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.95))
-
-            HStack {
-                Button { dismiss() } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(.white.opacity(0.95))
-                        .frame(width: 36, height: 36)
-                }
-                .background(glassButton(RoundedRectangle(cornerRadius: 12)))
-
-                Spacer()
-                Color.clear.frame(width: 36, height: 36)
-            }
-        }
-        .padding(.top, 4)
-    }
 
     // MARK: - Filter Menu
     var filterMenu: some View {

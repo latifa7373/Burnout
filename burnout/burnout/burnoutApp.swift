@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct burnoutApp: App {
@@ -26,5 +27,6 @@ struct burnoutApp: App {
             }
             .animation(.easeInOut(duration: 0.6), value: hasCompletedOnboarding)
         }
+        .modelContainer(for: [QuestionResponse.self, DailyRiskScore.self])
     }
 }
