@@ -2,7 +2,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-
 // MARK: - Model
 
 struct BurnoutDashboardModel: Equatable {
@@ -10,7 +9,7 @@ struct BurnoutDashboardModel: Equatable {
     var riskIndex: Double // 0.0 - 1.0
     var riskLabel: String
     var riskSubtitle: String
-    
+
     var statusCard: InfoCardModel
     var todayCard: InfoCardModel
     var insights: InsightsModel
@@ -35,3 +34,4 @@ struct BarModel: Equatable, Identifiable {
     var height: CGFloat
     var color: Color
 }
+
