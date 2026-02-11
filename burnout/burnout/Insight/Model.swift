@@ -3,7 +3,6 @@ import Foundation
 struct ChartDataPoint: Identifiable {
     let id = UUID()
     let label: String
-    let value1: Double
-    let value2: Double
-    let value3: Double
+    let riskScore: Double  // Risk Score من DailyRiskScore (1-6)
+    let date: Date  // التاريخ للترتيب
 }

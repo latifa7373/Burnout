@@ -1,9 +1,11 @@
 import SwiftUI
 import Charts
+import SwiftData
 
 struct BurnoutChartScreen: View {
 
     @StateObject private var vm = BurnoutViewModel()
+    @Query private var dailyRiskScores: [DailyRiskScore]
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
@@ -35,16 +37,28 @@ struct BurnoutChartScreen: View {
                 }
             }
         }
+        .onAppear {
+            vm.updateData(dailyRiskScores)
+        }
+        .onChange(of: dailyRiskScores) { _, _ in
+            vm.updateData(dailyRiskScores)
+        }
+        .onChange(of: vm.selectedFilter) { _, _ in
+            vm.updateData(dailyRiskScores)
+        }
+        .onChange(of: vm.selectedMonth) { _, _ in
+            vm.updateData(dailyRiskScores)
+        }
     }
 }
 
 // MARK: - Small Views
 private extension BurnoutChartScreen {
 
-    // ✅ نخلي الـ Day أنحف
+    // ✅ عرض العنصر حسب الفترة المختارة
     var chartItemWidth: CGFloat {
         switch vm.selectedFilter {
-        case .day:   return 18
+        case .day:   return 100  // نقطة واحدة لليوم
         case .week:  return 44
         case .month: return 28
         }
@@ -163,18 +177,28 @@ private extension BurnoutChartScreen {
         .background(glassCard(RoundedRectangle(cornerRadius: 22)))
     }
 
-    // ✅ عمود واحد = متوسط (value1,value2,value3) + أخضر
+    // ✅ خط واحد = Risk Score من DailyRiskScore
     var chartCore: some View {
         Chart {
             ForEach(Array(vm.data.enumerated()), id: \.element.id) { index, item in
-                let avg = (item.value1 + item.value2 + item.value3) / 3
+                // تحويل Risk Score من 1-6 إلى 0-100
+                let percentage = vm.convertToPercentage(item.riskScore)
 
-                BarMark(
+                LineMark(
                     x: .value("Index", index),
-                    y: .value("Avg", vm.cap(avg))
+                    y: .value("Risk Score", percentage)
                 )
                 .foregroundStyle(Color(red: 0.30, green: 0.60, blue: 0.60))
-                .cornerRadius(6)
+                .interpolationMethod(.catmullRom)
+                .lineStyle(StrokeStyle(lineWidth: 3))
+                
+                // إضافة نقاط على الخط
+                PointMark(
+                    x: .value("Index", index),
+                    y: .value("Risk Score", percentage)
+                )
+                .foregroundStyle(Color(red: 0.30, green: 0.60, blue: 0.60))
+                .symbolSize(60)
             }
         }
         .chartYScale(domain: 0...100)
@@ -187,11 +211,12 @@ private extension BurnoutChartScreen {
         .chartXAxis {
             switch vm.selectedFilter {
             case .day:
-                AxisMarks(values: [0, 6, 12, 18]) { value in
+                AxisMarks(values: Array(vm.data.indices)) { value in
                     AxisGridLine(stroke: StrokeStyle(lineWidth: 1, dash: [4,4]))
                         .foregroundStyle(.white.opacity(0.12))
                     AxisValueLabel {
-                        Text(dayAxisLabel(for: value.as(Int.self) ?? 0))
+                        let i = value.as(Int.self) ?? 0
+                        Text(vm.data.indices.contains(i) ? vm.data[i].label : "")
                     }
                     .foregroundStyle(.white.opacity(0.7))
                     .font(.system(size: 11))
