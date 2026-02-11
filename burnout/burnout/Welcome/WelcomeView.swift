@@ -268,6 +268,7 @@ struct WelcomeView: View {
             
             // Let's start Button
             Button(action: {
+                saveUserProfileData()
                 onComplete()
             }) {
                 HStack(spacing: 0) {
@@ -301,6 +302,33 @@ struct WelcomeView: View {
             .opacity(selectedDays.isEmpty ? 0.5 : 1.0)
             
             Spacer()
+        }
+    }
+
+    private func saveUserProfileData() {
+        let defaults = UserDefaults.standard
+        defaults.set(name, forKey: "userName")
+
+        let weekdaySet = Set(selectedDays.compactMap(mapStringDayToWeekday))
+        if let encoded = try? JSONEncoder().encode(weekdaySet) {
+            defaults.set(encoded, forKey: "workDays")
+        }
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        defaults.set(formatter.string(from: workEndTime), forKey: "workEndTime")
+    }
+
+    private func mapStringDayToWeekday(_ day: String) -> Weekday? {
+        switch day.lowercased() {
+        case "sun", "sunday": return .sunday
+        case "mon", "monday": return .monday
+        case "tue", "tues", "tuesday": return .tuesday
+        case "wed", "wednesday": return .wednesday
+        case "thu", "thur", "thurs", "thursday": return .thursday
+        case "fri", "friday": return .friday
+        case "sat", "saturday": return .saturday
+        default: return nil
         }
     }
 }

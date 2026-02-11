@@ -4,7 +4,7 @@ import SwiftData
 
 final class BurnoutViewModel: ObservableObject {
 
-    @Published var selectedFilter: TimeFilter = .day
+    @Published var selectedFilter: TimeFilter = .week
     @Published var data: [ChartDataPoint] = []
 
     // ✅ الشهر الحالي المختار (للـ Month فقط)
@@ -12,13 +12,84 @@ final class BurnoutViewModel: ObservableObject {
     
     // ✅ البيانات من SwiftData
     var dailyRiskScores: [DailyRiskScore] = []
+    
+    // ✅ أيام العمل من UserDefaults
+    private var selectedWorkDays: Set<Weekday> {
+        let userDefaults = UserDefaults.standard
+        let defaultDays: Set<Weekday> = [.sunday, .monday, .tuesday, .wednesday, .thursday]
+
+        if let data = userDefaults.data(forKey: "workDays"),
+           let decoded = try? JSONDecoder().decode(Set<Weekday>.self, from: data) {
+            return decoded.isEmpty ? defaultDays : decoded
+        }
+
+        // Backward compatibility: older onboarding stored [String] like ["Sun","Mon"].
+        if let stringDays = userDefaults.array(forKey: "workDays") as? [String] {
+            let mapped = Set(stringDays.compactMap(mapStringDayToWeekday))
+            if !mapped.isEmpty { return mapped }
+        }
+
+        return defaultDays
+    }
+    
+    // ✅ تحويل Weekday إلى Calendar weekday number (1 = Sunday, 2 = Monday, etc.)
+    private func weekdayToCalendarNumber(_ weekday: Weekday) -> Int {
+        switch weekday {
+        case .sunday: return 1
+        case .monday: return 2
+        case .tuesday: return 3
+        case .wednesday: return 4
+        case .thursday: return 5
+        case .friday: return 6
+        case .saturday: return 7
+        }
+    }
+    
+    // ✅ التحقق إذا كان اليوم من أيام العمل
+    private func isWorkDay(_ date: Date) -> Bool {
+        let calendar = Calendar.current
+        let weekdayNumber = calendar.component(.weekday, from: date)
+        return selectedWorkDays.contains { weekdayToCalendarNumber($0) == weekdayNumber }
+    }
+
+    private func mapStringDayToWeekday(_ day: String) -> Weekday? {
+        switch day.lowercased() {
+        case "sun", "sunday": return .sunday
+        case "mon", "monday": return .monday
+        case "tue", "tues", "tuesday": return .tuesday
+        case "wed", "wednesday": return .wednesday
+        case "thu", "thur", "thurs", "thursday": return .thursday
+        case "fri", "friday": return .friday
+        case "sat", "saturday": return .saturday
+        default: return nil
+        }
+    }
+
+    // Keep one score per day (latest saved value) so each day is represented once.
+    private func latestRiskPerDay(from scores: [DailyRiskScore]) -> [DailyRiskScore] {
+        let calendar = Calendar.current
+        var byDay: [Date: DailyRiskScore] = [:]
+
+        for score in scores {
+            let day = calendar.startOfDay(for: score.date)
+            if let existing = byDay[day] {
+                if score.date > existing.date {
+                    byDay[day] = score
+                }
+            } else {
+                byDay[day] = score
+            }
+        }
+
+        return byDay.values.sorted { $0.date < $1.date }
+    }
 
     init() {
         loadData()
     }
     
     func updateData(_ riskScores: [DailyRiskScore]) {
-        dailyRiskScores = riskScores
+        dailyRiskScores = latestRiskPerDay(from: riskScores)
         loadData()
     }
 
@@ -58,90 +129,97 @@ final class BurnoutViewModel: ObservableObject {
         let now = Date()
         
         switch selectedFilter {
-        case .day:
-            // Day = اليوم الحالي فقط (نقطة واحدة)
-            let today = calendar.startOfDay(for: now)
-            let dayScore = dailyRiskScores.first { 
-                calendar.isDate($0.date, inSameDayAs: today)
-            }
-            
-            if let score = dayScore {
-                // إذا كانت هناك بيانات لليوم، نعرضها كنقطة واحدة
-                data = [ChartDataPoint(
-                    label: "Today",
-                    riskScore: score.riskScore,
-                    date: score.date
-                )]
-            } else {
-                // إذا لم توجد بيانات، نعرض نقطة فارغة
-                data = [ChartDataPoint(
-                    label: "Today",
-                    riskScore: 0,
-                    date: today
-                )]
-            }
-
         case .week:
-            // Week = آخر 7 أيام
-            let weekAgo = calendar.date(byAdding: .day, value: -7, to: now) ?? now
-            let weekStart = calendar.startOfDay(for: weekAgo)
+            // Week = الأسبوع التقويمي الحالي (Sun...Sat)
+            // نعرض أيام الدوام (حتى لو ما جاوب) + أي يوم جاوب فيه داخل الأسبوع.
+            let weekStart = calendar.dateInterval(of: .weekOfYear, for: now)?.start
+                ?? calendar.startOfDay(for: now)
+            let weekEnd = calendar.date(byAdding: .day, value: 6, to: weekStart) ?? weekStart
             
-            let weekScores = dailyRiskScores.filter { $0.date >= weekStart }
-                .sorted { $0.date < $1.date }
+            // فلترة بيانات نفس الأسبوع
+            let weekScores = dailyRiskScores.filter { score in
+                let scoreDate = calendar.startOfDay(for: score.date)
+                return scoreDate >= weekStart && scoreDate <= weekEnd
+            }.sorted { $0.date < $1.date }
             
-            // إنشاء نقاط للأيام السبعة
-            let days = ["Sat","Sun","Mon","Tue","Wed","Thu","Fri"]
-            data = (0..<7).map { dayOffset in
+            let dayFormatter = DateFormatter()
+            dayFormatter.locale = Locale(identifier: "en")
+            dayFormatter.dateFormat = "E"
+            
+            var weekData: [ChartDataPoint] = []
+            
+            for dayOffset in 0..<7 {
                 let targetDate = calendar.date(byAdding: .day, value: dayOffset, to: weekStart) ?? weekStart
                 let dayStart = calendar.startOfDay(for: targetDate)
                 
-                // البحث عن Risk Score لهذا اليوم
-                if let score = weekScores.first(where: { 
-                    calendar.isDate($0.date, inSameDayAs: dayStart)
+                let workday = isWorkDay(dayStart)
+                let dayLabel = dayFormatter.string(from: dayStart)
+                
+                if let score = weekScores.first(where: { score in
+                    let scoreDate = calendar.startOfDay(for: score.date)
+                    return scoreDate == dayStart
                 }) {
-                    return ChartDataPoint(
-                        label: days[dayOffset % 7],
+                    // عنده إجابة -> ينعرض
+                    weekData.append(ChartDataPoint(
+                        label: dayLabel,
                         riskScore: score.riskScore,
-                        date: score.date
-                    )
-                } else {
-                    return ChartDataPoint(
-                        label: days[dayOffset % 7],
+                        date: score.date,
+                        isWorkDay: workday,
+                        hasResponse: true
+                    ))
+                } else if workday {
+                    // يوم دوام بدون إجابة -> ينعرض بدون عمود
+                    weekData.append(ChartDataPoint(
+                        label: dayLabel,
                         riskScore: 0,
-                        date: dayStart
-                    )
+                        date: dayStart,
+                        isWorkDay: true,
+                        hasResponse: false
+                    ))
                 }
             }
+            
+            data = weekData
 
         case .month:
-            // Month = أيام الشهر المختار
+            // Month = كل أيام الشهر المختار (28/29/30/31)
+            // نعرض الأعمدة فقط للأيام اللي جاوب فيها اليوزر، ونبقي باقي الأيام كفراغ.
             let range = calendar.range(of: .day, in: .month, for: selectedMonth) ?? (1..<31)
             let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: selectedMonth)) ?? selectedMonth
             
-            let monthScores = dailyRiskScores.filter {
-                calendar.isDate($0.date, equalTo: selectedMonth, toGranularity: .month)
+            let monthScores = dailyRiskScores.filter { score in
+                calendar.isDate(score.date, equalTo: selectedMonth, toGranularity: .month)
             }.sorted { $0.date < $1.date }
             
-            data = range.map { day in
+            var monthData: [ChartDataPoint] = []
+            for day in range {
                 let targetDate = calendar.date(bySetting: .day, value: day, of: monthStart) ?? monthStart
                 let dayStart = calendar.startOfDay(for: targetDate)
+                let workday = isWorkDay(dayStart)
                 
-                if let score = monthScores.first(where: {
-                    calendar.isDate($0.date, inSameDayAs: dayStart)
+                if let score = monthScores.first(where: { score in
+                    let scoreDate = calendar.startOfDay(for: score.date)
+                    return scoreDate == dayStart
                 }) {
-                    return ChartDataPoint(
+                    monthData.append(ChartDataPoint(
                         label: "\(day)",
                         riskScore: score.riskScore,
-                        date: score.date
-                    )
+                        date: score.date,
+                        isWorkDay: workday,
+                        hasResponse: true
+                    ))
                 } else {
-                    return ChartDataPoint(
+                    monthData.append(ChartDataPoint(
                         label: "\(day)",
                         riskScore: 0,
-                        date: dayStart
-                    )
+                        date: dayStart,
+                        isWorkDay: workday,
+                        hasResponse: false
+                    ))
                 }
             }
+            
+            data = monthData
         }
     }
 
