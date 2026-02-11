@@ -6,6 +6,24 @@ import AVFoundation
 final class SplashViewModel: ObservableObject {
     @Published var isFinished: Bool = false
     let model = SplashModel()
+    private var timer: Timer?
+    
+    init() {
+        startTimer()
+    }
+    
+    /// يبدأ Timer لمدة 3 ثواني ثم ينهي شاشة Splash
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.isFinished = true
+            }
+        }
+    }
+    
+    deinit {
+        timer?.invalidate()
+    }
     
     /// ينشئ AVPlayer للفيديو مع إعدادات التشغيل
     func createVideoPlayer() -> AVPlayer? {

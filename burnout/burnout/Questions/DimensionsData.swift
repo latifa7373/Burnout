@@ -22,10 +22,17 @@ struct Dimension {
 
 struct DimensionsData {
     static let dimensions: [Dimension] = [
+        // 🔥 Efficiency (الإرهاق العاطفي)
         Dimension(
             type: .Efficiency,
             questions: [
-                "I'm just running on autopilot just to get it done",
+                "By the end of the workday, I feel emotionally exhausted.",
+                "My job drains my mental and emotional energy.",
+                "I started my workday already feeling tired.",
+                "Today's work stress feels more than I can handle.",
+                "I feel like I really need a long break from work today.",
+                "Even after resting, the feeling of fatigue comes back quickly.",
+                "My job is emotionally consuming me.",
                 "I feel emotionally drained from my work",
                 "I feel used up at the end of the workday",
                 "I feel tired when I get up in the morning",
@@ -35,6 +42,25 @@ struct DimensionsData {
                 "I feel I'm working too hard on my job",
                 "Working with people directly puts too much stress on me",
                 "I feel like I'm at the end of my rope",
+                "I struggle to complete tasks efficiently",
+                "I feel disconnected from my work purpose",
+                "The thought of going to work drains me",
+                "I feel overwhelmed by my workload"
+            ],
+            imageName: "Oval_5"
+        ),
+        
+        // 💙 Boredom (الملل/الانفصال العاطفي)
+        Dimension(
+            type: .Boredom,
+            questions: [
+                "My enthusiasm for work today is lower than it used to be.",
+                "I've started dealing with my job in a cold, detached way.",
+                "I do my tasks without much feeling or care.",
+                "I don't care as much about what happens at work anymore.",
+                "I feel emotionally detached from my job.",
+                "I work on autopilot just to get things done.",
+                "Work doesn't mean as much to me as it used to.",
                 "I have become less interested in my work",
                 "I have become less enthusiastic about my work",
                 "I have become more cynical about my work",
@@ -43,15 +69,26 @@ struct DimensionsData {
                 "I feel less confident about my abilities",
                 "I question my professional effectiveness",
                 "I feel inadequate in my job role",
-                "I struggle to complete tasks efficiently",
-                "I feel disconnected from my work purpose"
+                "I just go through the motions at work",
+                "My work feels meaningless",
+                "I've lost passion for what I do",
+                "I feel disconnected from my colleagues",
+                "Nothing at work excites me anymore"
             ],
-            imageName: "Oval_5"
+            imageName: "Oval_6"
         ),
         
+        // 💚 Exhaustion (الإنجاز الشخصي - معكوس)
         Dimension(
-            type: .Boredom,
+            type: .Exhaustion,
             questions: [
+                "I feel that I achieve important things in my job.",
+                "I feel competent in the work I do.",
+                "My job makes me feel proud of myself.",
+                "My effort at work has real value.",
+                "I feel that I make a real contribution where I work.",
+                "I am satisfied with my performance at work.",
+                "I can handle work challenges in a good and effective way.",
                 "I am enthusiastic about my job",
                 "My job inspires me",
                 "I am eager to go to work in the morning",
@@ -64,41 +101,7 @@ struct DimensionsData {
                 "I can continue working for very long periods",
                 "At my work, I feel bursting with energy",
                 "I find my work full of meaning and purpose",
-                "I am passionate about my work",
-                "My work challenges me in a positive way",
-                "I feel absorbed in my daily tasks",
-                "I look forward to each workday",
-                "My work energizes me",
-                "I feel motivated to exceed expectations",
-                "I am fully focused when working",
-                "I experience a sense of flow in my work"
-            ],
-            imageName: "Oval_6"
-        ),
-        
-        Dimension(
-            type: .Exhaustion,
-            questions: [
-                "I feel satisfied with my life",
-                "I experience positive emotions daily",
-                "I have energy throughout the day",
-                "I sleep well at night",
-                "I feel physically healthy",
-                "I maintain good relationships with others",
-                "I feel connected to my community",
-                "I have a sense of purpose",
-                "I manage stress effectively",
-                "I take time for self-care",
-                "I feel balanced in life",
-                "I enjoy leisure activities",
-                "I feel optimistic about the future",
-                "I have supportive relationships",
-                "I feel mentally clear and focused",
-                "I maintain healthy boundaries",
-                "I feel grateful for what I have",
-                "I engage in activities I enjoy",
-                "I feel emotionally stable",
-                "I have a positive outlook on life"
+                "I am passionate about my work"
             ],
             imageName: "Oval_7"
         )
@@ -108,7 +111,6 @@ struct DimensionsData {
         var todaysQuestions: [(Dimension, String)] = []
         
         for dimension in dimensions {
-            // نستخدم modulo عشان نرجع من البداية بعد السؤال 19
             let index = questionIndex % dimension.questions.count
             todaysQuestions.append((dimension, dimension.questions[index]))
         }
@@ -116,4 +118,3 @@ struct DimensionsData {
         return todaysQuestions
     }
 }
- 

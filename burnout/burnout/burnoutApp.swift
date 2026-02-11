@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct burnoutApp: App {
@@ -13,5 +14,6 @@ struct burnoutApp: App {
         WindowGroup {
             SplashView()
         }
+        .modelContainer(for: [QuestionResponse.self, DailyRiskScore.self])
     }
 }

@@ -1,3 +1,6 @@
+// =========================
+//  CompletionView.swift
+// =========================
 import SwiftUI
 
 struct CompletionView: View {
@@ -5,70 +8,55 @@ struct CompletionView: View {
     
     var body: some View {
         ZStack {
-            // الخلفية
             Color(.primary)
                 .ignoresSafeArea()
             
-            VStack(spacing: 40) {
-                // Header
-                HStack {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(.white)
-                            .fontWeight(.semibold)
-                            .imageScale(.large)
-                    }
-                    
-                    Spacer()
-                    
-                    Text("Today's Check")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.white)
-                    
-                    Spacer()
-                    
-                    // مسافة فاضية عشان العنوان يكون في النص
-                    Color.clear
-                        .frame(width: 44)
+            VStack(spacing: 0) {
+                // Header بدون back button (سيتم استخدام toolbar)
+                CheckHeader(title: "Today's Check", showBack: false) {
+                    dismiss()
                 }
-                .padding(.horizontal)
-                .padding(.top, 10)
                 
                 Spacer()
                 
-                // الدائرة + النص
                 ZStack {
-                    // الصورة
                     Image("Oval_8")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 370, height: 370)
+                        .frame(width: 320, height: 320)
+                        .frame(maxWidth: .infinity, alignment: .center)
                     
-                    // النص
-                    VStack(spacing: 8) {
+                    VStack(spacing: 6) {
                         Text("All done !")
-                            .font(.system(size: 32, weight: .medium))
+                            .font(.system(size: 22, weight: .semibold))
                             .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.85)
                         
                         Text("come back")
-                            .font(.system(size: 28, weight: .regular))
+                            .font(.system(size: 18, weight: .regular))
                             .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.85)
                         
                         Text("tomorrow")
-                            .font(.system(size: 28, weight: .regular))
+                            .font(.system(size: 18, weight: .regular))
                             .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.85)
                     }
+                    .frame(width: 220) // ✅ يثبت النص داخل الدائرة
                 }
+                .frame(height: 320) // ✅ يمنع أي حركة
+                .padding(.vertical, 24)
                 
                 Spacer()
                 
-                // زر Done
-                Button {
-                    dismiss()
-                } label: {
+                // Button
+                Button { dismiss() } label: {
                     Text("Done")
                         .font(.title3)
                         .fontWeight(.semibold)
@@ -87,7 +75,8 @@ struct CompletionView: View {
         .navigationBarBackButtonHidden(true)
     }
 }
-
 #Preview {
-    CompletionView()
+    NavigationStack {
+        CompletionView()
+    }
 }

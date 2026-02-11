@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct WelcomeView: View {
+    let onComplete: () -> Void
+    
     @State private var name: String = ""
     @State private var currentPage: Int = 1 // 1 = first page, 2 = second page
     @State private var selectedDays: Set<String> = [] // Selected work days
@@ -266,7 +268,7 @@ struct WelcomeView: View {
             
             // Let's start Button
             Button(action: {
-                print("Let's start tapped")
+                onComplete()
             }) {
                 HStack(spacing: 0) {
                     Text("Let's start")
@@ -304,5 +306,5 @@ struct WelcomeView: View {
 }
 
 #Preview {
-    WelcomeView()
+    WelcomeView(onComplete: {})
 }
