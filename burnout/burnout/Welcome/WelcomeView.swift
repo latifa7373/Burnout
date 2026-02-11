@@ -142,15 +142,17 @@ struct WelcomeView: View {
                     }
                     .frame(width: 181, height: 44)
                 }
+                .disabled(name.isEmpty)
                 .buttonStyle(.plain)
                 .background {
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(buttonBackgroundColor)
+                        .fill(name.isEmpty ? buttonBackgroundColor.opacity(0.3) : buttonBackgroundColor)
                         .overlay(
                             RoundedRectangle(cornerRadius: 20)
-                                .stroke(buttonBorderColor, lineWidth: 1)
+                                .stroke(name.isEmpty ? buttonBorderColor.opacity(0.3) : buttonBorderColor, lineWidth: 1)
                         )
                 }
+                .opacity(name.isEmpty ? 0.5 : 1.0)
                 
                 Spacer()
             }
