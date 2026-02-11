@@ -130,7 +130,7 @@ private extension homeView {
 
             // ✅ Status يفتح صفحة StatusDetailView
             NavigationLink {
-                StatusDetailView()
+                StatusView()
             } label: {
                 SmallInfoCard(
                     title: viewModel.model.statusCard.title,
