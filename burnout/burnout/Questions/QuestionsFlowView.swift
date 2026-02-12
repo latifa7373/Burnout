@@ -1,5 +1,7 @@
 import SwiftUI
 import SwiftData
+import UserNotifications
+
 
 struct QuestionsFlowView: View {
     @Environment(\.modelContext) private var modelContext
@@ -105,15 +107,15 @@ struct QuestionsFlowView: View {
                 currentQuestionIndex += 1
             }
         } else {
-            // خلصت كل الأسئلة - نحسب ونحفظ Risk Score
             calculateAndSaveTodayRiskScore()
-            
-            withAnimation {
-                isComplete = true
+            requestNotificationsIfNeeded {
+                withAnimation {
+                    isComplete = true
+                }
             }
         }
     }
-    
+
     // حساب وحفظ Risk Score اليومي
     private func calculateAndSaveTodayRiskScore() {
         guard todayAnswers.count == 3 else {
@@ -172,6 +174,60 @@ struct QuestionsFlowView: View {
         // حفظ التغييرات
         try? modelContext.save()
     }
+    
+    private func requestNotificationsIfNeeded(completion: @escaping () -> Void) {
+        let key = "hasAskedNotifications"
+        if UserDefaults.standard.bool(forKey: key) {
+            completion()
+            return
+        }
+        
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+            UserDefaults.standard.set(true, forKey: key)
+            if granted {
+                scheduleWorkEndNotifications()
+            }
+            DispatchQueue.main.async {
+                completion()
+            }
+        }
+
+    }
+    private func scheduleWorkEndNotifications() {
+        let defaults = UserDefaults.standard
+        
+        guard let timeString = defaults.string(forKey: "workEndTime") else { return }
+        let parts = timeString.split(separator: ":").map { Int($0) ?? 0 }
+        if parts.count != 2 { return }
+        let hour = parts[0]
+        let minute = parts[1]
+        
+        var weekdays: [Int] = []
+        if let data = defaults.data(forKey: "workDays"),
+           let decoded = try? JSONDecoder().decode(Set<Weekday>.self, from: data) {
+            weekdays = decoded.map { $0.calendarValue }
+        }
+        
+        if weekdays.isEmpty { return }
+        
+        for weekday in weekdays {
+            var date = DateComponents()
+            date.weekday = weekday
+            date.hour = hour
+            date.minute = minute
+            
+            let content = UNMutableNotificationContent()
+            content.title = "Work day finished"
+            content.body = "Take a minute to check in."
+            content.sound = .default
+            
+            let trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
+            let id = "workEndReminder-\(weekday)"
+            let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request)
+        }
+    }
+
 }
 
 #Preview {

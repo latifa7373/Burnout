@@ -113,7 +113,8 @@ private extension homeView {
                 .padding(.vertical, 8)
                 .background(
                     Capsule()
-                        .stroke(Color.white.opacity(0.55), lineWidth: 1)
+                        .fill(Color.gray.opacity(0.1))
+                
                 )
             
             Text(viewModel.model.riskSubtitle)
