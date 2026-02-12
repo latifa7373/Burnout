@@ -69,6 +69,9 @@ private enum LogoPalette {
 
 // MARK: - Sections
 private extension homeView {
+    enum Layout {
+        static let squareCard: CGFloat = 180
+    }
 
     var topBar: some View {
         HStack {
@@ -140,7 +143,7 @@ private extension homeView {
                     badgeTitle: viewModel.model.statusCard.badgeTitle,
                     bodyText: viewModel.model.statusCard.bodyText
                 )
-                .frame(width: 165, height: 165)
+                .frame(width: Layout.squareCard, height: Layout.squareCard)
             }
             .buttonStyle(.plain)
 
@@ -154,7 +157,7 @@ private extension homeView {
                     badgeTitle: viewModel.model.todayCard.badgeTitle,
                     bodyText: viewModel.model.todayCard.bodyText
                 )
-                .frame(width: 165, height: 165)
+                .frame(width: Layout.squareCard, height: Layout.squareCard)
             }
             .buttonStyle(.plain)
         }
@@ -213,7 +216,7 @@ private extension homeView {
             }
             .padding(16)
         }
-        .frame(height: 140)
+        .frame(height: Layout.squareCard)
         .padding(.top, 10)
         }
         .buttonStyle(.plain)
