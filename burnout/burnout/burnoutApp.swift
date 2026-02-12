@@ -12,6 +12,5 @@ struct burnoutApp: App {
         WindowGroup {
             SplashView()
         }
-        .modelContainer(for: [QuestionResponse.self])
-    }
+        .modelContainer(for: [QuestionResponse.self, DailyRiskScore.self])    }
 }
