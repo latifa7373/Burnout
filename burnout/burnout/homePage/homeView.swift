@@ -19,7 +19,6 @@ struct homeView: View {
                 )
                 .ignoresSafeArea()
 
-                ScrollView(showsIndicators: false) {
                     VStack(alignment: .center, spacing: 22) {
                         topBar
                         header
@@ -30,7 +29,7 @@ struct homeView: View {
                     .padding(.horizontal, 25)
                     .padding(.top, 10)
                     .padding(.bottom, 30)
-                }
+               
             }
         }
         .onAppear {

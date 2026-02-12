@@ -128,10 +128,7 @@ struct ProfileView: View {
                                             .labelsHidden()
                                             .colorScheme(.dark)
                                             .accentColor(.blue)
-                                        
-                                        Image(systemName: "pencil.circle.fill")
-                                            .font(.system(size: 20))
-                                            .foregroundColor(.white)
+                                      
                                     }
                                 } else {
                                     Text(viewModel.formattedTime(for: viewModel.workEndTime))
