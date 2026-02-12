@@ -183,7 +183,7 @@ private extension homeView {
                             Text("View details")
                                 .font(.system(size: 10))
                                 .foregroundColor(.white.opacity(0.55))
-                            Image(systemName: "chevron.right")
+                            Image(systemName: "chevron.forward")
                                 .font(.system(size: 10, weight: .semibold))
                                 .foregroundColor(.white.opacity(0.55))
                         }
@@ -340,7 +340,7 @@ private extension homeView {
                             Text(actionText)
                                 .font(.system(size: 10))
                                 .foregroundColor(.white.opacity(0.55))
-                            Image(systemName: "chevron.right")
+                            Image(systemName: "chevron.forward")
                                 .font(.system(size: 10, weight: .semibold))
                                 .foregroundColor(.white.opacity(0.55))
                         }

@@ -19,7 +19,7 @@ struct CheckHeader: View {
         HStack {
             if showBack {
                 Button(action: onBack) {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "chevron.backward")
                         .foregroundStyle(.white)
                         .fontWeight(.semibold)
                         .imageScale(.large)

@@ -75,7 +75,7 @@ Your status changes only after the same level repeats for 3 days in a row.
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { dismiss() } label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "chevron.backward")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
                 }
