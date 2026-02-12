@@ -14,8 +14,10 @@ struct BurnoutChartScreen: View {
         VStack(alignment: .leading, spacing: 14) {
             // Title
             Text("Burnout Insights")
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 24, weight: .semibold))
                 .foregroundStyle(.white.opacity(0.95))
+                .frame(maxWidth: .infinity, alignment: .center)
+                .multilineTextAlignment(.center)
                 .padding(.top, 4)
             
             filterMenu

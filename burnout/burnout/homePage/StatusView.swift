@@ -18,11 +18,14 @@ struct StatusView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
 
-                    // Title
+                    // Title (centered to match other top screen titles)
                     Text("Status")
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 26, weight: .semibold))
                         .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .multilineTextAlignment(.center)
                         .padding(.top, 4)
+                        .padding(.bottom, 2)
 
                     // ✅ Card 1 (NOW ON TOP): What does Low/Medium/High mean?
                     ExpandableInfoCard(
