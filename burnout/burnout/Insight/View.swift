@@ -199,6 +199,8 @@ private extension BurnoutChartScreen {
                         .frame(width: chartWidth, height: 240)
                 }
                 .id(chartScrollResetID) // reset to leading when data/filter changes
+                // ✅ ثبّت اتجاه السكروول للأيسر → اليمين حتى لو اللغة عربية
+                .environment(\.layoutDirection, .leftToRight)
 
                 fixedYAxis
                     .frame(width: fixedYAxisWidth, height: 240)

@@ -90,12 +90,24 @@ struct QuestionView: View {
 
     private var sliderText: String {
         switch Int(sliderValue) {
-        case 1: return "Never"
-        case 2: return "A Little"
-        case 3: return "Somewhat"
-        case 4: return "A Lot"
-        case 5: return "Extremely"
-        default: return "Somewhat"
+        case 1:
+            return String(localized: "Never",
+                          comment: "Slider label: Never (1/5)")
+        case 2:
+            return String(localized: "A Little",
+                          comment: "Slider label: A Little (2/5)")
+        case 3:
+            return String(localized: "Somewhat",
+                          comment: "Slider label: Somewhat (3/5)")
+        case 4:
+            return String(localized: "A Lot",
+                          comment: "Slider label: A Lot (4/5)")
+        case 5:
+            return String(localized: "Extremely",
+                          comment: "Slider label: Extremely (5/5)")
+        default:
+            return String(localized: "Somewhat",
+                          comment: "Slider label: default mid value")
         }
     }
 
@@ -167,6 +179,8 @@ struct QuestionView: View {
                         thumbColor: .white
                     )
                     .padding(.horizontal, 40)
+                    // ✅ ثبّت اتجاه السلايدر (يسار ↔︎ يمين) حتى لو واجهة الجهاز بالعربي
+                    .environment(\.layoutDirection, .leftToRight)
 
                     Button {
                         onContinue(Int(sliderValue))
