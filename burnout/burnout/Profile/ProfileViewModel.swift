@@ -39,7 +39,16 @@ final class ProfileViewModel: ObservableObject {
     
     private var workEndTimeString: String {
         get {
-            userDefaults.string(forKey: workEndTimeKey) ?? "17:00"
+            if let value = userDefaults.string(forKey: workEndTimeKey), !value.isEmpty {
+                return value
+            }
+            // Backward compatibility: older onboarding stored Date مباشرة.
+            if let savedDate = userDefaults.object(forKey: workEndTimeKey) as? Date {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "HH:mm"
+                return formatter.string(from: savedDate)
+            }
+            return "17:00"
         }
         set {
             userDefaults.set(newValue, forKey: workEndTimeKey)
@@ -48,16 +57,35 @@ final class ProfileViewModel: ObservableObject {
     
     private var selectedWorkDays: Set<Weekday> {
         get {
+            let defaultDays: Set<Weekday> = [.sunday, .monday, .tuesday, .wednesday, .thursday]
             if let data = userDefaults.data(forKey: workDaysKey),
                let decoded = try? JSONDecoder().decode(Set<Weekday>.self, from: data) {
                 return decoded
             }
-            return [.sunday, .monday, .tuesday, .wednesday, .thursday]
+            // Backward compatibility: older onboarding stored [String] like ["Sun","Mon"].
+            if let stringDays = userDefaults.array(forKey: workDaysKey) as? [String] {
+                let mapped = Set(stringDays.compactMap(mapStringDayToWeekday))
+                if !mapped.isEmpty { return mapped }
+            }
+            return defaultDays
         }
         set {
             if let encoded = try? JSONEncoder().encode(newValue) {
                 userDefaults.set(encoded, forKey: workDaysKey)
             }
+        }
+    }
+
+    private func mapStringDayToWeekday(_ day: String) -> Weekday? {
+        switch day.lowercased() {
+        case "sun", "sunday": return .sunday
+        case "mon", "monday": return .monday
+        case "tue", "tues", "tuesday": return .tuesday
+        case "wed", "wednesday": return .wednesday
+        case "thu", "thur", "thurs", "thursday": return .thursday
+        case "fri", "friday": return .friday
+        case "sat", "saturday": return .saturday
+        default: return nil
         }
     }
     

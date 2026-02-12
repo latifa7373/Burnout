@@ -3,6 +3,8 @@ import SwiftUI
 struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
     @Environment(\.dismiss) var dismiss
+
+    private var insightsAccent: Color { Color(red: 0.30, green: 0.60, blue: 0.60) } // نفس لون عمود Insights
     
     var body: some View {
         ZStack {
@@ -21,25 +23,6 @@ struct ProfileView: View {
                             .foregroundColor(.white)
                         
                         Spacer()
-                        
-                        Button(action: {
-                            withAnimation(.spring(response: 0.3)) {
-                                viewModel.toggleEditing()
-                            }
-                        }) {
-                            Image(systemName: viewModel.isEditing ? "checkmark" : "pencil")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(viewModel.isEditing ? .green : .white)
-                                .frame(width: 40, height: 40)
-                                .background(
-                                    Circle()
-                                        .fill(viewModel.isEditing ? Color.green.opacity(0.2) : Color.white.opacity(0.15))
-                                        .background(
-                                            Circle()
-                                                .fill(.ultraThinMaterial)
-                                        )
-                                )
-                        }
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
@@ -201,7 +184,7 @@ struct ProfileView: View {
                                                 HStack(spacing: 12) {
                                                     Image(systemName: viewModel.tempSelectedWorkDays.contains(day) ? "checkmark.circle.fill" : "circle")
                                                         .font(.system(size: 20))
-                                                        .foregroundColor(viewModel.tempSelectedWorkDays.contains(day) ? .green : .white.opacity(0.5))
+                                                        .foregroundColor(viewModel.tempSelectedWorkDays.contains(day) ? insightsAccent : .white.opacity(0.5))
                                                     
                                                     Text(day.rawValue)
                                                         .font(.system(size: 16, weight: .medium))
@@ -213,7 +196,7 @@ struct ProfileView: View {
                                                 .padding(.horizontal, 12)
                                                 .background(
                                                     RoundedRectangle(cornerRadius: 12)
-                                                        .fill(viewModel.tempSelectedWorkDays.contains(day) ? Color.green.opacity(0.2) : Color.white.opacity(0.08))
+                                                        .fill(viewModel.tempSelectedWorkDays.contains(day) ? insightsAccent.opacity(0.20) : Color.white.opacity(0.08))
                                                 )
                                             }
                                         }
@@ -227,11 +210,11 @@ struct ProfileView: View {
                                         .padding(.leading, 65)
                                 } else {
                                     VStack(alignment: .leading, spacing: 8) {
-                                        ForEach(Array(viewModel.model.selectedWorkDays.sorted(by: { $0.rawValue < $1.rawValue })), id: \.self) { day in
+                                        ForEach(Weekday.allCases.filter { viewModel.model.selectedWorkDays.contains($0) }, id: \.self) { day in
                                             HStack(spacing: 8) {
                                                 Image(systemName: "checkmark.circle.fill")
                                                     .font(.system(size: 14))
-                                                    .foregroundColor(.green)
+                                                    .foregroundColor(insightsAccent)
                                                 
                                                 Text(day.rawValue)
                                                     .font(.system(size: 16, weight: .medium))
@@ -261,6 +244,18 @@ struct ProfileView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
                 }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    withAnimation(.spring(response: 0.3)) {
+                        viewModel.toggleEditing()
+                    }
+                } label: {
+                    Image(systemName: viewModel.isEditing ? "checkmark" : "pencil")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+                .buttonStyle(.plain)
             }
         }
         .onAppear {

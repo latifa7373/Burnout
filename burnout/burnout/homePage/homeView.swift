@@ -69,6 +69,9 @@ private enum LogoPalette {
 
 // MARK: - Sections
 private extension homeView {
+    enum Layout {
+        static let squareCard: CGFloat = 180
+    }
 
     var topBar: some View {
         HStack {
@@ -113,10 +116,12 @@ private extension homeView {
                 .padding(.vertical, 8)
                 .background(
                     Capsule()
-                        .stroke(Color.white.opacity(0.55), lineWidth: 1)
+                        .fill(Color.gray.opacity(0.1))
+                
                 )
             
-            Text(viewModel.model.riskSubtitle)
+            // ✅ جملة ثابتة تحت الـ gauge (بدون شرح مطوّل)
+            Text("Your average over the past 3 days looks")
                 .font(.system(size: 15))
                 .foregroundColor(.white.opacity(0.6))
         }
@@ -130,7 +135,7 @@ private extension homeView {
 
             // ✅ Status يفتح صفحة StatusDetailView
             NavigationLink {
-                StatusDetailView()
+                StatusView()
             } label: {
                 SmallInfoCard(
                     title: viewModel.model.statusCard.title,
@@ -138,7 +143,7 @@ private extension homeView {
                     badgeTitle: viewModel.model.statusCard.badgeTitle,
                     bodyText: viewModel.model.statusCard.bodyText
                 )
-                .frame(width: 165, height: 165)
+                .frame(width: Layout.squareCard, height: Layout.squareCard)
             }
             .buttonStyle(.plain)
 
@@ -152,7 +157,7 @@ private extension homeView {
                     badgeTitle: viewModel.model.todayCard.badgeTitle,
                     bodyText: viewModel.model.todayCard.bodyText
                 )
-                .frame(width: 165, height: 165)
+                .frame(width: Layout.squareCard, height: Layout.squareCard)
             }
             .buttonStyle(.plain)
         }
@@ -211,7 +216,7 @@ private extension homeView {
             }
             .padding(16)
         }
-        .frame(height: 140)
+        .frame(height: Layout.squareCard)
         .padding(.top, 10)
         }
         .buttonStyle(.plain)
@@ -290,14 +295,15 @@ private extension homeView {
         
         var body: some View {
             ZStack {
+                // ضع الإبرة بحيث تكون قاعدتها (bottom center) على نفس pivot الخاص بالدائرة البيضاء
                 NeedleShape()
                     .fill(Color.white)
                     .frame(width: needleWidth, height: needleHeight)
-                    .offset(y: -needleHeight / 2)
+                    // اجعل مركز الإبرة أعلى الـ pivot بنصف طولها => bottom = pivotY
+                    .position(x: frameWidth / 2, y: pivotY - needleHeight / 2)
                     .rotationEffect(.degrees(needleAngle), anchor: .bottom)
             }
-            .frame(width: frameWidth, height: frameHeight, alignment: .top)
-            .position(x: frameWidth / 2, y: pivotY)
+            .frame(width: frameWidth, height: frameHeight, alignment: .topLeading)
         }
     }
     
@@ -322,6 +328,7 @@ private extension homeView {
             ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 22, style: .continuous)
                     .fill(cardGradient)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
                 VStack(alignment: .leading, spacing: -3) {
                     // العنوان + View more بنفس السطر
@@ -372,6 +379,8 @@ private extension homeView {
                 }
                 .padding(16)
             }
+            // ✅ اجعل الخلفية تملأ المساحة حتى لو المحتوى قليل (Status vs Today's Check)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         
         private var cardGradient: LinearGradient {

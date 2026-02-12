@@ -1,8 +1,7 @@
 import SwiftUI
 
-struct StatusDetailView: View {
+struct StatusView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.openURL) private var openURL
 
     var body: some View {
         ZStack {
@@ -18,42 +17,51 @@ struct StatusDetailView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
+
                     // Title
                     Text("Status")
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(.white)
                         .padding(.top, 4)
 
-                    ExpandableInfoCard(
-                        title: "How is this calculated?",
-                        actionCollapsed: "Read more",
-                        actionExpanded: "Show less",
-                        bodyText: """
-We ask 3 questions (one per dimension). Each answer is scored from 1 to 5.
-We calculate the daily score using the arithmetic mean:
-
-Risk Score = (Q1 + Q2 + Q3) / 3
-
-Then we convert it to a 0–100 scale to match the chart.
-If the score goes above 50, the risk starts increasing.
-""",
-                        linkTitle: "Learn more — WHO (ICD-11)",
-                        linkURL: URL(string: "https://www.who.int/standards/classifications/frequently-asked-questions/burn-out-an-occupational-phenomenon")!,
-                        openURL: { url in openURL(url) }
-                    )
-
+                    // ✅ Card 1 (NOW ON TOP): What does Low/Medium/High mean?
                     ExpandableInfoCard(
                         title: "What does “Low / Medium / High” mean?",
                         actionCollapsed: "Read more",
                         actionExpanded: "Show less",
                         bodyText: """
-Low: Your signals are stable.
-Medium: Early warning signs—try recovery habits.
-High: Strong warning—consider reducing workload and seeking support.
-""",
-                        linkTitle: "Tips for recovery",
-                        linkURL: URL(string: "https://www.who.int/news-room/fact-sheets/detail/mental-health-strengthening-our-response")!,
-                        openURL: { url in openURL(url) }
+
+Low: Your recent responses indicate stable patterns.
+
+Medium : Your recent responses suggest increased strain. Consider healthy recovery habits.
+
+High :Your recent responses indicate elevated strain levels. Consider prioritizing rest and seeking support if needed.
+
+Note : Burn-Out provides general insights and is not a medical diagnosis
+"""
+                    )
+
+                    // ✅ Card 2 (NOW BELOW): How is this calculated?
+                    ExpandableInfoCard(
+                        title: "How is this calculated?",
+                        actionCollapsed: "Read more",
+                        actionExpanded: "Show less",
+                        bodyText: """
+Your answers use a 1–5 scale from Never (1) to Extremely (5)
+
+Each day, you answer 3 questions then we calculate the daily average: 
+
+(Q1 + Q2 + Q3) ÷ 3 
+
+and we label the daily result as:
+
+  * Low: 1–2
+  * Medium: 2.5–3
+  * High: 3.5–5
+
+Your status changes only after the same level repeats for 3 days in a row. 
+
+"""
                     )
 
                     Spacer(minLength: 20)
@@ -66,9 +74,7 @@ High: Strong warning—consider reducing workload and seeking support.
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
+                Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
@@ -79,15 +85,12 @@ High: Strong warning—consider reducing workload and seeking support.
 }
 
 
-// MARK: - Reusable Expandable Card (نفس ستايل كروت Home)
+// MARK: - Reusable Expandable Card (بدون روابط)
 private struct ExpandableInfoCard: View {
     let title: String
     let actionCollapsed: String
     let actionExpanded: String
     let bodyText: String
-    let linkTitle: String
-    let linkURL: URL
-    let openURL: (URL) -> Void
 
     @State private var expanded = false
 
@@ -119,17 +122,6 @@ private struct ExpandableInfoCard: View {
                 .lineSpacing(3)
                 .lineLimit(expanded ? nil : 3)
                 .fixedSize(horizontal: false, vertical: true)
-
-            if expanded {
-                Button {
-                    openURL(linkURL)
-                } label: {
-                    Text(linkTitle)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.blue)
-                }
-                .buttonStyle(.plain)
-            }
         }
         .padding(16)
         .background(
@@ -151,9 +143,8 @@ private struct ExpandableInfoCard: View {
 }
 
 
-// ✅ Preview الصحيح للصفحة نفسها (بدون ما يعلق على homeView)
 #Preview {
     NavigationStack {
-        StatusDetailView()
+        StatusView()
     }
 }
