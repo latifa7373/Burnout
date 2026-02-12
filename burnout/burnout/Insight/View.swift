@@ -32,7 +32,7 @@ struct BurnoutChartScreen: View {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "chevron.backward")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
                 }
@@ -154,7 +154,7 @@ private extension BurnoutChartScreen {
 
             HStack(spacing: 8) {
                 Button { vm.prevMonth() } label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "chevron.forward")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(.white.opacity(0.95))
                         .frame(width: 30, height: 30)
@@ -162,7 +162,7 @@ private extension BurnoutChartScreen {
                 .background(glassButton(RoundedRectangle(cornerRadius: 10)))
 
                 Button { vm.nextMonth() } label: {
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.forward")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(.white.opacity(0.95))
                         .frame(width: 30, height: 30)

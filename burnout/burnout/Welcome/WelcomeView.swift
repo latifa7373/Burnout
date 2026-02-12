@@ -141,7 +141,7 @@ struct WelcomeView: View {
                         .fill(.white.opacity(0.2))
                         .frame(width: 1.5)
                     
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.forward")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(width: 40)
@@ -174,7 +174,7 @@ struct WelcomeView: View {
                         currentPage = 1
                     }
                 }) {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "chevron.backward")
                         .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(width: 44, height: 44)
@@ -286,7 +286,7 @@ struct WelcomeView: View {
                         .fill(.white.opacity(0.2))
                         .frame(width: 1.5)
                     
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.forward")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(width: 40)
