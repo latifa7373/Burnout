@@ -57,7 +57,7 @@ final class HomeViewModel: ObservableObject {
         let isHighRisk = riskDaysCount >= 3
         
         // حساب متوسط Risk Score للأسبوع
-        let avgRiskScore = weekRiskScores.isEmpty ? 0.0 : 
+        let avgRiskScore = weekRiskScores.isEmpty ? 0.0 :
             weekRiskScores.reduce(0.0) { $0 + $1.riskScore } / Double(weekRiskScores.count)
         
         // تحويل من نطاق 1-6 إلى 0-1 للـ gauge
@@ -66,7 +66,7 @@ final class HomeViewModel: ObservableObject {
         
         model.riskIndex = clamped
         
-        // تحديد التصنيف بناءً على النمط
+        // تحديد التصنيف بناءً على النمط (هذا هو مصدر الحقيقة للـ gauge + status card)
         if isHighRisk {
             model.riskLabel = "High"
             model.riskSubtitle = "3 or more risk days detected in the past week"
@@ -76,25 +76,30 @@ final class HomeViewModel: ObservableObject {
         }
         
         // تحديث Status Card
-        updateStatusCard(isHighRisk: isHighRisk, riskScore: avgRiskScore)
+        updateStatusCard(riskLabel: model.riskLabel, riskSubtitle: model.riskSubtitle)
         
         // تحديث Insights
         updateInsights(riskScores: weekRiskScores)
     }
     
-    private func updateStatusCard(isHighRisk: Bool, riskScore: Double) {
-        if isHighRisk {
+    private func updateStatusCard(riskLabel: String, riskSubtitle: String) {
+        // ✅ اجعل كارد Status يعكس نفس حالة الـ gauge تمامًا
+        switch riskLabel {
+        case "High":
             model.statusCard.badgeTitle = "High Risk"
-            model.statusCard.bodyText = "3 or more risk days detected in the past week. Please take care of yourself."
-        } else {
+            model.statusCard.bodyText = riskSubtitle
+        case "Medium":
+            model.statusCard.badgeTitle = "Medium Risk"
+            model.statusCard.bodyText = riskSubtitle.isEmpty ? "Some early signs are showing. Try recovery habits." : riskSubtitle
+        default:
             model.statusCard.badgeTitle = "Low Risk"
-            model.statusCard.bodyText = "Your responses indicate that your productivity level is currently normal"
+            model.statusCard.bodyText = riskSubtitle
         }
     }
     
     private func updateInsights(riskScores: [DailyRiskScore]) {
         // حساب متوسط Risk Score للأسبوع
-        let avgScore = riskScores.isEmpty ? 0.0 : 
+        let avgScore = riskScores.isEmpty ? 0.0 :
             riskScores.reduce(0.0) { $0 + $1.riskScore } / Double(riskScores.count)
         
         // تحويل Risk Score (1-6) إلى نسبة مئوية (0-100)
