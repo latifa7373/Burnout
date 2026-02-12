@@ -146,8 +146,8 @@ struct QuestionsFlowView: View {
                 cynicismSum += Double(answer.response)
                 cynicismCount += 1
             case "Exhaustion": // الكفاءة (Efficiency - معكوس)
-                // Efficiency Score = 6 - response
-                let efficiencyValue = 6.0 - Double(answer.response)
+                // Efficiency Score = 5 - response
+                let efficiencyValue = 5.0 - Double(answer.response)
                 efficiencySum += efficiencyValue
                 efficiencyCount += 1
             default:

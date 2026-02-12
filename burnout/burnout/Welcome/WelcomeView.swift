@@ -7,23 +7,21 @@ struct WelcomeView: View {
     @State private var currentPage: Int = 1 // 1 = first page, 2 = second page
     @State private var selectedDays: Set<String> = [] // Selected work days
     @State private var workEndTime = Date() // Work end time
-
-    // الاسم صالح فقط إذا مو فاضي بعد إزالة المسافات
-    private var isNameValid: Bool {
-        !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-
+    
+    // Completion handler
+    var onComplete: (() -> Void)?
+    
     // MARK: - Colors (عدل الألوان من هنا)
     private let textFieldBackgroundColor = Color.white.opacity(0.05)  // لون خلفية حقل الإدخال
-    private let buttonBackgroundColor = Color.white.opacity(0.5)      // لون خلفية زر Continue
+    private let buttonBackgroundColor = Color.white.opacity(0.5)     // لون خلفية زر Continue
     private let buttonBorderColor = Color.white.opacity(0.9)          // لون حواف زر Continue
-
+    
     var body: some View {
         ZStack {
             // Background Color
             Color("PrimaryColor")
                 .ignoresSafeArea()
-
+            
             if currentPage == 1 {
                 // Page 1: Name Input
                 firstPageContent
@@ -33,135 +31,139 @@ struct WelcomeView: View {
             }
         }
     }
-
+    
     // MARK: - Page 1 Content
     private var firstPageContent: some View {
-        VStack(spacing: 0) {
-            // Title - positioned in upper third
-            Text("Let's get to know\nyou")
-                .font(.system(size: 35, weight: .semibold))
-                .foregroundColor(.white)
-                .multilineTextAlignment(.center)
-                .padding(.top, 120)
-
-            // Spacing between title and profile icon
-            Spacer()
-                .frame(height: 55)
-
-            // صورة البروفايل
-            ZStack {
-                // حلقة خارجية متوهجة
-                Circle()
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.8),
-                                Color.white.opacity(0.3),
-                                Color.white.opacity(0.1)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 4
-                    )
-                    .frame(width: 100, height: 100)
-                    .shadow(color: .white.opacity(0.3), radius: 10)
-
-                // صورة البروفايل
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.4),
-                                Color.white.opacity(0.15)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 90, height: 90)
-
-                Image(systemName: "person.fill")
-                    .font(.system(size: 40))
+            
+            VStack(spacing: 0) {
+                // Title - positioned in upper third
+                Text("Let's get to know\nyou")
+                    .font(.system(size: 40, weight: .semibold))
                     .foregroundColor(.white)
-            }
-
-            // Enter your name text - close to icon
-            Text("Enter your name")
-                .font(.system(size: 22, weight: .regular))
-                .foregroundColor(.white)
-                .padding(.top, 20)
-
-            // Text Field with liquid glass effect
-            ZStack {
-                // Background with glass effect
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color("LightPurple").opacity(0.2))
-                    .background {
-                        RoundedRectangle(cornerRadius: 20)
-                            .glassEffect()
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 120)
+                
+                // Spacing between title and profile icon
+                Spacer()
+                    .frame(height: 55)
+                
+                // صورة البروفايل
+                ZStack {
+                    // حلقة خارجية متوهجة
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.8),
+                                    Color.white.opacity(0.3),
+                                    Color.white.opacity(0.1)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 4
+                        )
+                        .frame(width: 100, height: 100)
+                        .shadow(color: .white.opacity(0.3), radius: 10)
+                    
+                    // صورة البروفايل
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.4),
+                                    Color.white.opacity(0.15)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 90, height: 90)
+                    
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 40))
+                        .foregroundColor(.white)
+                }
+                
+                // Enter your name text - close to icon
+                Text("Enter your name")
+                    .font(.system(size: 22, weight: .regular))
+                    .foregroundColor(.white)
+                    .padding(.top, 20)
+                
+                // Text Field with liquid glass effect
+                ZStack {
+                    // Background with glass effect
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color("LightPurple").opacity(0.2))
+                        .background {
+                            RoundedRectangle(cornerRadius: 20)
+                                .glassEffect()
+                        }
+                        .frame(width: 288, height: 47)
+                    
+                    // Text Field on top
+                    ZStack {
+                        if name.isEmpty {
+                            Text("Type your name")
+                                .foregroundColor(.white.opacity(0.5))
+                                .font(.system(size: 17))
+                        }
+                        
+                        TextField("", text: $name)
+                            .font(.system(size: 17))
+                            .foregroundColor(.white)
+                            .tint(.white)
+                            .multilineTextAlignment(.center)
                     }
                     .frame(width: 288, height: 47)
-
-                // Text Field on top
-                ZStack {
-                    if name.isEmpty {
-                        Text("Type your name")
-                            .foregroundColor(.white.opacity(0.5))
-                            .font(.system(size: 17))
+                }
+                .padding(.top, 30)
+                
+                Spacer()
+                    .frame(height: 230)
+                
+                // Continue Button
+                Button(action: {
+                    withAnimation {
+                        currentPage = 2
                     }
-
-                    TextField("", text: $name)
-                        .font(.system(size: 17))
-                        .foregroundColor(.white)
-                        .tint(.white)
-                        .multilineTextAlignment(.center)
-                }
-                .frame(width: 288, height: 47)
-            }
-            .padding(.top, 30)
-
-            Spacer()
-                .frame(height: 230)
-
-            // Continue Button (✅ RTL/LTR صحيح: السهم يتبدل + ترتيب النص/السهم يتعدل تلقائيًا)
-            Button(action: {
-                withAnimation {
-                    currentPage = 2
-                }
-            }) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(!isNameValid ? buttonBackgroundColor.opacity(0.3) : buttonBackgroundColor)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(!isNameValid ? buttonBorderColor.opacity(0.3) : buttonBorderColor, lineWidth: 1)
-                        )
-
+                }) {
                     HStack(spacing: 0) {
                         Spacer().frame(width: 20)
 
                         Text("Continue")
                             .font(.system(size: 18, weight: .medium))
                             .foregroundColor(.white)
-
-                        Spacer()
-
+                            .frame(maxWidth: .infinity)
+                            .padding(.leading, 20)
+                        
                         Rectangle()
                             .fill(.white.opacity(0.2))
                             .frame(width: 1.5)
-
-                        // ✅ Semantic: يتبدل تلقائيًا حسب اللغة
-                        Image(systemName: "chevron.forward")
+                        
+                        Image(systemName: "chevron.right")
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(.white)
                             .frame(width: 40)
 
                         Spacer().frame(width: 0)
                     }
+                    .frame(width: 181, height: 44)
                 }
-                .padding(.horizontal, 20)
-                .frame(minWidth: 200, maxWidth: 120, minHeight: 44, maxHeight: 44)
+                .disabled(name.isEmpty)
+                .buttonStyle(.plain)
+                .background {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(name.isEmpty ? buttonBackgroundColor.opacity(0.3) : buttonBackgroundColor)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(name.isEmpty ? buttonBorderColor.opacity(0.3) : buttonBorderColor, lineWidth: 1)
+                        )
+                }
+                .opacity(name.isEmpty ? 0.5 : 1.0)
+                
+                Spacer()
             }
             .disabled(!isNameValid)
             .buttonStyle(.plain)
@@ -181,8 +183,7 @@ struct WelcomeView: View {
                         currentPage = 1
                     }
                 }) {
-                    // ✅ Back لازم يكون backward (Semantic) عشان ينعكس صح
-                    Image(systemName: "chevron.backward")
+                    Image(systemName: "chevron.left")
                         .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(width: 44, height: 44)
@@ -211,7 +212,7 @@ struct WelcomeView: View {
                         )
                         .frame(width: 50, height: 50)
                         .overlay(
-                            Text(day)
+                            Text(WorkDay.localizedName(for: day))
                                 .font(.system(size: 15, weight: .regular))
                                 .foregroundColor(
                                     selectedDays.contains(day)
@@ -242,7 +243,7 @@ struct WelcomeView: View {
                         )
                         .frame(width: 50, height: 50)
                         .overlay(
-                            Text(day)
+                            Text(WorkDay.localizedName(for: day))
                                 .font(.system(size: 15, weight: .regular))
                                 .foregroundColor(
                                     selectedDays.contains(day)
@@ -280,35 +281,23 @@ struct WelcomeView: View {
 
             // Let's start Button (✅ RTL/LTR صحيح)
             Button(action: {
-                saveUserProfileData()
-                onComplete()
+                onComplete?()
             }) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(selectedDays.isEmpty ? buttonBackgroundColor.opacity(0.3) : buttonBackgroundColor)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(selectedDays.isEmpty ? buttonBorderColor.opacity(0.3) : buttonBorderColor, lineWidth: 1)
-                        )
-
-                    HStack(spacing: 0) {
-                        Spacer().frame(width: 20)
-
-                        Text("Let's start")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundColor(.white)
-
-                        Spacer()
-
-                        Rectangle()
-                            .fill(.white.opacity(0.2))
-                            .frame(width: 1.5)
-
-                        Image(systemName: "chevron.forward")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(.white)
-                            .frame(width: 40)
-                    }
+                HStack(spacing: 0) {
+                    Text("Let's start")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.leading, 20)
+                    
+                    Rectangle()
+                        .fill(.white.opacity(0.2))
+                        .frame(width: 1.5)
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(width: 40)
                 }
                 .frame(minWidth: 200, maxWidth: 120, minHeight: 44, maxHeight: 44)
             }
@@ -319,35 +308,8 @@ struct WelcomeView: View {
             Spacer()
         }
     }
-
-    private func saveUserProfileData() {
-        let defaults = UserDefaults.standard
-        defaults.set(name, forKey: "userName")
-
-        let weekdaySet = Set(selectedDays.compactMap(mapStringDayToWeekday))
-        if let encoded = try? JSONEncoder().encode(weekdaySet) {
-            defaults.set(encoded, forKey: "workDays")
-        }
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        defaults.set(formatter.string(from: workEndTime), forKey: "workEndTime")
-    }
-
-    private func mapStringDayToWeekday(_ day: String) -> Weekday? {
-        switch day.lowercased() {
-        case "sun", "sunday": return .sunday
-        case "mon", "monday": return .monday
-        case "tue", "tues", "tuesday": return .tuesday
-        case "wed", "wednesday": return .wednesday
-        case "thu", "thur", "thurs", "thursday": return .thursday
-        case "fri", "friday": return .friday
-        case "sat", "saturday": return .saturday
-        default: return nil
-        }
-    }
 }
 
 #Preview {
-    WelcomeView(onComplete: {})
+    WelcomeView()
 }

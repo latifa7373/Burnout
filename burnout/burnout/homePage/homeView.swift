@@ -69,7 +69,8 @@ private enum LogoPalette {
 // MARK: - Sections
 private extension homeView {
     enum Layout {
-        static let squareCard: CGFloat = 180
+        static let squareCard: CGFloat = 168
+        static let statusCardSize = CGSize(width: 172, height: 176)
     }
 
     var topBar: some View {
@@ -120,7 +121,7 @@ private extension homeView {
                 )
             
             // ✅ جملة ثابتة تحت الـ gauge (بدون شرح مطوّل)
-            Text("Your average over the past 3 days looks")
+            Text("your average on the past 3 days looks")
                 .font(.system(size: 15))
                 .foregroundColor(.white.opacity(0.6))
         }
@@ -142,7 +143,7 @@ private extension homeView {
                     badgeTitle: viewModel.model.statusCard.badgeTitle,
                     bodyText: viewModel.model.statusCard.bodyText
                 )
-                .frame(width: Layout.squareCard, height: Layout.squareCard)
+                .frame(width: Layout.statusCardSize.width, height: Layout.statusCardSize.height)
             }
             .buttonStyle(.plain)
 
@@ -193,12 +194,24 @@ private extension homeView {
                 
                 HStack(alignment: .bottom, spacing: 20) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(viewModel.model.insights.averageLabel)
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.white.opacity(0.8))
-                        Text("\(viewModel.model.insights.averagePercent)%")
-                            .font(.system(size: 32, weight: .semibold))
-                            .foregroundColor(.white)
+                        if !viewModel.isFirstTimeUser {
+                            Text(viewModel.model.insights.averageLabel)
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        
+                        if viewModel.isFirstTimeUser {
+                            Text("No data yet")
+                                .font(.system(size: 28, weight: .semibold))
+                                .foregroundColor(.white)
+                            Text("Start with today's check-in")
+                                .font(.system(size: 12))
+                                .foregroundColor(.white.opacity(0.75))
+                        } else {
+                            Text("\(viewModel.model.insights.averagePercent)%")
+                                .font(.system(size: 32, weight: .semibold))
+                                .foregroundColor(.white)
+                        }
                     }
                     
                     Spacer()
