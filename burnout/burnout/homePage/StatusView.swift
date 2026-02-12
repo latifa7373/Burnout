@@ -31,12 +31,13 @@ struct StatusView: View {
                         actionExpanded: "Show less",
                         bodyText: """
 
-Low: Your signals are stable
+Low: Your recent responses indicate stable patterns.
 
-Medium: Early signs—try recovery habits
+Medium : Your recent responses suggest increased strain. Consider healthy recovery habits.
 
-High: High strain—prioritize recovery 
-and support
+High :Your recent responses indicate elevated strain levels. Consider prioritizing rest and seeking support if needed.
+
+Note : Burn-Out provides general insights and is not a medical diagnosis
 """
                     )
 
