@@ -7,32 +7,32 @@ struct WelcomeView: View {
     @State private var currentPage: Int = 1 // 1 = first page, 2 = second page
     @State private var selectedDays: Set<String> = [] // Selected work days
     @State private var workEndTime = Date() // Work end time
-    
-    // MARK: - Colors (عدل الألوان من هنا)
-    private let textFieldBackgroundColor = Color.white.opacity(0.05)  // لون خلفية حقل الإدخال
-    private let buttonBackgroundColor = Color.white.opacity(0.5)     // لون خلفية زر Continue
-    private let buttonBorderColor = Color.white.opacity(0.9)          // لون حواف زر Continue
-    
+
+    private var isNameValid: Bool {
+        !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    // MARK: - Colors
+    private let textFieldBackgroundColor = Color.white.opacity(0.05)
+    private let buttonBackgroundColor = Color.white.opacity(0.5)
+    private let buttonBorderColor = Color.white.opacity(0.9)
+
     var body: some View {
         ZStack {
-            // Background Color
             Color("PrimaryColor")
                 .ignoresSafeArea()
-            
+
             if currentPage == 1 {
-                // Page 1: Name Input
                 firstPageContent
             } else {
-                // Page 2: Work Days Selection
                 secondPageContent
             }
         }
     }
-    
+
     // MARK: - Page 1 Content
     private var firstPageContent: some View {
         VStack(spacing: 0) {
-                // Title - positioned in upper third
             Text("Let's get to know\nyou")
                 .font(.system(size: 35, weight: .semibold))
                 .foregroundColor(.white)
@@ -44,127 +44,110 @@ struct WelcomeView: View {
                 .padding(.horizontal, 24)
                 .padding(.top, 120)
 
-                
-                // Spacing between title and profile icon
-                Spacer()
-                    .frame(height: 55)
-                
-                // صورة البروفايل
-                ZStack {
-                    // حلقة خارجية متوهجة
-                    Circle()
-                        .stroke(
-                            LinearGradient(
-                                colors: [
-                                    Color.white.opacity(0.8),
-                                    Color.white.opacity(0.3),
-                                    Color.white.opacity(0.1)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 4
+            Spacer().frame(height: 55)
+
+            ZStack {
+                Circle()
+                    .stroke(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.8),
+                                Color.white.opacity(0.3),
+                                Color.white.opacity(0.1)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 4
+                    )
+                    .frame(width: 100, height: 100)
+                    .shadow(color: .white.opacity(0.3), radius: 10)
+
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.4),
+                                Color.white.opacity(0.15)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
                         )
-                        .frame(width: 100, height: 100)
-                        .shadow(color: .white.opacity(0.3), radius: 10)
-                    
-                    // صورة البروفايل
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color.white.opacity(0.4),
-                                    Color.white.opacity(0.15)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 90, height: 90)
-                    
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 40))
-                        .foregroundColor(.white)
-                }
-                
-                // Enter your name text - close to icon
-                Text("Enter your name")
-                    .font(.system(size: 22, weight: .regular))
+                    )
+                    .frame(width: 90, height: 90)
+
+                Image(systemName: "person.fill")
+                    .font(.system(size: 40))
                     .foregroundColor(.white)
-                    .padding(.top, 20)
-                
-                // Text Field with liquid glass effect
-                ZStack {
-                    // Background with glass effect
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color("LightPurple").opacity(0.2))
-                        .background {
-                            RoundedRectangle(cornerRadius: 20)
-                                .glassEffect()
-                        }
-                        .frame(width: 288, height: 47)
-                    
-                    // Text Field on top
-                    ZStack {
-                        if name.isEmpty {
-                            Text("Type your name")
-                                .foregroundColor(.white.opacity(0.5))
-                                .font(.system(size: 17))
-                        }
-                        
-                        TextField("", text: $name)
-                            .font(.system(size: 17))
-                            .foregroundColor(.white)
-                            .tint(.white)
-                            .multilineTextAlignment(.center)
+            }
+
+            Text("Enter your name")
+                .font(.system(size: 22, weight: .regular))
+                .foregroundColor(.white)
+                .padding(.top, 20)
+
+            ZStack {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(textFieldBackgroundColor)
+                    .background {
+                        RoundedRectangle(cornerRadius: 20)
+                            .glassEffect()
                     }
                     .frame(width: 288, height: 47)
-                }
-                .padding(.top, 30)
-                
-                Spacer()
-                    .frame(height: 230)
-                
-                // Continue Button
-                Button(action: {
-                    withAnimation {
-                        currentPage = 2
-                    }
-                }) {
-                    HStack(spacing: 0) {
-                        Spacer().frame(width: 20)
 
-                        Text("Continue")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                        
-                        
-                        Rectangle()
-                            .fill(.white.opacity(0.2))
-                            .frame(width: 1.5)
-                        
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(.white)
-                            .frame(width: 40)
-
-                        Spacer().frame(width: 0)
+                ZStack {
+                    if name.isEmpty {
+                        Text("Type your name")
+                            .foregroundColor(.white.opacity(0.5))
+                            .font(.system(size: 17))
                     }
-                    .frame(width: 181, height: 44)
+
+                    TextField("", text: $name)
+                        .font(.system(size: 17))
+                        .foregroundColor(.white)
+                        .tint(.white)
+                        .multilineTextAlignment(.center)
                 }
-                .disabled(name.isEmpty)
-                .buttonStyle(.plain)
-                .background {
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(name.isEmpty ? buttonBackgroundColor.opacity(0.3) : buttonBackgroundColor)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(name.isEmpty ? buttonBorderColor.opacity(0.3) : buttonBorderColor, lineWidth: 1)
-                        )
+                .frame(width: 288, height: 47)
+            }
+            .padding(.top, 30)
+
+            Spacer().frame(height: 230)
+
+            Button(action: {
+                withAnimation { currentPage = 2 }
+            }) {
+                HStack(spacing: 0) {
+                    Spacer().frame(width: 20)
+
+                    Text("Continue")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+
+                    Rectangle()
+                        .fill(.white.opacity(0.2))
+                        .frame(width: 1.5)
+
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(width: 40)
                 }
-                .opacity(name.isEmpty ? 0.5 : 1.0)
-                
+                .frame(width: 181, height: 44)
+            }
+            .disabled(!isNameValid)
+            .buttonStyle(.plain)
+            .background {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(!isNameValid ? buttonBackgroundColor.opacity(0.3) : buttonBackgroundColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(!isNameValid ? buttonBorderColor.opacity(0.3) : buttonBorderColor, lineWidth: 1)
+                    )
+            }
+            .opacity(!isNameValid ? 0.5 : 1.0)
+
             Spacer()
         }
     }
@@ -172,12 +155,9 @@ struct WelcomeView: View {
     // MARK: - Page 2 Content
     private var secondPageContent: some View {
         VStack(spacing: 0) {
-            // Back Button
             HStack {
                 Button(action: {
-                    withAnimation {
-                        currentPage = 1
-                    }
+                    withAnimation { currentPage = 1 }
                 }) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 20, weight: .semibold))
@@ -190,13 +170,11 @@ struct WelcomeView: View {
                 Spacer()
             }
 
-            // Select work days title
             Text("Select work days")
                 .font(.system(size: 22, weight: .semibold))
                 .foregroundColor(.white)
                 .padding(.top, 25)
 
-            // First row of day buttons (4 circles)
             HStack(spacing: 40) {
                 ForEach(["Sun", "Mon", "Tue", "Wed"], id: \.self) { day in
                     Circle()
@@ -210,24 +188,16 @@ struct WelcomeView: View {
                         .overlay(
                             Text(WorkDay.localizedName(for: day))
                                 .font(.system(size: 15, weight: .regular))
-                                .foregroundColor(
-                                    selectedDays.contains(day)
-                                    ? .white
-                                    : .white.opacity(0.3)
-                                )
+                                .foregroundColor(selectedDays.contains(day) ? .white : .white.opacity(0.3))
                         )
                         .onTapGesture {
-                            if selectedDays.contains(day) {
-                                selectedDays.remove(day)
-                            } else {
-                                selectedDays.insert(day)
-                            }
+                            if selectedDays.contains(day) { selectedDays.remove(day) }
+                            else { selectedDays.insert(day) }
                         }
                 }
             }
             .padding(.top, 30)
 
-            // Second row of day buttons (3 circles)
             HStack(spacing: 40) {
                 ForEach(["Thu", "Fri", "Sat"], id: \.self) { day in
                     Circle()
@@ -241,30 +211,21 @@ struct WelcomeView: View {
                         .overlay(
                             Text(WorkDay.localizedName(for: day))
                                 .font(.system(size: 15, weight: .regular))
-                                .foregroundColor(
-                                    selectedDays.contains(day)
-                                    ? .white
-                                    : .white.opacity(0.3)
-                                )
+                                .foregroundColor(selectedDays.contains(day) ? .white : .white.opacity(0.3))
                         )
                         .onTapGesture {
-                            if selectedDays.contains(day) {
-                                selectedDays.remove(day)
-                            } else {
-                                selectedDays.insert(day)
-                            }
+                            if selectedDays.contains(day) { selectedDays.remove(day) }
+                            else { selectedDays.insert(day) }
                         }
                 }
             }
             .padding(.top, 20)
 
-            // Select work end time title
             Text("Select work end time")
                 .font(.system(size: 22, weight: .semibold))
                 .foregroundColor(.white)
                 .padding(.top, 60)
 
-            // Time Picker
             DatePicker("", selection: $workEndTime, displayedComponents: .hourAndMinute)
                 .datePickerStyle(.wheel)
                 .labelsHidden()
@@ -272,10 +233,8 @@ struct WelcomeView: View {
                 .frame(width: 304, height: 215)
                 .padding(.top, 20)
 
-            Spacer()
-                .frame(height: 100)
+            Spacer().frame(height: 100)
 
-            // Let's start Button (✅ RTL/LTR صحيح)
             Button(action: {
                 completeOnboarding()
                 onComplete()
@@ -286,20 +245,28 @@ struct WelcomeView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.leading, 20)
-                    
+
                     Rectangle()
                         .fill(.white.opacity(0.2))
                         .frame(width: 1.5)
-                    
+
                     Image(systemName: "chevron.right")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(width: 40)
                 }
-                .frame(minWidth: 200, maxWidth: 120, minHeight: 44, maxHeight: 44)
+                .frame(width: 181, height: 44)
             }
             .disabled(selectedDays.isEmpty)
             .buttonStyle(.plain)
+            .background {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(selectedDays.isEmpty ? buttonBackgroundColor.opacity(0.3) : buttonBackgroundColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(selectedDays.isEmpty ? buttonBorderColor.opacity(0.3) : buttonBorderColor, lineWidth: 1)
+                    )
+            }
             .opacity(selectedDays.isEmpty ? 0.5 : 1.0)
 
             Spacer()
