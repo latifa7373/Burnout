@@ -138,7 +138,7 @@ struct WelcomeView: View {
                             .font(.system(size: 18, weight: .medium))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
-                            .padding(.leading, 20)
+                        
                         
                         Rectangle()
                             .fill(.white.opacity(0.2))
