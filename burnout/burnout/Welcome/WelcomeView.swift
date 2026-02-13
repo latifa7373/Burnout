@@ -28,91 +28,94 @@ struct WelcomeView: View {
                 secondPageContent
             }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 
-    // MARK: - Page 1 Content
+    // MARK: - Page 1 Content (button fixed position)
     private var firstPageContent: some View {
-        VStack(spacing: 0) {
-            Text("Let's get to know\nyou")
-                .font(.system(size: 35, weight: .semibold))
-                .foregroundColor(.white)
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .minimumScaleFactor(0.85)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.horizontal, 24)
-                .padding(.top, 120)
-
-            Spacer().frame(height: 55)
-
-            ZStack {
-                Circle()
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.8),
-                                Color.white.opacity(0.3),
-                                Color.white.opacity(0.1)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 4
-                    )
-                    .frame(width: 100, height: 100)
-                    .shadow(color: .white.opacity(0.3), radius: 10)
-
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.4),
-                                Color.white.opacity(0.15)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 90, height: 90)
-
-                Image(systemName: "person.fill")
-                    .font(.system(size: 40))
+        ZStack(alignment: .bottom) {
+            VStack(spacing: 0) {
+                Text("Let's get to know\nyou")
+                    .font(.system(size: 35, weight: .semibold))
                     .foregroundColor(.white)
-            }
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.85)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 120)
 
-            Text("Enter your name")
-                .font(.system(size: 22, weight: .regular))
-                .foregroundColor(.white)
-                .padding(.top, 20)
-
-            ZStack {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(textFieldBackgroundColor)
-                    .background {
-                        RoundedRectangle(cornerRadius: 20)
-                            .glassEffect()
-                    }
-                    .frame(width: 288, height: 47)
+                Spacer().frame(height: 55)
 
                 ZStack {
-                    if name.isEmpty {
-                        Text("Type your name")
-                            .foregroundColor(.white.opacity(0.5))
-                            .font(.system(size: 17))
-                    }
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.8),
+                                    Color.white.opacity(0.3),
+                                    Color.white.opacity(0.1)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 4
+                        )
+                        .frame(width: 100, height: 100)
+                        .shadow(color: .white.opacity(0.3), radius: 10)
 
-                    TextField("", text: $name)
-                        .font(.system(size: 17))
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.4),
+                                    Color.white.opacity(0.15)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 90, height: 90)
+
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 40))
                         .foregroundColor(.white)
-                        .tint(.white)
-                        .multilineTextAlignment(.center)
                 }
-                .frame(width: 288, height: 47)
-            }
-            .padding(.top, 30)
 
-            Spacer(minLength: 0)
+                Text("Enter your name")
+                    .font(.system(size: 22, weight: .regular))
+                    .foregroundColor(.white)
+                    .padding(.top, 20)
+
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(textFieldBackgroundColor)
+                        .background {
+                            RoundedRectangle(cornerRadius: 20)
+                                .glassEffect()
+                        }
+                        .frame(width: 288, height: 47)
+
+                    ZStack {
+                        if name.isEmpty {
+                            Text("Type your name")
+                                .foregroundColor(.white.opacity(0.5))
+                                .font(.system(size: 17))
+                        }
+
+                        TextField("", text: $name)
+                            .font(.system(size: 17))
+                            .foregroundColor(.white)
+                            .tint(.white)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(width: 288, height: 47)
+                }
+                .padding(.top, 30)
+
+                Spacer()
+            }
 
             Button(action: {
                 withAnimation { currentPage = 2 }
@@ -178,9 +181,7 @@ struct WelcomeView: View {
                 ForEach(["Sun", "Mon", "Tue", "Wed"], id: \.self) { day in
                     Circle()
                         .stroke(
-                            selectedDays.contains(day)
-                            ? Color("LightPurple")
-                            : Color("LightPurple").opacity(0.3),
+                            selectedDays.contains(day) ? Color("LightPurple") : Color("LightPurple").opacity(0.3),
                             lineWidth: 3
                         )
                         .frame(width: 50, height: 50)
@@ -201,9 +202,7 @@ struct WelcomeView: View {
                 ForEach(["Thu", "Fri", "Sat"], id: \.self) { day in
                     Circle()
                         .stroke(
-                            selectedDays.contains(day)
-                            ? Color("LightPurple")
-                            : Color("LightPurple").opacity(0.3),
+                            selectedDays.contains(day) ? Color("LightPurple") : Color("LightPurple").opacity(0.3),
                             lineWidth: 3
                         )
                         .frame(width: 50, height: 50)
