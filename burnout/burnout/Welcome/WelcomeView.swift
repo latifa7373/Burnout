@@ -8,9 +8,6 @@ struct WelcomeView: View {
     @State private var selectedDays: Set<String> = [] // Selected work days
     @State private var workEndTime = Date() // Work end time
     
-    // Completion handler
-    var onComplete: (() -> Void)?
-    
     // MARK: - Colors (عدل الألوان من هنا)
     private let textFieldBackgroundColor = Color.white.opacity(0.05)  // لون خلفية حقل الإدخال
     private let buttonBackgroundColor = Color.white.opacity(0.5)     // لون خلفية زر Continue
@@ -34,8 +31,7 @@ struct WelcomeView: View {
     
     // MARK: - Page 1 Content
     private var firstPageContent: some View {
-            
-            VStack(spacing: 0) {
+        VStack(spacing: 0) {
                 // Title - positioned in upper third
                 Text("Let's get to know\nyou")
                     .font(.system(size: 40, weight: .semibold))
@@ -163,12 +159,6 @@ struct WelcomeView: View {
                 }
                 .opacity(name.isEmpty ? 0.5 : 1.0)
                 
-                Spacer()
-            }
-            .disabled(!isNameValid)
-            .buttonStyle(.plain)
-            .opacity(!isNameValid ? 0.5 : 1.0)
-
             Spacer()
         }
     }
@@ -281,7 +271,8 @@ struct WelcomeView: View {
 
             // Let's start Button (✅ RTL/LTR صحيح)
             Button(action: {
-                onComplete?()
+                completeOnboarding()
+                onComplete()
             }) {
                 HStack(spacing: 0) {
                     Text("Let's start")
@@ -308,8 +299,15 @@ struct WelcomeView: View {
             Spacer()
         }
     }
+
+    private func completeOnboarding() {
+        UserDefaults.standard.set(name, forKey: "userName")
+        UserDefaults.standard.set(Array(selectedDays), forKey: "workDays")
+        UserDefaults.standard.set(workEndTime, forKey: "workEndTime")
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+    }
 }
 
 #Preview {
-    WelcomeView()
+    WelcomeView(onComplete: {})
 }
