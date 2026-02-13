@@ -2,9 +2,9 @@ import SwiftUI
 import Charts
 import SwiftData
 
-struct BurnoutChartScreen: View {
+struct InsightView: View {
 
-    @StateObject private var vm = BurnoutViewModel()
+    @StateObject private var vm = InsightViewModel()
     @Query private var dailyRiskScores: [DailyRiskScore]
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
@@ -66,7 +66,7 @@ struct BurnoutChartScreen: View {
 }
 
 // MARK: - Small Views
-private extension BurnoutChartScreen {
+private extension InsightView {
 
     // MARK: - Chart line styling
     var gridLineStyle: StrokeStyle { StrokeStyle(lineWidth: 1, dash: [4, 4]) }
@@ -510,8 +510,19 @@ private struct ExpandableInfoCard: View {
             endPoint: .bottomTrailing
         )
     }
+    
+    struct BuuApp: App {
+        var body: some Scene {
+            WindowGroup {
+                NavigationStack {
+                    InsightView()
+                }
+            }
+        }
+    }
+
 }
 
 #Preview {
-    BurnoutChartScreen()
+    InsightView()
 }

@@ -8,3 +8,9 @@ struct ChartDataPoint: Identifiable {
     let isWorkDay: Bool
     let hasResponse: Bool  // true فقط إذا فيه DailyRiskScore محفوظ لليوم
 }
+enum TimeFilter: String, CaseIterable, Identifiable {
+    case week = "Week"
+    case month = "Month"
+
+    var id: String { rawValue }
+}

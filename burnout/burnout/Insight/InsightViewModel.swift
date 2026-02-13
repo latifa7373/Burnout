@@ -2,7 +2,7 @@ import Foundation
 import Combine
 import SwiftData
 
-final class BurnoutViewModel: ObservableObject {
+final class InsightViewModel: ObservableObject {
 
     @Published var selectedFilter: TimeFilter = .week
     @Published var data: [ChartDataPoint] = []

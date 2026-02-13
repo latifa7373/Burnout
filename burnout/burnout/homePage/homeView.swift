@@ -170,7 +170,7 @@ private extension homeView {
     
     var insightsCard: some View {
         NavigationLink {
-            BurnoutChartScreen()
+            InsightView()
         } label: {
             ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 22, style: .continuous)
