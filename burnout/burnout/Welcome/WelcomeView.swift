@@ -112,7 +112,7 @@ struct WelcomeView: View {
             }
             .padding(.top, 30)
 
-            Spacer().frame(height: 230)
+            Spacer(minLength: 0)
 
             Button(action: {
                 withAnimation { currentPage = 2 }
@@ -147,8 +147,7 @@ struct WelcomeView: View {
                     )
             }
             .opacity(!isNameValid ? 0.5 : 1.0)
-
-            Spacer()
+            .padding(.bottom, 48)
         }
     }
 
@@ -233,7 +232,7 @@ struct WelcomeView: View {
                 .frame(width: 304, height: 215)
                 .padding(.top, 20)
 
-            Spacer().frame(height: 100)
+            Spacer(minLength: 0)
 
             Button(action: {
                 completeOnboarding()
@@ -268,8 +267,7 @@ struct WelcomeView: View {
                     )
             }
             .opacity(selectedDays.isEmpty ? 0.5 : 1.0)
-
-            Spacer()
+            .padding(.bottom, 48)
         }
     }
 
