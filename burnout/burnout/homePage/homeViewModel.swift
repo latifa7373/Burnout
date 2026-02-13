@@ -54,14 +54,13 @@ final class HomeViewModel: ObservableObject {
         // آخر 3 أيام فقط (rolling window)
         let last3Days = Array(dailyRiskScores.sorted { $0.date > $1.date }.prefix(3))
         let avgRiskScore = last3Days.reduce(0.0) { $0 + $1.riskScore } / Double(last3Days.count)
-        let clampedAverage = min(max(avgRiskScore, 1.0), 5.0)
 
-        // تحويل من نطاق 1-5 إلى 0-1 للـ gauge
-        model.riskIndex = (clampedAverage - 1.0) / 4.0
+        // نخزن المتوسط الخام كما هو (آخر 3 أيام)
+        model.riskIndex = avgRiskScore
 
         // التصنيف حسب المتوسط (بدقة منزلة عشرية واحدة):
         // Low: ...2.0, Medium: 2.1...3.4, High: 3.5...
-        let roundedAverage = (clampedAverage * 10).rounded() / 10
+        let roundedAverage = (avgRiskScore * 10).rounded() / 10
         if roundedAverage <= 2.0 {
             model.riskLabel = "Low"
             model.riskSubtitle = "Your average over the past 3 days is in the low range."

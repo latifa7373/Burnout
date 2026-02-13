@@ -6,7 +6,7 @@ import Combine
 
 struct BurnoutDashboardModel: Equatable {
     var userName: String
-    var riskIndex: Double // 0.0 - 1.0
+    var riskIndex: Double // Raw average risk score based on the latest 3 days
     var riskLabel: String
     var riskSubtitle: String
 

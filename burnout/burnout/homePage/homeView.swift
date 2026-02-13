@@ -300,7 +300,9 @@ private extension homeView {
         private let needleWidth: CGFloat = 4
         
         private var needleAngle: Double {
-            let v = min(max(value, 0), 1)
+            // value هنا يمثل متوسط risk score الخام (1...5)،
+            // لذلك نحوله محليًا إلى 0...1 فقط لغرض رسم الإبرة.
+            let v = min(max((value - 1.0) / 4.0, 0.0), 1.0)
             return -90 + (180 * v)
             
         }
