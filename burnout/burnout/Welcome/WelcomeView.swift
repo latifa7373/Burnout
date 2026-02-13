@@ -34,7 +34,7 @@ struct WelcomeView: View {
         VStack(spacing: 0) {
                 // Title - positioned in upper third
                 Text("Let's get to know\nyou")
-                    .font(.system(size: 40, weight: .semibold))
+                    .font(.system(size: 35, weight: .semibold))
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .padding(.top, 120)
