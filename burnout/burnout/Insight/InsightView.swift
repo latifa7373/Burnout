@@ -91,6 +91,27 @@ private extension InsightView {
             endPoint: .bottomTrailing
         )
     }
+    var riskLineLegend: some View {
+        HStack(spacing: 8) {
+            Canvas { context, size in
+                var path = Path()
+                path.move(to: CGPoint(x: 0, y: size.height / 2))
+                path.addLine(to: CGPoint(x: size.width, y: size.height / 2))
+                context.stroke(
+                    path,
+                    with: .color(Color.red.opacity(0.9)),
+                    style: StrokeStyle(lineWidth: 1.5, dash: [6, 4])
+                )
+            }
+            .frame(width: 24, height: 6)
+
+            Text("Risk line")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.white.opacity(0.68))
+
+            Spacer()
+        }
+    }
 
     var glassStroke: Color { .white.opacity(0.10) }
     var glassShadow: Color { .black.opacity(0.18) }
@@ -186,6 +207,17 @@ private extension InsightView {
                 fixedYAxis
                     .frame(width: fixedYAxisWidth, height: 240)
             }
+
+            VStack(alignment: .leading, spacing: 6) {
+                riskLineLegend
+
+                Text("Note: High means your score is above the risk line for 3 days in a row.")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.white.opacity(0.62))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.top, 2)
+
         }
         .padding(14)
         .background(glassCard(RoundedRectangle(cornerRadius: 22)))
