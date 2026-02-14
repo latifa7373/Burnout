@@ -88,6 +88,7 @@ struct WelcomeView: View {
                     .foregroundColor(.white)
                     .padding(.top, 20)
 
+                // Fixed: prompt is now inside TextField, so first tap focuses correctly.
                 ZStack {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(textFieldBackgroundColor)
@@ -97,20 +98,20 @@ struct WelcomeView: View {
                         }
                         .frame(width: 288, height: 47)
 
-                    ZStack {
-                        if name.isEmpty {
-                            Text("Type your name")
-                                .foregroundColor(.white.opacity(0.5))
-                                .font(.system(size: 17))
-                        }
-
-                        TextField("", text: $name)
+                    TextField(
+                        "",
+                        text: $name,
+                        prompt: Text("Type your name")
+                            .foregroundColor(.white.opacity(0.5))
                             .font(.system(size: 17))
-                            .foregroundColor(.white)
-                            .tint(.white)
-                            .multilineTextAlignment(.center)
-                    }
+                    )
+                    .font(.system(size: 17))
+                    .foregroundColor(.white)
+                    .tint(.white)
+                    .multilineTextAlignment(.center)
                     .frame(width: 288, height: 47)
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.never)
                 }
                 .padding(.top, 30)
 
@@ -165,7 +166,9 @@ struct WelcomeView: View {
                         .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .padding(.leading, 25)
                 .padding(.top, 10)
 
@@ -281,3 +284,4 @@ struct WelcomeView: View {
 #Preview {
     WelcomeView(onComplete: {})
 }
+
