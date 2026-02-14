@@ -17,7 +17,7 @@ struct ProfileView: View {
                     HStack {
                         Spacer()
                         
-                        Text("Profile")
+                        Text(String(localized: "Profile"))
                             .font(.system(size: viewModel.model.headerFontSize, weight: .bold))
                             .foregroundColor(.white)
                         
@@ -68,7 +68,7 @@ struct ProfileView: View {
                         
                         // Name
                         if viewModel.isEditing {
-                            TextField("Your name", text: $viewModel.tempUserName)
+                            TextField(String(localized: "Your name"), text: $viewModel.tempUserName)
                                 .font(.system(size: viewModel.model.titleFontSize, weight: .bold))
                                 .foregroundColor(.white)
                                 .multilineTextAlignment(.center)
@@ -116,7 +116,7 @@ struct ProfileView: View {
                             }
                             
                             VStack(alignment: .leading, spacing: 5) {
-                                Text("End of Work Time")
+                                Text(String(localized: "End of Work Time"))
                                     .font(.system(size: 14))
                                     .foregroundColor(.white.opacity(0.7))
                                 
@@ -163,7 +163,7 @@ struct ProfileView: View {
                                         .foregroundColor(.white)
                                 }
                                 
-                                Text("Weekly Work Days")
+                                Text(String(localized: "Weekly Work Days"))
                                     .font(.system(size: 14))
                                     .foregroundColor(.white.opacity(0.7))
                                 
@@ -182,7 +182,7 @@ struct ProfileView: View {
                                                         .font(.system(size: 20))
                                                         .foregroundColor(viewModel.tempSelectedWorkDays.contains(day) ? insightsAccent : .white.opacity(0.5))
                                                     
-                                                    Text(day.rawValue)
+                                                    Text(day.localizedName)
                                                         .font(.system(size: 16, weight: .medium))
                                                         .foregroundColor(.white)
                                                     
@@ -200,7 +200,7 @@ struct ProfileView: View {
                                 }
                             } else {
                                 if viewModel.model.selectedWorkDays.isEmpty {
-                                    Text("No work days selected")
+                                    Text(String(localized: "No work days selected"))
                                         .font(.system(size: 16))
                                         .foregroundColor(.white.opacity(0.6))
                                         .padding(.leading, 65)
@@ -212,7 +212,7 @@ struct ProfileView: View {
                                                     .font(.system(size: 14))
                                                     .foregroundColor(insightsAccent)
                                                 
-                                                Text(day.rawValue)
+                                                Text(day.localizedName)
                                                     .font(.system(size: 16, weight: .medium))
                                                     .foregroundColor(.white)
                                             }

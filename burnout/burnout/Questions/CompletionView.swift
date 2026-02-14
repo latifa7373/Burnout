@@ -13,7 +13,7 @@ struct CompletionView: View {
             
             VStack(spacing: 0) {
                 // Header بدون back button (سيتم استخدام toolbar)
-                CheckHeader(title: "Today's Check", showBack: false) {
+                CheckHeader(title: String(localized: "Today's Check"), showBack: false) {
                     dismiss()
                 }
                 
@@ -27,21 +27,21 @@ struct CompletionView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                     
                     VStack(spacing: 6) {
-                        Text("All done !")
+                        Text(String(localized: "All done !"))
                             .font(.system(size: 22, weight: .semibold))
                             .foregroundStyle(.white)
                             .multilineTextAlignment(.center)
                             .lineLimit(1)
                             .minimumScaleFactor(0.85)
                         
-                        Text("come back")
+                        Text(String(localized: "come back"))
                             .font(.system(size: 18, weight: .regular))
                             .foregroundStyle(.white)
                             .multilineTextAlignment(.center)
                             .lineLimit(1)
                             .minimumScaleFactor(0.85)
                         
-                        Text("tomorrow")
+                        Text(String(localized: "tomorrow"))
                             .font(.system(size: 18, weight: .regular))
                             .foregroundStyle(.white)
                             .multilineTextAlignment(.center)
@@ -57,7 +57,7 @@ struct CompletionView: View {
                 
                 // Button
                 Button { dismiss() } label: {
-                    Text("Done")
+                    Text(String(localized: "Done"))
                         .font(.title3)
                         .fontWeight(.semibold)
                         .foregroundStyle(.white)

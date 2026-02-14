@@ -35,7 +35,7 @@ struct WelcomeView: View {
     private var firstPageContent: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 0) {
-                Text("Let's get to know\nyou")
+                Text(String(localized: "Let's get to know\nyou"))
                     .font(.system(size: 35, weight: .semibold))
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
@@ -83,7 +83,7 @@ struct WelcomeView: View {
                         .foregroundColor(.white)
                 }
 
-                Text("Enter your name")
+                Text(String(localized: "Enter your name"))
                     .font(.system(size: 22, weight: .regular))
                     .foregroundColor(.white)
                     .padding(.top, 20)
@@ -101,7 +101,7 @@ struct WelcomeView: View {
                     TextField(
                         "",
                         text: $name,
-                        prompt: Text("Type your name")
+                        prompt: Text(String(localized: "Type your name"))
                             .foregroundColor(.white.opacity(0.5))
                             .font(.system(size: 17))
                     )
@@ -124,7 +124,7 @@ struct WelcomeView: View {
                 HStack(spacing: 0) {
                     Spacer().frame(width: 20)
 
-                    Text("Continue")
+                    Text(String(localized: "Continue"))
                         .font(.system(size: 18, weight: .medium))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -175,7 +175,7 @@ struct WelcomeView: View {
                 Spacer()
             }
 
-            Text("Select work days")
+            Text(String(localized: "Select work days"))
                 .font(.system(size: 22, weight: .semibold))
                 .foregroundColor(.white)
                 .padding(.top, 25)
@@ -222,7 +222,7 @@ struct WelcomeView: View {
             }
             .padding(.top, 20)
 
-            Text("Select work end time")
+            Text(String(localized: "Select work end time"))
                 .font(.system(size: 22, weight: .semibold))
                 .foregroundColor(.white)
                 .padding(.top, 60)
@@ -241,7 +241,7 @@ struct WelcomeView: View {
                 onComplete()
             }) {
                 HStack(spacing: 0) {
-                    Text("Let's start")
+                    Text(String(localized: "Let's start"))
                         .font(.system(size: 18, weight: .medium))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)

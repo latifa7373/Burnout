@@ -11,21 +11,21 @@ final class HomeViewModel: ObservableObject {
         userName: "Nourah",
         riskIndex: 0.0,
         riskLabel: "Pending",
-        riskSubtitle: "Complete 3 daily check-ins to see your burnout status.",
+        riskSubtitle: String(localized: "Complete 3 daily check-ins to see your burnout status."),
         statusCard: InfoCardModel(
-            title: "Status",
-            actionText: "learn more",
-            badgeTitle: "Pending",
-            bodyText: "Your status will appear after 3 check-ins."
+            title: String(localized: "Status"),
+            actionText: String(localized: "learn more"),
+            badgeTitle: String(localized: "Pending"),
+            bodyText: String(localized: "Your status will appear after 3 check-ins.")
         ),
         todayCard: InfoCardModel(
-            title: "Today's\nCheck",
-            actionText: "View more",
-            badgeTitle: "All Done",
-            bodyText: "Keep checking in daily for more accurate insights"
+            title: String(localized: "Today's\nCheck"),
+            actionText: String(localized: "View more"),
+            badgeTitle: String(localized: "All Done"),
+            bodyText: String(localized: "Keep checking in daily for more accurate insights")
         ),
         insights: InsightsModel(
-            averageLabel: "Insights",
+            averageLabel: String(localized: "Insights"),
             averagePercent: 0,
             bars: [
                 BarModel(height: 0, color: Color(red: 98/255.0, green: 62/255.0, blue: 83/255.0)),
@@ -70,14 +70,14 @@ final class HomeViewModel: ObservableObject {
 
         let roundedAverage = (avgRiskScore * 10).rounded() / 10
         if roundedAverage <= 2.0 {
-            model.riskLabel = "Low"
-            model.riskSubtitle = "Your average over the past 3 days is in the low range."
+            model.riskLabel = String(localized: "Low")
+            model.riskSubtitle = String(localized: "Your average over the past 3 days is in the low range.")
         } else if roundedAverage <= 3.4 {
-            model.riskLabel = "Medium"
-            model.riskSubtitle = "Your average over the past 3 days is in the medium range."
+            model.riskLabel = String(localized: "Medium")
+            model.riskSubtitle = String(localized: "Your average over the past 3 days is in the medium range.")
         } else {
-            model.riskLabel = "High"
-            model.riskSubtitle = "Your average over the past 3 days is in the high range."
+            model.riskLabel = String(localized: "High")
+            model.riskSubtitle = String(localized: "Your average over the past 3 days is in the high range.")
         }
 
         updateStatusCard(riskLabel: model.riskLabel, riskSubtitle: model.riskSubtitle)
@@ -88,13 +88,13 @@ final class HomeViewModel: ObservableObject {
         hasMinimumData = false
 
         model.riskIndex = 0.0
-        model.riskLabel = "Pending"
-        model.riskSubtitle = "Complete 3 daily check-ins to see your burnout status."
+        model.riskLabel = String(localized: "Pending")
+        model.riskSubtitle = String(localized: "Complete 3 daily check-ins to see your burnout status.")
 
-        model.statusCard.badgeTitle = "Pending"
-        model.statusCard.bodyText = "Your status will appear after 3 check-ins."
+        model.statusCard.badgeTitle = String(localized: "Pending")
+        model.statusCard.bodyText = String(localized: "Your status will appear after 3 check-ins.")
 
-        model.insights.averageLabel = "Insights"
+        model.insights.averageLabel = String(localized: "Insights")
         model.insights.averagePercent = 0
 
         updateBarsOnly(riskScores: riskScores)
@@ -102,14 +102,14 @@ final class HomeViewModel: ObservableObject {
 
     private func updateStatusCard(riskLabel: String, riskSubtitle: String) {
         switch riskLabel {
-        case "High":
-            model.statusCard.badgeTitle = "High Risk"
+        case String(localized: "High"):
+            model.statusCard.badgeTitle = String(localized: "High Risk")
             model.statusCard.bodyText = riskSubtitle
-        case "Medium":
-            model.statusCard.badgeTitle = "Medium Risk"
+        case String(localized: "Medium"):
+            model.statusCard.badgeTitle = String(localized: "Medium Risk")
             model.statusCard.bodyText = riskSubtitle
         default:
-            model.statusCard.badgeTitle = "Low Risk"
+            model.statusCard.badgeTitle = String(localized: "Low Risk")
             model.statusCard.bodyText = riskSubtitle
         }
     }
@@ -119,7 +119,7 @@ final class HomeViewModel: ObservableObject {
         let rawPercent = Int(((avgScore - 1.0) / 4.0) * 100)
         let percent = min(max(rawPercent, 0), 100)
 
-        model.insights.averageLabel = "Insights"
+        model.insights.averageLabel = String(localized: "Insights")
         model.insights.averagePercent = percent
 
         updateBarsOnly(riskScores: riskScores)
@@ -146,11 +146,11 @@ final class HomeViewModel: ObservableObject {
 
     func updateTodayCard() {
         if hasCompletedCheckIn {
-            model.todayCard.badgeTitle = "All Done"
-            model.todayCard.bodyText = "Keep checking in daily for more accurate insights"
+            model.todayCard.badgeTitle = String(localized: "All Done")
+            model.todayCard.bodyText = String(localized: "Keep checking in daily for more accurate insights")
         } else {
-            model.todayCard.badgeTitle = "Check-In Pending"
-            model.todayCard.bodyText = "Take a minute to complete it when you're ready."
+            model.todayCard.badgeTitle = String(localized: "Check-In Pending")
+            model.todayCard.bodyText = String(localized: "Take a minute to complete it when you're ready.")
         }
     }
 
@@ -166,16 +166,16 @@ final class HomeViewModel: ObservableObject {
         hasCompletedCheckIn = false
 
         model.riskIndex = 0.0
-        model.riskLabel = "No Status"
-        model.riskSubtitle = "Answer today's questions to see your burnout status."
+        model.riskLabel = String(localized: "No Status")
+        model.riskSubtitle = String(localized: "Answer today's questions to see your burnout status.")
 
-        model.statusCard.badgeTitle = "No Status Yet"
-        model.statusCard.bodyText = "Complete your first check-in to unlock your personalized status."
+        model.statusCard.badgeTitle = String(localized: "No Status Yet")
+        model.statusCard.bodyText = String(localized: "Complete your first check-in to unlock your personalized status.")
 
-        model.todayCard.badgeTitle = "Start Now"
-        model.todayCard.bodyText = "Answer today's questions to generate your first insights."
+        model.todayCard.badgeTitle = String(localized: "Start Now")
+        model.todayCard.bodyText = String(localized: "Answer today's questions to generate your first insights.")
 
-        model.insights.averageLabel = "Insights"
+        model.insights.averageLabel = String(localized: "Insights")
         model.insights.averagePercent = 0
         model.insights.bars = [
             BarModel(height: 0, color: Color(red: 98/255.0, green: 62/255.0, blue: 83/255.0)),

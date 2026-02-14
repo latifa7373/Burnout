@@ -21,7 +21,7 @@ struct StatusView: View {
                     // Header مطابق لصفحة Profile (حجم 22، .bold، متمركز داخل HStack مع نفس الـ paddings)
                     HStack {
                         Spacer()
-                        Text("Status")
+                        Text(String(localized: "Status"))
                             .font(.system(size: 22, weight: .bold))
                             .foregroundColor(.white)
                         Spacer()
@@ -32,10 +32,10 @@ struct StatusView: View {
 
                     // ✅ Card 1 (NOW ON TOP): What does Low/Medium/High mean?
                     ExpandableInfoCard(
-                        title: "What does “Low / Medium / High” mean?",
-                        actionCollapsed: "Read more",
-                        actionExpanded: "Show less",
-                        bodyText: """
+                        title: String(localized: "What does “Low / Medium / High” mean?"),
+                        actionCollapsed: String(localized: "Read more"),
+                        actionExpanded: String(localized: "Show less"),
+                        bodyText: String(localized: """
 
 Low: Your recent responses indicate stable patterns.
 
@@ -44,15 +44,15 @@ Medium : Your recent responses suggest increased strain. Consider healthy recove
 High :Your recent responses indicate elevated strain levels. Consider prioritizing rest and seeking support if needed.
 
 Note : Burn-Out provides general insights and is not a medical diagnosis
-"""
+""")
                     )
 
                     // ✅ Card 2 (NOW BELOW): How is this calculated?
                     ExpandableInfoCard(
-                        title: "How is this calculated?",
-                        actionCollapsed: "Read more",
-                        actionExpanded: "Show less",
-                        bodyText: """
+                        title: String(localized: "How is this calculated?"),
+                        actionCollapsed: String(localized: "Read more"),
+                        actionExpanded: String(localized: "Show less"),
+                        bodyText: String(localized: """
 Your answers use a 1–5 scale from Never (1) to Extremely (5)
 
 Each day, you answer 3 questions then we calculate the daily average: 
@@ -67,7 +67,7 @@ and we label the daily result as:
 
 Your status changes only after the same level repeats for 3 days in a row. 
 
-"""
+""")
                     )
 
                     Spacer(minLength: 20)

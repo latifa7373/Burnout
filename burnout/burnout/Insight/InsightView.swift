@@ -11,7 +11,7 @@ struct InsightView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("Burnout Insights")
+            Text(String(localized: "Burnout Insights"))
                 .font(.system(size: 24, weight: .semibold))
                 .foregroundStyle(.white.opacity(0.95))
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -105,7 +105,7 @@ private extension InsightView {
             }
             .frame(width: 24, height: 6)
 
-            Text("Risk line")
+            Text(String(localized: "Risk line"))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.white.opacity(0.68))
 
@@ -133,11 +133,11 @@ private extension InsightView {
     var filterMenu: some View {
         Menu {
             ForEach(TimeFilter.allCases, id: \.self) { filter in
-                Button(filter.rawValue) { vm.setFilter(filter) }
+                Button(filter.localizedTitle) { vm.setFilter(filter) }
             }
         } label: {
             HStack(spacing: 8) {
-                Text(vm.selectedFilter.rawValue)
+                Text(vm.selectedFilter.localizedTitle)
                 Image(systemName: "chevron.down")
                     .font(.system(size: 13, weight: .semibold))
             }
@@ -184,9 +184,7 @@ private extension InsightView {
                 let workDaysCount = vm.data.filter { $0.isWorkDay }.count
                 let answeredDaysCount = vm.data.filter { $0.hasResponse }.count
 
-                Text(vm.selectedFilter == .month
-                     ? "Answered days: \(answeredDaysCount) • Work days this month: \(workDaysCount) • Total days: \(vm.data.count)"
-                     : "Answered days: \(answeredDaysCount) • Work days shown: \(workDaysCount)")
+                Text(summaryText(answeredDaysCount: answeredDaysCount, workDaysCount: workDaysCount))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(.white.opacity(0.7))
                 Spacer()
@@ -211,7 +209,7 @@ private extension InsightView {
             VStack(alignment: .leading, spacing: 6) {
                 riskLineLegend
 
-                Text("Note: High means your score is above the risk line for 3 days in a row.")
+                Text(String(localized: "Note: High means your score is above the risk line for 3 days in a row."))
                     .font(.system(size: 11))
                     .foregroundStyle(.white.opacity(0.62))
                     .fixedSize(horizontal: false, vertical: true)
@@ -230,7 +228,7 @@ private extension InsightView {
 
     var chartCore: some View {
         Chart {
-            RuleMark(y: .value("Danger Line", 70))
+            RuleMark(y: .value(String(localized: "Danger Line"), 70))
                 .foregroundStyle(Color.red.opacity(0.9))
                 .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [6, 4]))
 
@@ -239,8 +237,8 @@ private extension InsightView {
                     let percentage = riskScoreToPercentage(item.riskScore)
 
                     BarMark(
-                        x: .value("Index", index),
-                        y: .value("Risk %", percentage)
+                        x: .value(String(localized: "Index"), index),
+                        y: .value(String(localized: "Risk %"), percentage)
                     )
                     .foregroundStyle(Color(red: 0.30, green: 0.60, blue: 0.60))
                     .cornerRadius(6)
@@ -314,10 +312,10 @@ private extension InsightView {
 
     var aboutSection: some View {
         ExpandableInfoCard(
-            title: "About Burnout",
-            actionCollapsed: "Read more",
-            actionExpanded: "Show less",
-            bodyText: """
+            title: String(localized: "About Burnout"),
+            actionCollapsed: String(localized: "Read more"),
+            actionExpanded: String(localized: "Show less"),
+            bodyText: String(localized: """
 Burnout is an occupational phenomenon — not a medical condition.
 It results from chronic workplace stress that has not been successfully managed.
 
@@ -325,8 +323,8 @@ According to ICD-11, burnout is characterized by:
 • Feelings of energy depletion or exhaustion
 • Increased mental distance or cynicism toward work
 • Reduced professional efficacy
-""",
-            linkTitle: "Learn more — World Health Organization (ICD-11)",
+"""),
+            linkTitle: String(localized: "Learn more — World Health Organization (ICD-11)"),
             linkURL: URL(string: "https://www.who.int/standards/classifications/frequently-asked-questions/burn-out-an-occupational-phenomenon")!,
             openURL: { url in openURL(url) }
         )
@@ -335,6 +333,27 @@ According to ICD-11, burnout is characterized by:
 
     var appBackground: some View {
         Color(red: 44/255, green: 30/255, blue: 47/255).ignoresSafeArea()
+    }
+
+    func summaryText(answeredDaysCount: Int, workDaysCount: Int) -> String {
+        if vm.selectedFilter == .month {
+            let format = String(localized: "Answered days: %lld • Work days this month: %lld • Total days: %lld")
+            return String(
+                format: format,
+                locale: Locale.current,
+                Int64(answeredDaysCount),
+                Int64(workDaysCount),
+                Int64(vm.data.count)
+            )
+        }
+
+        let format = String(localized: "Answered days: %lld • Work days shown: %lld")
+        return String(
+            format: format,
+            locale: Locale.current,
+            Int64(answeredDaysCount),
+            Int64(workDaysCount)
+        )
     }
 }
 

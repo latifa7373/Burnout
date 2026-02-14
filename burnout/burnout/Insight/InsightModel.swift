@@ -14,4 +14,13 @@ enum TimeFilter: String, CaseIterable, Identifiable {
     case month = "Month"
 
     var id: String { rawValue }
+
+    var localizedTitle: String {
+        switch self {
+        case .week:
+            return String(localized: "Week")
+        case .month:
+            return String(localized: "Month")
+        }
+    }
 }

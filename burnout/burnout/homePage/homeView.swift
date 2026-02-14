@@ -86,12 +86,12 @@ private extension homeView {
 
     var header: some View {
         VStack(alignment: .center, spacing: 6) {
-            Text("Hello, \(viewModel.model.userName)")
+            Text(String(format: String(localized: "Hello, %@"), locale: Locale.current, viewModel.model.userName))
                 .font(.system(size: 28, weight: .regular))
                 .foregroundColor(.white)
                 .padding(.bottom, 3)
 
-            Text("Here is your Burnout Risk Index")
+            Text(String(localized: "Here is your Burnout Risk Index"))
                 .font(.system(size: 18, weight: .regular))
                 .foregroundColor(.white.opacity(0.85))
         }
@@ -117,8 +117,8 @@ private extension homeView {
 
             Text(
                 viewModel.hasMinimumData
-                ? "your average on the past 3 days looks"
-                : "complete 3 daily check-ins to unlock your average"
+                ? String(localized: "your average on the past 3 days looks")
+                : String(localized: "complete 3 daily check-ins to unlock your average")
             )
             .font(.system(size: 15))
             .foregroundColor(.white.opacity(0.6))
@@ -172,12 +172,12 @@ private extension homeView {
 
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
-                        Text("Burnout Insights")
+                        Text(String(localized: "Burnout Insights"))
                             .font(.system(size: 16, weight: .medium))
                             .foregroundColor(.white)
                         Spacer()
                         HStack(spacing: 2) {
-                            Text("View details")
+                            Text(String(localized: "View details"))
                                 .font(.system(size: 10))
                                 .foregroundColor(.white.opacity(0.55))
                             Image(systemName: "chevron.forward")
@@ -189,17 +189,17 @@ private extension homeView {
                     HStack(alignment: .bottom, spacing: 20) {
                         VStack(alignment: .leading, spacing: 4) {
                             if viewModel.isFirstTimeUser {
-                                Text("No data yet")
+                                Text(String(localized: "No data yet"))
                                     .font(.system(size: 28, weight: .semibold))
                                     .foregroundColor(.white)
-                                Text("Start with today's check-in")
+                                Text(String(localized: "Start with today's check-in"))
                                     .font(.system(size: 12))
                                     .foregroundColor(.white.opacity(0.75))
                             } else if !viewModel.hasMinimumData {
-                                Text("Pending")
+                                Text(String(localized: "Pending"))
                                     .font(.system(size: 28, weight: .semibold))
                                     .foregroundColor(.white)
-                                Text("Need 3 days to calculate average")
+                                Text(String(localized: "Need 3 days to calculate average"))
                                     .font(.system(size: 12))
                                     .foregroundColor(.white.opacity(0.75))
                             } else {

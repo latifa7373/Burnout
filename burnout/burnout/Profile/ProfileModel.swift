@@ -39,6 +39,25 @@ extension Weekday {
         case .saturday: return 7
         }
     }
+
+    var localizedName: String {
+        switch self {
+        case .sunday:
+            return String(localized: "Sunday")
+        case .monday:
+            return String(localized: "Monday")
+        case .tuesday:
+            return String(localized: "Tuesday")
+        case .wednesday:
+            return String(localized: "Wednesday")
+        case .thursday:
+            return String(localized: "Thursday")
+        case .friday:
+            return String(localized: "Friday")
+        case .saturday:
+            return String(localized: "Saturday")
+        }
+    }
 }
 
 

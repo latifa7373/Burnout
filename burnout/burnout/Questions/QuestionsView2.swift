@@ -123,7 +123,7 @@ struct QuestionView: View {
 
             VStack(spacing: 0) {
                 // Header بدون back button (QuestionsFlowView لديه toolbar)
-                CheckHeader(title: "Today's Check", showBack: false) {
+                CheckHeader(title: String(localized: "Today's Check"), showBack: false) {
                     dismiss()
                 }
 
@@ -131,7 +131,7 @@ struct QuestionView: View {
 
                 // السؤال الثابت
                 VStack(spacing: 16) {
-                    Text("How much does this describe you?")
+                    Text(String(localized: "How much does this describe you?"))
                         .font(.title3)
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
@@ -185,7 +185,7 @@ struct QuestionView: View {
                     Button {
                         onContinue(Int(sliderValue))
                     } label: {
-                        Text("Continue")
+                        Text(String(localized: "Continue"))
                             .font(.title3)
                             .fontWeight(.semibold)
                             .foregroundStyle(.white)
