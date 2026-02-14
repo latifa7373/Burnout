@@ -6,7 +6,10 @@ import Combine
 
 struct BurnoutDashboardModel: Equatable {
     var userName: String
-    var riskIndex: Double // Raw average risk score based on the latest 3 days
+
+    // Final risk score used by gauge/status (average of last 3 daily averages)
+    // Expected range: 1...5 when enough data exists
+    var riskIndex: Double
     var riskLabel: String
     var riskSubtitle: String
 
@@ -34,4 +37,3 @@ struct BarModel: Equatable, Identifiable {
     var height: CGFloat
     var color: Color
 }
-

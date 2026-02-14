@@ -18,14 +18,17 @@ struct StatusView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
 
-                    // Title (centered to match other top screen titles)
-                    Text("Status")
-                        .font(.system(size: 26, weight: .semibold))
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .multilineTextAlignment(.center)
-                        .padding(.top, 4)
-                        .padding(.bottom, 2)
+                    // Header مطابق لصفحة Profile (حجم 22، .bold، متمركز داخل HStack مع نفس الـ paddings)
+                    HStack {
+                        Spacer()
+                        Text("Status")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
+                    .padding(.bottom, 30)
 
                     // ✅ Card 1 (NOW ON TOP): What does Low/Medium/High mean?
                     ExpandableInfoCard(

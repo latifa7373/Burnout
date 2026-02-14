@@ -19,17 +19,16 @@ struct homeView: View {
                 )
                 .ignoresSafeArea()
 
-                    VStack(alignment: .center, spacing: 22) {
-                        topBar
-                        header
-                        gaugeSection
-                        infoCards
-                        insightsCard
-                    }
-                    .padding(.horizontal, 25)
-                    .padding(.top, 10)
-                    .padding(.bottom, 30)
-               
+                VStack(alignment: .center, spacing: 22) {
+                    topBar
+                    header
+                    gaugeSection
+                    infoCards
+                    insightsCard
+                }
+                .padding(.horizontal, 25)
+                .padding(.top, 10)
+                .padding(.bottom, 30)
             }
         }
         .onAppear {
@@ -48,9 +47,8 @@ struct homeView: View {
     }
 }
 
-// MARK: - ألوان موحّدة (الـ gauge)
+// MARK: - Colors
 private enum Palette {
-    // Low = أخضر (left) ، High = بنفسجي (right)
     static let green = LogoPalette.three
     static let purple = LogoPalette.two
 
@@ -59,7 +57,6 @@ private enum Palette {
     }
 }
 
-// MARK: - ألوان اللوقو (الشارت تحت)
 private enum LogoPalette {
     static let one = Color(red: 98/255.0, green: 62/255.0, blue: 83/255.0)
     static let two = Color(red: 58/255.0, green: 27/255.0, blue: 79/255.0)
@@ -87,14 +84,14 @@ private extension homeView {
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .padding(.top, 4)
     }
-    
+
     var header: some View {
         VStack(alignment: .center, spacing: 6) {
             Text("Hello, \(viewModel.model.userName)")
                 .font(.system(size: 28, weight: .regular))
                 .foregroundColor(.white)
                 .padding(.bottom, 3)
-            
+
             Text("Here is your Burnout Risk Index")
                 .font(.system(size: 18, weight: .regular))
                 .foregroundColor(.white.opacity(0.85))
@@ -103,12 +100,12 @@ private extension homeView {
         .frame(maxWidth: .infinity, alignment: .center)
         .padding(.top, 8)
     }
-    
+
     var gaugeSection: some View {
         VStack(alignment: .center, spacing: 14) {
             BurnoutGaugeView(value: gaugeValue)
                 .frame(height: 140)
-            
+
             Text(viewModel.model.riskLabel)
                 .font(.system(size: 18, weight: .medium))
                 .foregroundColor(.white)
@@ -117,23 +114,23 @@ private extension homeView {
                 .background(
                     Capsule()
                         .fill(Color.gray.opacity(0.1))
-                
                 )
-            
-            // ✅ جملة ثابتة تحت الـ gauge (بدون شرح مطوّل)
-            Text("your average on the past 3 days looks")
-                .font(.system(size: 15))
-                .foregroundColor(.white.opacity(0.6))
+
+            Text(
+                viewModel.hasMinimumData
+                ? "your average on the past 3 days looks"
+                : "complete 3 daily check-ins to unlock your average"
+            )
+            .font(.system(size: 15))
+            .foregroundColor(.white.opacity(0.6))
         }
         .frame(maxWidth: .infinity, alignment: .center)
         .multilineTextAlignment(.center)
         .padding(.top, -25)
     }
-    
+
     var infoCards: some View {
         HStack(spacing: 16) {
-
-            // ✅ Status يفتح صفحة StatusDetailView
             NavigationLink {
                 StatusView()
             } label: {
@@ -147,7 +144,6 @@ private extension homeView {
             }
             .buttonStyle(.plain)
 
-            // ✅ Today's Check يفتح صفحة QuestionsFlowView
             NavigationLink {
                 QuestionsFlowView()
             } label: {
@@ -165,9 +161,6 @@ private extension homeView {
         .padding(.top, 4)
     }
 
-
-
-    
     var insightsCard: some View {
         NavigationLink {
             InsightView()
@@ -175,7 +168,7 @@ private extension homeView {
             ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 22, style: .continuous)
                     .fill(cardGradient)
-                
+
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
                         Text("Burnout Insights")
@@ -191,49 +184,53 @@ private extension homeView {
                                 .foregroundColor(.white.opacity(0.55))
                         }
                     }
-                
-                HStack(alignment: .bottom, spacing: 20) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        if !viewModel.isFirstTimeUser {
-                            Text(viewModel.model.insights.averageLabel)
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundColor(.white.opacity(0.8))
+
+                    HStack(alignment: .bottom, spacing: 20) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            if viewModel.isFirstTimeUser {
+                                Text("No data yet")
+                                    .font(.system(size: 28, weight: .semibold))
+                                    .foregroundColor(.white)
+                                Text("Start with today's check-in")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.white.opacity(0.75))
+                            } else if !viewModel.hasMinimumData {
+                                Text("Pending")
+                                    .font(.system(size: 28, weight: .semibold))
+                                    .foregroundColor(.white)
+                                Text("Need 3 days to calculate average")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.white.opacity(0.75))
+                            } else {
+                                Text(viewModel.model.insights.averageLabel)
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundColor(.white.opacity(0.8))
+                                Text("\(viewModel.model.insights.averagePercent)%")
+                                    .font(.system(size: 32, weight: .semibold))
+                                    .foregroundColor(.white)
+                            }
                         }
-                        
-                        if viewModel.isFirstTimeUser {
-                            Text("No data yet")
-                                .font(.system(size: 28, weight: .semibold))
-                                .foregroundColor(.white)
-                            Text("Start with today's check-in")
-                                .font(.system(size: 12))
-                                .foregroundColor(.white.opacity(0.75))
-                        } else {
-                            Text("\(viewModel.model.insights.averagePercent)%")
-                                .font(.system(size: 32, weight: .semibold))
-                                .foregroundColor(.white)
+
+                        Spacer()
+
+                        HStack(alignment: .bottom, spacing: 10) {
+                            ForEach(viewModel.model.insights.bars) { bar in
+                                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                    .fill(bar.color)
+                                    .frame(width: 14, height: bar.height)
+                            }
                         }
                     }
-                    
-                    Spacer()
-                    
-                    HStack(alignment: .bottom, spacing: 10) {
-                        ForEach(viewModel.model.insights.bars) { bar in
-                            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                                .fill(bar.color)
-                                .frame(width: 14, height: bar.height)
-                        }
-                    }
+                    .padding(.top, 16)
                 }
-                .padding(.top, 16)
+                .padding(16)
             }
-            .padding(16)
-        }
-        .frame(height: Layout.squareCard)
-        .padding(.top, 10)
+            .frame(height: Layout.squareCard)
+            .padding(.top, 10)
         }
         .buttonStyle(.plain)
     }
-    
+
     private var cardGradient: LinearGradient {
         LinearGradient(
             colors: [
@@ -244,31 +241,32 @@ private extension homeView {
             endPoint: .bottomTrailing
         )
     }
-    
+
     // MARK: - Components
     private struct BurnoutGaugeView: View {
-        var value: Double = 0.2
-        
+        var value: Double = 0.0
+
         private let lineWidth: CGFloat = 14
         private let gaugeSize: CGFloat = 180
-        
+
         private var arcCenterY: CGFloat { gaugeSize / 2 + lineWidth - 8 }
         private var radius: CGFloat { gaugeSize / 2 - 10 }
-        
+
         var body: some View {
             ZStack {
                 GaugeArcShape(radius: radius, centerY: arcCenterY)
                     .stroke(Palette.gaugeGradient, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
                     .frame(width: gaugeSize, height: gaugeSize / 2 + lineWidth)
-                
+
                 GaugeNeedleView(
                     value: value,
                     pivotY: arcCenterY,
                     frameWidth: gaugeSize,
-                    frameHeight: gaugeSize / 2 + lineWidth
+                    frameHeight: gaugeSize / 2 + lineWidth,
+                    radius: radius
                 )
                 .frame(width: gaugeSize, height: gaugeSize / 2 + lineWidth)
-                
+
                 Circle()
                     .fill(Color.white)
                     .frame(width: 12, height: 12)
@@ -277,11 +275,11 @@ private extension homeView {
             .frame(width: gaugeSize, height: gaugeSize / 2 + lineWidth)
         }
     }
-    
+
     private struct GaugeArcShape: Shape {
         var radius: CGFloat
         var centerY: CGFloat
-        
+
         func path(in rect: CGRect) -> Path {
             var p = Path()
             let center = CGPoint(x: rect.midX, y: centerY)
@@ -289,63 +287,59 @@ private extension homeView {
             return p
         }
     }
-    
+
+    // Needle is now a line drawn from pivot to arc direction.
+    // This keeps it always inside gauge bounds for 0...100%.
     private struct GaugeNeedleView: View {
         var value: Double
         var pivotY: CGFloat
         var frameWidth: CGFloat
         var frameHeight: CGFloat
-        
-        private let needleHeight: CGFloat = 44
-        private let needleWidth: CGFloat = 4
-        
-        private var needleAngle: Double {
-            // value هنا يمثل متوسط risk score الخام (1...5)،
-            // لذلك نحوله محليًا إلى 0...1 فقط لغرض رسم الإبرة.
-            let v = min(max((value - 1.0) / 4.0, 0.0), 1.0)
-            return -90 + (180 * v)
-            
-        }
-        
-        var body: some View {
-            ZStack {
-                // ضع الإبرة بحيث تكون قاعدتها (bottom center) على نفس pivot الخاص بالدائرة البيضاء
-                NeedleShape()
-                    .fill(Color.white)
-                    .frame(width: needleWidth, height: needleHeight)
-                    // اجعل مركز الإبرة أعلى الـ pivot بنصف طولها => bottom = pivotY
-                    .position(x: frameWidth / 2, y: pivotY - needleHeight / 2)
-                    .rotationEffect(.degrees(needleAngle), anchor: .bottom)
+        var radius: CGFloat
+
+        private var normalizedValue: CGFloat {
+            if value > 1 {
+                return CGFloat(min(max((value - 1.0) / 4.0, 0.0), 1.0))
+            } else {
+                return CGFloat(min(max(value, 0.0), 1.0))
             }
-            .frame(width: frameWidth, height: frameHeight, alignment: .topLeading)
+        }
+
+        var body: some View {
+            let cx = frameWidth / 2
+            let cy = pivotY
+
+            // 0 -> left, 0.5 -> top, 1 -> right
+            let angle = Double.pi - (Double(normalizedValue) * Double.pi)
+            let needleLength = radius - 10
+
+            let tipX = cx + CGFloat(cos(angle)) * needleLength
+            let tipY = cy - CGFloat(sin(angle)) * needleLength
+
+            return ZStack {
+                Path { p in
+                    p.move(to: CGPoint(x: cx, y: cy))
+                    p.addLine(to: CGPoint(x: tipX, y: tipY))
+                }
+                .stroke(Color.white, style: StrokeStyle(lineWidth: 3.5, lineCap: .round, lineJoin: .round))
+            }
+            .frame(width: frameWidth, height: frameHeight)
         }
     }
-    
-    private struct NeedleShape: Shape {
-        func path(in rect: CGRect) -> Path {
-            var p = Path()
-            p.move(to: CGPoint(x: rect.midX, y: rect.minY))
-            p.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-            p.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-            p.closeSubpath()
-            return p
-        }
-    }
-    
+
     private struct SmallInfoCard: View {
         let title: String
         let actionText: String
         let badgeTitle: String
         let bodyText: String
-        
+
         var body: some View {
             ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 22, style: .continuous)
                     .fill(cardGradient)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
+
                 VStack(alignment: .leading, spacing: -3) {
-                    // العنوان + View more بنفس السطر
                     ZStack(alignment: .topLeading) {
                         Text(title)
                             .font(.system(size: 16, weight: .medium))
@@ -364,25 +358,21 @@ private extension homeView {
                         .frame(maxWidth: .infinity, alignment: .topTrailing)
                     }
 
-                    
-                    // مسافة بسيطة
                     Spacer().frame(height: 8)
-                    
+
                     Text(badgeTitle)
                         .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.white.opacity(0.7))
-                    
-                    // نزّل النص تحت شوي
+
                     Spacer().frame(height: 8)
-                    
+
                     Text(bodyText)
                         .font(.system(size: 12))
                         .foregroundColor(.white.opacity(0.7))
                         .fixedSize(horizontal: false, vertical: true)
-                    
+
                     Spacer()
-                    
-                    // اللوقو أسفل يمين
+
                     HStack {
                         Spacer()
                         Image("logo")
@@ -393,10 +383,9 @@ private extension homeView {
                 }
                 .padding(16)
             }
-            // ✅ اجعل الخلفية تملأ المساحة حتى لو المحتوى قليل (Status vs Today's Check)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        
+
         private var cardGradient: LinearGradient {
             LinearGradient(
                 colors: [
@@ -415,3 +404,4 @@ private extension homeView {
         homeView()
     }
 }
+

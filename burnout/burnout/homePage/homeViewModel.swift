@@ -6,16 +6,17 @@ import SwiftData
 final class HomeViewModel: ObservableObject {
     @Published var hasCompletedCheckIn: Bool = true
     @Published var isFirstTimeUser: Bool = true
+    @Published var hasMinimumData: Bool = false // true only when we have 3 days
     @Published var model: BurnoutDashboardModel = BurnoutDashboardModel(
         userName: "Nourah",
         riskIndex: 0.0,
-        riskLabel: "Low",
-        riskSubtitle: "Some signs are starting to slightly increase",
+        riskLabel: "Pending",
+        riskSubtitle: "Complete 3 daily check-ins to see your burnout status.",
         statusCard: InfoCardModel(
             title: "Status",
             actionText: "learn more",
-            badgeTitle: "Low Risk",
-            bodyText: "Your responses indicate that your productivity level is currently normal"
+            badgeTitle: "Pending",
+            bodyText: "Your status will appear after 3 check-ins."
         ),
         todayCard: InfoCardModel(
             title: "Today's\nCheck",
@@ -24,21 +25,22 @@ final class HomeViewModel: ObservableObject {
             bodyText: "Keep checking in daily for more accurate insights"
         ),
         insights: InsightsModel(
-            averageLabel: "Average",
-            averagePercent: 30,
+            averageLabel: "Insights",
+            averagePercent: 0,
             bars: [
-                BarModel(height: 28, color: Color(red: 98/255.0, green: 62/255.0, blue: 83/255.0)),
-                BarModel(height: 42, color: Color(red: 58/255.0, green: 27/255.0, blue: 79/255.0)),
-                BarModel(height: 56, color: Color(red: 22/255.0, green: 46/255.0, blue: 53/255.0))
+                BarModel(height: 0, color: Color(red: 98/255.0, green: 62/255.0, blue: 83/255.0)),
+                BarModel(height: 0, color: Color(red: 58/255.0, green: 27/255.0, blue: 79/255.0)),
+                BarModel(height: 0, color: Color(red: 22/255.0, green: 46/255.0, blue: 53/255.0))
             ]
         )
     )
 
     private let defaults = UserDefaults.standard
 
-    // الحساب يعتمد فقط على متوسط آخر 3 أيام (نافذة متحركة)
+    // IMPORTANT:
+    // Each DailyRiskScore.riskScore should be the daily average (sum of answers / 3).
+    // Final dashboard risk = average of last 3 daily averages.
     func calculateRiskFromLastWeek(dailyRiskScores: [DailyRiskScore]) {
-        // أول دخول بدون أي إجابات محفوظة: اعرض حالة ترحيبية بدل النتائج.
         if dailyRiskScores.isEmpty {
             applyFirstTimeState()
             return
@@ -46,20 +48,26 @@ final class HomeViewModel: ObservableObject {
 
         isFirstTimeUser = false
 
-        // التحقق من حالة اليوم
-        let today = Calendar.current.startOfDay(for: Date())
-        hasCompletedCheckIn = dailyRiskScores.contains { Calendar.current.startOfDay(for: $0.date) == today }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        hasCompletedCheckIn = dailyRiskScores.contains { calendar.startOfDay(for: $0.date) == today }
         updateTodayCard()
 
-        // آخر 3 أيام فقط (rolling window)
-        let last3Days = Array(dailyRiskScores.sorted { $0.date > $1.date }.prefix(3))
-        let avgRiskScore = last3Days.reduce(0.0) { $0 + $1.riskScore } / Double(last3Days.count)
+        let sorted = dailyRiskScores.sorted { $0.date > $1.date }
 
-        // نخزن المتوسط الخام كما هو (آخر 3 أيام)
+        // Always show bars for available data, but do not show final status/average before 3 days.
+        if sorted.count < 3 {
+            applyInsufficientDataState(riskScores: sorted)
+            return
+        }
+
+        hasMinimumData = true
+        let last3Days = Array(sorted.prefix(3))
+
+        // average of 3 daily averages
+        let avgRiskScore = last3Days.reduce(0.0) { $0 + $1.riskScore } / 3.0
         model.riskIndex = avgRiskScore
 
-        // التصنيف حسب المتوسط (بدقة منزلة عشرية واحدة):
-        // Low: ...2.0, Medium: 2.1...3.4, High: 3.5...
         let roundedAverage = (avgRiskScore * 10).rounded() / 10
         if roundedAverage <= 2.0 {
             model.riskLabel = "Low"
@@ -72,39 +80,52 @@ final class HomeViewModel: ObservableObject {
             model.riskSubtitle = "Your average over the past 3 days is in the high range."
         }
 
-        // تحديث Status Card
         updateStatusCard(riskLabel: model.riskLabel, riskSubtitle: model.riskSubtitle)
-
-        // تحديث Insights
         updateInsights(riskScores: last3Days)
     }
-    
+
+    private func applyInsufficientDataState(riskScores: [DailyRiskScore]) {
+        hasMinimumData = false
+
+        model.riskIndex = 0.0
+        model.riskLabel = "Pending"
+        model.riskSubtitle = "Complete 3 daily check-ins to see your burnout status."
+
+        model.statusCard.badgeTitle = "Pending"
+        model.statusCard.bodyText = "Your status will appear after 3 check-ins."
+
+        model.insights.averageLabel = "Insights"
+        model.insights.averagePercent = 0
+
+        updateBarsOnly(riskScores: riskScores)
+    }
+
     private func updateStatusCard(riskLabel: String, riskSubtitle: String) {
-        // ✅ اجعل كارد Status يعكس نفس حالة الـ gauge تمامًا
         switch riskLabel {
         case "High":
             model.statusCard.badgeTitle = "High Risk"
             model.statusCard.bodyText = riskSubtitle
         case "Medium":
             model.statusCard.badgeTitle = "Medium Risk"
-            model.statusCard.bodyText = riskSubtitle.isEmpty ? "Some early signs are showing. Try recovery habits." : riskSubtitle
+            model.statusCard.bodyText = riskSubtitle
         default:
             model.statusCard.badgeTitle = "Low Risk"
             model.statusCard.bodyText = riskSubtitle
         }
     }
-    
-    private func updateInsights(riskScores: [DailyRiskScore]) {
-        // حساب متوسط آخر 3 أيام
-        let avgScore = riskScores.isEmpty ? 0.0 :
-            riskScores.reduce(0.0) { $0 + $1.riskScore } / Double(riskScores.count)
 
-        // تحويل Risk Score (1-5) إلى نسبة مئوية (0-100)
+    private func updateInsights(riskScores: [DailyRiskScore]) {
+        let avgScore = riskScores.reduce(0.0) { $0 + $1.riskScore } / Double(max(riskScores.count, 1))
         let rawPercent = Int(((avgScore - 1.0) / 4.0) * 100)
         let percent = min(max(rawPercent, 0), 100)
+
+        model.insights.averageLabel = "Insights"
         model.insights.averagePercent = percent
 
-        // تحديث الأعمدة بناءً على آخر 3 أيام
+        updateBarsOnly(riskScores: riskScores)
+    }
+
+    private func updateBarsOnly(riskScores: [DailyRiskScore]) {
         let sortedScores = riskScores.sorted { $0.date > $1.date }
         let last3Days = Array(sortedScores.prefix(3))
 
@@ -122,7 +143,7 @@ final class HomeViewModel: ObservableObject {
             BarModel(height: heights[2], color: Color(red: 22/255.0, green: 46/255.0, blue: 53/255.0))
         ]
     }
-    
+
     func updateTodayCard() {
         if hasCompletedCheckIn {
             model.todayCard.badgeTitle = "All Done"
@@ -132,8 +153,7 @@ final class HomeViewModel: ObservableObject {
             model.todayCard.bodyText = "Take a minute to complete it when you're ready."
         }
     }
-    
-    // تحميل اسم المستخدم
+
     func loadUserName() {
         if let name = defaults.string(forKey: "userName"), !name.isEmpty {
             model.userName = name
@@ -142,6 +162,7 @@ final class HomeViewModel: ObservableObject {
 
     private func applyFirstTimeState() {
         isFirstTimeUser = true
+        hasMinimumData = false
         hasCompletedCheckIn = false
 
         model.riskIndex = 0.0
@@ -156,6 +177,11 @@ final class HomeViewModel: ObservableObject {
 
         model.insights.averageLabel = "Insights"
         model.insights.averagePercent = 0
+        model.insights.bars = [
+            BarModel(height: 0, color: Color(red: 98/255.0, green: 62/255.0, blue: 83/255.0)),
+            BarModel(height: 0, color: Color(red: 58/255.0, green: 27/255.0, blue: 79/255.0)),
+            BarModel(height: 0, color: Color(red: 22/255.0, green: 46/255.0, blue: 53/255.0))
+        ]
     }
 }
 
