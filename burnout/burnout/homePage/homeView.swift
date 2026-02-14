@@ -228,23 +228,6 @@ private extension homeView {
             }
             .frame(height: 168)
             .padding(.top, 10)
-            // زخرفة الأعمدة الكبيرة في أسفل يمين الكارد
-            .overlay(alignment: .bottomTrailing) {
-                HStack(alignment: .bottom, spacing: 10) {
-                    RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .fill(LogoPalette.one)
-                        .frame(width: 20, height: 60)
-                    RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .fill(LogoPalette.two)
-                        .frame(width: 20, height: 50)
-                    RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .fill(LogoPalette.three)
-                        .frame(width: 20, height: 70)
-                }
-                .padding(.trailing, 20)
-                .padding(.bottom, 40)
-                .opacity(0.9)
-            }
         }
         .buttonStyle(.plain)
     }
