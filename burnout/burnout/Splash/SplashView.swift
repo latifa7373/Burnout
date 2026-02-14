@@ -2,7 +2,7 @@ import SwiftUI
 import AVKit
 
 struct SplashView: View {
-    @StateObject private var viewModel = SplashViewModel()
+    @ObservedObject var viewModel: SplashViewModel
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding: Bool = false
 
     var body: some View {
@@ -63,6 +63,9 @@ struct SplashView: View {
         }
         .animation(.easeInOut(duration: 0.5), value: viewModel.isFinished)
         .animation(.easeInOut(duration: 0.5), value: hasCompletedOnboarding)
+        .onAppear {
+            viewModel.startIfNeeded()
+        }
     }
 }
 
@@ -72,23 +75,23 @@ struct VideoBackgroundView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
-        
-        if let player = viewModel.createVideoPlayer() {
-            controller.player = player
-        }
-        
+        controller.player = viewModel.player
         viewModel.configurePlayerController(controller)
         
         return controller
     }
     
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
-        // لا نحتاج تحديث
+        // If controller was created before the player was ready, attach it here.
+        if uiViewController.player == nil {
+            uiViewController.player = viewModel.player
+            uiViewController.player?.play()
+        }
     }
 }
 
 #Preview {
-    SplashView()
+    SplashView(viewModel: SplashViewModel())
 }
 
 

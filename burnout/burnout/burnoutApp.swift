@@ -3,6 +3,7 @@ import SwiftData
 
 @main
 struct burnoutApp: App {
+    @StateObject private var splashViewModel = SplashViewModel()
 
     init() {
         UIView.appearance().semanticContentAttribute = .unspecified
@@ -10,7 +11,7 @@ struct burnoutApp: App {
 
     var body: some Scene {
         WindowGroup {
-            SplashView()
+            SplashView(viewModel: splashViewModel)
         }
         .modelContainer(for: [QuestionResponse.self, DailyRiskScore.self])    }
 }

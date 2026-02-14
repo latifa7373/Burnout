@@ -6,9 +6,21 @@ import AVFoundation
 final class SplashViewModel: ObservableObject {
     @Published var isFinished: Bool = false
     let model = SplashModel()
+
+    private(set) var player: AVPlayer?
     private var timer: Timer?
-    
+    private var hasStarted = false
+    private var playbackObserver: NSObjectProtocol?
+
     init() {
+        // Start immediately so the player exists before the AVPlayerViewController is rendered.
+        startIfNeeded()
+    }
+    
+    func startIfNeeded() {
+        guard !hasStarted else { return }
+        hasStarted = true
+        preparePlayerIfNeeded()
         startTimer()
     }
     
@@ -23,32 +35,35 @@ final class SplashViewModel: ObservableObject {
     
     deinit {
         timer?.invalidate()
+        if let observer = playbackObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
-    /// ينشئ AVPlayer للفيديو مع إعدادات التشغيل
-    func createVideoPlayer() -> AVPlayer? {
+    /// ينشئ AVPlayer مرة واحدة فقط مع إعدادات التشغيل
+    private func preparePlayerIfNeeded() {
+        guard player == nil else { return }
         guard let path = Bundle.main.path(forResource: model.videoName, ofType: "mp4") else {
             print("⚠️ ما لقيت ملف الفيديو: \(model.videoName).mp4")
-            return nil
+            return
         }
         
         let url = URL(fileURLWithPath: path)
-        let player = AVPlayer(url: url)
+        let createdPlayer = AVPlayer(url: url)
         
         // نخلي الفيديو يعيد نفسه (loop)
-        NotificationCenter.default.addObserver(
+        playbackObserver = NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
-            object: player.currentItem,
+            object: createdPlayer.currentItem,
             queue: .main
-        ) { [weak player] _ in
-            player?.seek(to: .zero)
-            player?.play()
+        ) { [weak createdPlayer] _ in
+            createdPlayer?.seek(to: .zero)
+            createdPlayer?.play()
         }
         
-        player.rate = model.videoRate
-        player.play()
-        
-        return player
+        createdPlayer.rate = model.videoRate
+        createdPlayer.play()
+        player = createdPlayer
     }
     
     /// يعدل إعدادات AVPlayerViewController
