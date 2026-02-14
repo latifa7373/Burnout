@@ -47,9 +47,13 @@ struct QuestionsFlowView: View {
                     Image(systemName: "chevron.backward")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
             }
         }
+
         .onAppear {
             checkIfAlreadyAnswered()
             if todaysQuestions.isEmpty && !hasAlreadyAnswered {
