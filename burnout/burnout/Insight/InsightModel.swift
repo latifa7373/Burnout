@@ -3,11 +3,12 @@ import Foundation
 struct ChartDataPoint: Identifiable {
     let id = UUID()
     let label: String
-    let riskScore: Double  // Risk Score من DailyRiskScore (1-6)
-    let date: Date  // التاريخ للترتيب
+    let riskScore: Double  // Daily risk score (1...5)
+    let date: Date
     let isWorkDay: Bool
-    let hasResponse: Bool  // true فقط إذا فيه DailyRiskScore محفوظ لليوم
+    let hasResponse: Bool
 }
+
 enum TimeFilter: String, CaseIterable, Identifiable {
     case week = "Week"
     case month = "Month"

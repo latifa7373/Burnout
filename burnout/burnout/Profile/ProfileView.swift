@@ -12,7 +12,6 @@ struct ProfileView: View {
             Color(hex: viewModel.model.backgroundColorHex)
                 .ignoresSafeArea(.all)
             
-            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     // Header
                     HStack {
@@ -228,8 +227,9 @@ struct ProfileView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 40)
+                    Spacer(minLength: 0)
                 }
-            }
+            
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
