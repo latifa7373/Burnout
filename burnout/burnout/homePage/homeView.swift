@@ -66,8 +66,7 @@ private enum LogoPalette {
 // MARK: - Sections
 private extension homeView {
     enum Layout {
-        static let squareCard: CGFloat = 168
-        static let statusCardSize = CGSize(width: 172, height: 176)
+        static let infoCardHeight: CGFloat = 176
     }
 
     var topBar: some View {
@@ -129,8 +128,8 @@ private extension homeView {
         .padding(.top, -25)
     }
 
-    var infoCards: some View {
-        HStack(spacing: 16) {
+   var infoCards: some View {
+        HStack(alignment: .top, spacing: 16) {
             NavigationLink {
                 StatusView()
             } label: {
@@ -140,7 +139,7 @@ private extension homeView {
                     badgeTitle: viewModel.model.statusCard.badgeTitle,
                     bodyText: viewModel.model.statusCard.bodyText
                 )
-                .frame(width: Layout.statusCardSize.width, height: Layout.statusCardSize.height)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .buttonStyle(.plain)
 
@@ -153,13 +152,15 @@ private extension homeView {
                     badgeTitle: viewModel.model.todayCard.badgeTitle,
                     bodyText: viewModel.model.todayCard.bodyText
                 )
-                .frame(width: Layout.squareCard, height: Layout.squareCard)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .buttonStyle(.plain)
         }
-        .frame(maxWidth: .infinity, alignment: .center)
+        .frame(maxWidth: .infinity)
+        .frame(height: 168)   // نفس الارتفاع للكاردين
         .padding(.top, 4)
     }
+
 
     var insightsCard: some View {
         NavigationLink {
@@ -225,7 +226,7 @@ private extension homeView {
                 }
                 .padding(16)
             }
-            .frame(height: Layout.squareCard)
+            .frame(height: 168)
             .padding(.top, 10)
             // زخرفة الأعمدة الكبيرة في أسفل يمين الكارد
             .overlay(alignment: .bottomTrailing) {
