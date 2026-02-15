@@ -71,6 +71,8 @@ struct MotionGlowRing: View {
     }
 }
 
+import SwiftUI
+
 // MARK: - QuestionView
 struct QuestionView: View {
     @Environment(\.dismiss) private var dismiss
@@ -98,7 +100,6 @@ struct QuestionView: View {
 
     var body: some View {
         ZStack {
-            // ✅ نفس خلفية InsightView بالضبط (ثابتة)
             Color(red: 44/255, green: 30/255, blue: 47/255)
                 .ignoresSafeArea()
 
@@ -184,5 +185,7 @@ struct QuestionView: View {
                 .padding(.bottom, 40)
             }
         }
+        .preferredColorScheme(.dark)   // ✅ هذا اللي يخليها نفس النتيجة دايمًا
     }
 }
+
