@@ -103,7 +103,21 @@ struct QuestionView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                CheckHeader(title: String(localized: "Today's Check"), showBack: false) { dismiss() }
+                
+                
+                
+                HStack {
+                    Spacer()
+                    Text(String(localized: "Today's Check"))
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(.white)
+                    Spacer()
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+                .padding(.bottom, 30)
+                
+                
 
                 Spacer()
 
@@ -176,15 +190,15 @@ struct QuestionView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-//        .toolbar {
-//            ToolbarItem(placement: .navigationBarLeading) {
-//                Button { dismiss() } label: {
-//                    Image(systemName: "chevron.backward")
-//                        .font(.system(size: 16, weight: .semibold))
-//                        .foregroundStyle(.white)
-//                }
-//            }
-//        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.backward")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+            }
+        }
     }
 }
 
