@@ -118,7 +118,7 @@ private extension homeView {
             Text(
                 viewModel.hasMinimumData
                 ? String(localized: "your average on the past 3 days looks")
-                : String(localized: "complete 3 daily check-ins to unlock your average")
+                : String(localized: "Complete 3 check-ins to unlock your average")
             )
             .font(.system(size: 15))
             .foregroundColor(.white.opacity(0.6))

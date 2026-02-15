@@ -11,7 +11,8 @@ struct ProfileView: View {
             // خلفية ثابتة باللون المطلوب
             Color(hex: viewModel.model.backgroundColorHex)
                 .ignoresSafeArea(.all)
-            
+
+            ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
                     // Header
                     HStack {
@@ -227,9 +228,9 @@ struct ProfileView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 40)
-                    Spacer(minLength: 0)
                 }
-            
+                .padding(.bottom, 20)
+            }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
