@@ -4,22 +4,23 @@ struct WelcomeView: View {
     let onComplete: () -> Void
 
     @State private var name: String = ""
-    @State private var currentPage: Int = 1 // 1 = first page, 2 = second page
-    @State private var selectedDays: Set<String> = [] // Selected work days
-    @State private var workEndTime = Date() // Work end time
+    @State private var currentPage: Int = 1
+    @State private var selectedDays: Set<String> = []
+    @State private var workEndTime = Date()
 
     private var isNameValid: Bool {
         !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
-    // MARK: - Colors
+    // MARK: - Colors (مثل ثيم QuestionView)
     private let textFieldBackgroundColor = Color.white.opacity(0.05)
     private let buttonBackgroundColor = Color.white.opacity(0.5)
     private let buttonBorderColor = Color.white.opacity(0.9)
 
     var body: some View {
         ZStack {
-            Color("PrimaryColor")
+            // ✅ نفس خلفية QuestionView بالضبط
+            Color(red: 44/255, green: 30/255, blue: 47/255)
                 .ignoresSafeArea()
 
             if currentPage == 1 {
@@ -31,7 +32,7 @@ struct WelcomeView: View {
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 
-    // MARK: - Page 1 Content (button fixed position)
+    // MARK: - Page 1 Content
     private var firstPageContent: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 0) {
@@ -88,7 +89,6 @@ struct WelcomeView: View {
                     .foregroundColor(.white)
                     .padding(.top, 20)
 
-                // Fixed: prompt is now inside TextField, so first tap focuses correctly.
                 ZStack {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(textFieldBackgroundColor)
@@ -230,7 +230,7 @@ struct WelcomeView: View {
             DatePicker("", selection: $workEndTime, displayedComponents: .hourAndMinute)
                 .datePickerStyle(.wheel)
                 .labelsHidden()
-                .colorScheme(.dark)
+                .colorScheme(.dark) // ✅ نخليه غامق عشان يركب مع الثيم
                 .frame(width: 304, height: 215)
                 .padding(.top, 20)
 
@@ -284,4 +284,3 @@ struct WelcomeView: View {
 #Preview {
     WelcomeView(onComplete: {})
 }
-

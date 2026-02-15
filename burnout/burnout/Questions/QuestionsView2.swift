@@ -8,34 +8,29 @@ struct MotionGlowRing: View {
     var size: CGFloat = 320
     var strength: Double // 0...1
 
-    // ✅ لون قريب من ألوان الدائرة (موف/بنفسجي ناعم بدل الأبيض الصريح)
     private let glowColor = Color(red: 0.62, green: 0.56, blue: 0.78)
 
     var body: some View {
         TimelineView(.animation) { context in
             let t = context.date.timeIntervalSinceReferenceDate
 
-            // Motion بسيط جدًا (نخليه أخف شوي)
-            let motion = 3.5 + (strength * 5.5)              // كان 4...10 صار تقريبًا 3.5...9
+            let motion = 3.5 + (strength * 5.5)
             let dx = cos(t * 0.9) * motion
             let dy = sin(t * 1.1) * motion
 
-            // ✅ خففنا التوهج "شوي" فقط + لون أقرب للدائرة
-            let outerBlur   = 11 + (strength * 23)           // كان 12...38 صار 11...34
-            let innerBlur   = 2.5 + (strength * 8)           // كان 3...13 صار 2.5...10.5
+            let outerBlur   = 11 + (strength * 23)
+            let innerBlur   = 2.5 + (strength * 8)
 
-            let glowOpacity = 0.12 + (strength * 0.45)       // كان 0.15...0.70 صار 0.12...0.57
-            let rimOpacity  = 0.16 + (strength * 0.45)       // كان 0.18...0.73 صار 0.16...0.61
+            let glowOpacity = 0.12 + (strength * 0.45)
+            let rimOpacity  = 0.16 + (strength * 0.45)
 
-            let rimWidth    = 2.3 + (strength * 1.8)         // كان 2.5...4.5 صار 2.3...4.1
-            let shadowOp    = 0.08 + (strength * 0.28)       // كان 0.10...0.45 صار 0.08...0.36
-            let shadowRad   = 5 + (strength * 15)            // كان 6...24 صار 5...20
+            let rimWidth    = 2.3 + (strength * 1.8)
+            let shadowOp    = 0.08 + (strength * 0.28)
+            let shadowRad   = 5 + (strength * 15)
 
-            // نبض خفيف (نخففه شوي)
             let pulse = 1.0 + (sin(t * 1.6) * (0.004 + strength * 0.015))
 
             ZStack {
-                // 1) هالة كبيرة ناعمة (Premium glow) — ملونة بدل الأبيض
                 Circle()
                     .fill(
                         RadialGradient(
@@ -49,14 +44,13 @@ struct MotionGlowRing: View {
                             endRadius: size * 0.62
                         )
                     )
-                    .frame(width: size * 1.13, height: size * 1.13) // كان 1.15 خففناه شوي
+                    .frame(width: size * 1.13, height: size * 1.13)
                     .blur(radius: outerBlur)
                     .scaleEffect(pulse)
                     .offset(x: dx, y: dy)
                     .blendMode(.screen)
                     .opacity(0.9)
 
-                // 2) Rim واضح — ملون بدل الأبيض + شادو أخف
                 Circle()
                     .stroke(glowColor.opacity(rimOpacity), lineWidth: rimWidth)
                     .frame(width: size, height: size)
@@ -66,11 +60,10 @@ struct MotionGlowRing: View {
                     .blur(radius: innerBlur)
                     .opacity(0.95)
 
-                // 3) Rim داخلي خفيف — ملون وخفيف
                 Circle()
                     .stroke(glowColor.opacity(0.07 + strength * 0.14), lineWidth: 8)
                     .frame(width: size * 0.92, height: size * 0.92)
-                    .blur(radius: 10 + strength * 8) // كان 10 + 10
+                    .blur(radius: 10 + strength * 8)
                     .opacity(0.65)
             }
             .compositingGroup()
@@ -78,7 +71,6 @@ struct MotionGlowRing: View {
     }
 }
 
-// MARK: - QuestionView
 // MARK: - QuestionView
 struct QuestionView: View {
     @Environment(\.dismiss) private var dismiss
@@ -120,7 +112,7 @@ struct QuestionView: View {
                 VStack(spacing: 16) {
                     Text(String(localized: "How much does this describe you?"))
                         .font(.title3)
-                        .foregroundStyle(.white)   // ✅ مثل InsightView
+                        .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
 
@@ -135,7 +127,7 @@ struct QuestionView: View {
 
                         Text(question)
                             .font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(.white)  // ✅ مثل InsightView
+                            .foregroundStyle(.white)
                             .multilineTextAlignment(.center)
                             .lineLimit(4)
                             .minimumScaleFactor(0.75)
@@ -151,7 +143,7 @@ struct QuestionView: View {
                     Text(sliderText)
                         .font(.title)
                         .fontWeight(.regular)
-                        .foregroundStyle(.white)   // ✅ مثل InsightView
+                        .foregroundStyle(.white)
 
                     CapsuleSlider(
                         value: $sliderValue,
@@ -172,7 +164,7 @@ struct QuestionView: View {
                         Text(String(localized: "Continue"))
                             .font(.title3)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.white)  // ✅ مثل InsightView
+                            .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: 60)
                             .background(
@@ -186,6 +178,25 @@ struct QuestionView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .toolbar {
+            // ✅ نفس زر الباك الدائري بالضبط (نفس اللي كتبناه لصفحة Status)
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.backward")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 36, height: 36)
+                        .background(
+                            Circle()
+                                .fill(Color.white.opacity(0.12))
+                        )
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                        )
+                }
+                .buttonStyle(.plain)
+            }
+        }
     }
 }
-
