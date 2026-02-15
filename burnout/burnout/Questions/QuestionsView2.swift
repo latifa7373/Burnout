@@ -103,9 +103,7 @@ struct QuestionView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                CheckHeader(title: String(localized: "Today's Check"), showBack: false) {
-                    dismiss()
-                }
+                CheckHeader(title: String(localized: "Today's Check"), showBack: false) { dismiss() }
 
                 Spacer()
 
@@ -178,25 +176,18 @@ struct QuestionView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            // ✅ نفس زر الباك الدائري بالضبط (نفس اللي كتبناه لصفحة Status)
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button { dismiss() } label: {
-                    Image(systemName: "chevron.backward")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 36, height: 36)
-                        .background(
-                            Circle()
-                                .fill(Color.white.opacity(0.12))
-                        )
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white.opacity(0.18), lineWidth: 1)
-                        )
-                }
-                .buttonStyle(.plain)
-            }
-        }
+//        .toolbar {
+//            ToolbarItem(placement: .navigationBarLeading) {
+//                Button { dismiss() } label: {
+//                    Image(systemName: "chevron.backward")
+//                        .font(.system(size: 16, weight: .semibold))
+//                        .foregroundStyle(.white)
+//                }
+//            }
+//        }
     }
 }
+
+
+
+
