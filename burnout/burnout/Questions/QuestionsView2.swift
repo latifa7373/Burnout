@@ -103,9 +103,7 @@ struct QuestionView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                
-                
-                
+
                 HStack {
                     Spacer()
                     Text(String(localized: "Today's Check"))
@@ -116,8 +114,6 @@ struct QuestionView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 10)
                 .padding(.bottom, 30)
-                
-                
 
                 Spacer()
 
@@ -189,19 +185,6 @@ struct QuestionView: View {
                 .padding(.bottom, 40)
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button { dismiss() } label: {
-                    Image(systemName: "chevron.backward")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
-                }
-            }
-        }
+        
     }
 }
-
-
-
-
