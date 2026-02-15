@@ -106,16 +106,19 @@ final class InsightViewModel: ObservableObject {
     }
 
     private func loadData() {
-        let calendar = Calendar.current
         let now = Date()
 
         switch selectedFilter {
         case .week:
-            let weekStart = calendar.dateInterval(of: .weekOfYear, for: now)?.start
-                ?? calendar.startOfDay(for: now)
+            // ✅ استخدمي calendar يبدأ من الأحد
+            var weekCalendar = Calendar.current
+            weekCalendar.firstWeekday = 1  // 1 = الأحد
+            
+            let weekStart = weekCalendar.dateInterval(of: .weekOfYear, for: now)?.start
+                ?? weekCalendar.startOfDay(for: now)
 
             let weekScores = dailyRiskScores.filter { score in
-                calendar.isDate(score.date, equalTo: weekStart, toGranularity: .weekOfYear)
+                weekCalendar.isDate(score.date, equalTo: weekStart, toGranularity: .weekOfYear)
             }
 
             let dayFormatter = DateFormatter()
@@ -125,12 +128,12 @@ final class InsightViewModel: ObservableObject {
             var weekData: [ChartDataPoint] = []
 
             for dayOffset in 0..<7 {
-                let targetDate = calendar.date(byAdding: .day, value: dayOffset, to: weekStart) ?? weekStart
-                let dayStart = calendar.startOfDay(for: targetDate)
+                let targetDate = weekCalendar.date(byAdding: .day, value: dayOffset, to: weekStart) ?? weekStart
+                let dayStart = weekCalendar.startOfDay(for: targetDate)
                 let workday = isWorkDay(dayStart)
                 let dayLabel = dayFormatter.string(from: dayStart)
 
-                if let score = weekScores.first(where: { calendar.startOfDay(for: $0.date) == dayStart }) {
+                if let score = weekScores.first(where: { weekCalendar.startOfDay(for: $0.date) == dayStart }) {
                     weekData.append(ChartDataPoint(
                         label: dayLabel,
                         riskScore: score.riskScore,
@@ -152,6 +155,7 @@ final class InsightViewModel: ObservableObject {
             data = weekData
 
         case .month:
+            let calendar = Calendar.current
             let range = calendar.range(of: .day, in: .month, for: selectedMonth) ?? (1..<31)
             let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: selectedMonth)) ?? selectedMonth
 
@@ -189,4 +193,3 @@ final class InsightViewModel: ObservableObject {
         }
     }
 }
-

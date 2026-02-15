@@ -98,12 +98,11 @@ struct QuestionView: View {
 
     var body: some View {
         ZStack {
-            // ✅ نفس خلفية InsightView
+            // ✅ نفس خلفية InsightView بالضبط (ثابتة)
             Color(red: 44/255, green: 30/255, blue: 47/255)
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-
                 HStack {
                     Spacer()
                     Text(String(localized: "Today's Check"))
@@ -185,6 +184,5 @@ struct QuestionView: View {
                 .padding(.bottom, 40)
             }
         }
-        
     }
 }

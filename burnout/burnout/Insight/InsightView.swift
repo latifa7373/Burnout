@@ -91,6 +91,7 @@ private extension InsightView {
             endPoint: .bottomTrailing
         )
     }
+
     var riskLineLegend: some View {
         HStack(spacing: 8) {
             Canvas { context, size in
@@ -226,22 +227,26 @@ private extension InsightView {
         return min(max(percentage, 0), 100)
     }
 
+    // ✅ التعديل هنا فقط: x يعتمد على label بدل index عشان يصير البار فوق الاسم مباشرة
     var chartCore: some View {
         Chart {
             RuleMark(y: .value(String(localized: "Danger Line"), 70))
                 .foregroundStyle(Color.red.opacity(0.9))
                 .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [6, 4]))
 
-            ForEach(Array(vm.data.enumerated()), id: \.element.id) { index, item in
+            ForEach(vm.data, id: \.id) { item in
                 if item.hasResponse {
                     let percentage = riskScoreToPercentage(item.riskScore)
 
                     BarMark(
-                        x: .value(String(localized: "Index"), index),
-                        y: .value(String(localized: "Risk %"), percentage)
+                        x: .value(String(localized: "Label"), item.label),
+                        y: .value(String(localized: "Risk %"), percentage),
+                        width: .fixed(12)   // 👈 أنحف
+
                     )
                     .foregroundStyle(Color(red: 0.30, green: 0.60, blue: 0.60))
                     .cornerRadius(6)
+                    
                 }
             }
         }
@@ -252,8 +257,9 @@ private extension InsightView {
                 AxisValueLabel().foregroundStyle(.clear)
             }
         }
+        // ✅ نخلي الـ AxisMarks بنفس ترتيب labels (ومع ذلك نخفي اللابل الافتراضي لأنك تستخدمين custom)
         .chartXAxis {
-            AxisMarks(values: Array(vm.data.indices)) { _ in
+            AxisMarks(values: vm.data.map { $0.label }) { _ in
                 AxisGridLine(stroke: gridLineStyle).foregroundStyle(gridLineColor)
                 AxisValueLabel().foregroundStyle(.clear)
             }
