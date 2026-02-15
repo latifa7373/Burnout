@@ -79,6 +79,7 @@ struct MotionGlowRing: View {
 }
 
 // MARK: - QuestionView
+// MARK: - QuestionView
 struct QuestionView: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -90,67 +91,51 @@ struct QuestionView: View {
 
     private var sliderText: String {
         switch Int(sliderValue) {
-        case 1:
-            return String(localized: "Never",
-                          comment: "Slider label: Never (1/5)")
-        case 2:
-            return String(localized: "A Little",
-                          comment: "Slider label: A Little (2/5)")
-        case 3:
-            return String(localized: "Somewhat",
-                          comment: "Slider label: Somewhat (3/5)")
-        case 4:
-            return String(localized: "A Lot",
-                          comment: "Slider label: A Lot (4/5)")
-        case 5:
-            return String(localized: "Extremely",
-                          comment: "Slider label: Extremely (5/5)")
-        default:
-            return String(localized: "Somewhat",
-                          comment: "Slider label: default mid value")
+        case 1: return String(localized: "Never", comment: "Slider label: Never (1/5)")
+        case 2: return String(localized: "A Little", comment: "Slider label: A Little (2/5)")
+        case 3: return String(localized: "Somewhat", comment: "Slider label: Somewhat (3/5)")
+        case 4: return String(localized: "A Lot", comment: "Slider label: A Lot (4/5)")
+        case 5: return String(localized: "Extremely", comment: "Slider label: Extremely (5/5)")
+        default: return String(localized: "Somewhat", comment: "Slider label: default mid value")
         }
     }
 
-    // ✅ قوة التوهج مرتبطة بالسلايدر: 1...5 -> 0...1
     private var glowStrength: Double {
         (sliderValue - 1) / 4
     }
 
     var body: some View {
         ZStack {
-            Color("PrimaryColor")
+            // ✅ نفس خلفية InsightView
+            Color(red: 44/255, green: 30/255, blue: 47/255)
                 .ignoresSafeArea()
 
-
             VStack(spacing: 0) {
-                // Header بدون back button (QuestionsFlowView لديه toolbar)
                 CheckHeader(title: String(localized: "Today's Check"), showBack: false) {
                     dismiss()
                 }
 
                 Spacer()
 
-                // السؤال الثابت
                 VStack(spacing: 16) {
                     Text(String(localized: "How much does this describe you?"))
                         .font(.title3)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(.white)   // ✅ مثل InsightView
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
 
-                    // ✅ دائرة ثابتة + سؤال داخلها + Glow يتغير مع السلايدر
                     ZStack {
                         MotionGlowRing(size: 320, strength: glowStrength)
 
                         Image(dimension.imageName)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 320, height: 320) // ثبات الحجم
+                            .frame(width: 320, height: 320)
                             .frame(maxWidth: .infinity, alignment: .center)
 
                         Text(question)
                             .font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(.white)  // ✅ مثل InsightView
                             .multilineTextAlignment(.center)
                             .lineLimit(4)
                             .minimumScaleFactor(0.75)
@@ -162,12 +147,11 @@ struct QuestionView: View {
 
                 Spacer()
 
-                // النص + السلايدر + الزر
                 VStack(spacing: 20) {
                     Text(sliderText)
                         .font(.title)
                         .fontWeight(.regular)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(.white)   // ✅ مثل InsightView
 
                     CapsuleSlider(
                         value: $sliderValue,
@@ -180,7 +164,6 @@ struct QuestionView: View {
                         thumbColor: .white
                     )
                     .padding(.horizontal, 40)
-                    // ✅ ثبّت اتجاه السلايدر (يسار ↔︎ يمين) حتى لو واجهة الجهاز بالعربي
                     .environment(\.layoutDirection, .leftToRight)
 
                     Button {
@@ -189,7 +172,7 @@ struct QuestionView: View {
                         Text(String(localized: "Continue"))
                             .font(.title3)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(.white)  // ✅ مثل InsightView
                             .frame(maxWidth: .infinity)
                             .frame(height: 60)
                             .background(
@@ -206,12 +189,3 @@ struct QuestionView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        QuestionView(
-            dimension: DimensionsData.dimensions[0],
-            question: DimensionsData.dimensions[0].questions[0],
-            onContinue: { print("Response:", $0) }
-        )
-    }
-}
