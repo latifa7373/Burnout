@@ -118,8 +118,9 @@ struct QuestionView: View {
 
     var body: some View {
         ZStack {
-            Color(.primary)
+            Color("PrimaryColor")
                 .ignoresSafeArea()
+
 
             VStack(spacing: 0) {
                 // Header بدون back button (QuestionsFlowView لديه toolbar)
@@ -133,7 +134,7 @@ struct QuestionView: View {
                 VStack(spacing: 16) {
                     Text(String(localized: "How much does this describe you?"))
                         .font(.title3)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
 
@@ -149,7 +150,7 @@ struct QuestionView: View {
 
                         Text(question)
                             .font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.primary)
                             .multilineTextAlignment(.center)
                             .lineLimit(4)
                             .minimumScaleFactor(0.75)
@@ -166,7 +167,7 @@ struct QuestionView: View {
                     Text(sliderText)
                         .font(.title)
                         .fontWeight(.regular)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
 
                     CapsuleSlider(
                         value: $sliderValue,
@@ -188,7 +189,7 @@ struct QuestionView: View {
                         Text(String(localized: "Continue"))
                             .font(.title3)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.primary)
                             .frame(maxWidth: .infinity)
                             .frame(height: 60)
                             .background(
