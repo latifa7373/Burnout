@@ -278,6 +278,7 @@ struct WelcomeView: View {
         UserDefaults.standard.set(Array(selectedDays), forKey: "workDays")
         UserDefaults.standard.set(workEndTime, forKey: "workEndTime")
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+        NotificationManager.requestAndScheduleDailyReminder(at: workEndTime)
     }
 }
 

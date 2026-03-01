@@ -186,55 +186,24 @@ struct QuestionsFlowView: View {
     }
     
     private func requestNotificationsIfNeeded(completion: @escaping () -> Void) {
-        let key = "hasAskedNotifications"
-        if UserDefaults.standard.bool(forKey: key) {
-            completion()
-            return
-        }
-        
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
-            UserDefaults.standard.set(true, forKey: key)
-            if granted {
-                scheduleWorkEndNotifications()
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral, .denied:
+                DispatchQueue.main.async {
+                    completion()
+                }
+            case .notDetermined:
+                center.requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in
+                    DispatchQueue.main.async {
+                        completion()
+                    }
+                }
+            @unknown default:
+                DispatchQueue.main.async {
+                    completion()
+                }
             }
-            DispatchQueue.main.async {
-                completion()
-            }
-        }
-
-    }
-    private func scheduleWorkEndNotifications() {
-        let defaults = UserDefaults.standard
-        
-        guard let timeString = defaults.string(forKey: "workEndTime") else { return }
-        let parts = timeString.split(separator: ":").map { Int($0) ?? 0 }
-        if parts.count != 2 { return }
-        let hour = parts[0]
-        let minute = parts[1]
-        
-        var weekdays: [Int] = []
-        if let data = defaults.data(forKey: "workDays"),
-           let decoded = try? JSONDecoder().decode(Set<Weekday>.self, from: data) {
-            weekdays = decoded.map { $0.calendarValue }
-        }
-        
-        if weekdays.isEmpty { return }
-        
-        for weekday in weekdays {
-            var date = DateComponents()
-            date.weekday = weekday
-            date.hour = hour
-            date.minute = minute
-            
-            let content = UNMutableNotificationContent()
-            content.title = "Work day finished"
-            content.body = "Take a minute to check in."
-            content.sound = .default
-            
-            let trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
-            let id = "workEndReminder-\(weekday)"
-            let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request)
         }
     }
     private func scheduleMissedCheckInNotification(days: Int = 3) {
@@ -244,13 +213,9 @@ struct QuestionsFlowView: View {
         center.removePendingNotificationRequests(withIdentifiers: ["missedCheckIn"])
         
         // وقت الإشعار = بعد 3 أيام على وقت نهاية العمل
-        guard let timeString = UserDefaults.standard.string(forKey: "workEndTime") else { return }
-        let parts = timeString.split(separator: ":").map { Int($0) ?? 0 }
-        if parts.count != 2 { return }
+        guard let (hour, minute) = workEndTimeComponents() else { return }
         
         var date = Calendar.current.date(byAdding: .day, value: days, to: Date()) ?? Date()
-        let hour = parts[0]
-        let minute = parts[1]
         date = Calendar.current.date(bySettingHour: hour, minute: minute, second: 0, of: date) ?? date
         
         let content = UNMutableNotificationContent()
@@ -293,11 +258,7 @@ struct QuestionsFlowView: View {
         if workdays.isEmpty { return }
 
         // وقت نهاية الدوام
-        guard let timeString = defaults.string(forKey: "workEndTime") else { return }
-        let parts = timeString.split(separator: ":").map { Int($0) ?? 0 }
-        if parts.count != 2 { return }
-        let endHour = parts[0]
-        let endMinute = parts[1]
+        guard let (endHour, endMinute) = workEndTimeComponents() else { return }
 
         let calendar = Calendar.current
         var date = calendar.date(byAdding: .day, value: 1, to: Date()) ?? Date()
@@ -336,6 +297,25 @@ struct QuestionsFlowView: View {
 
         let request = UNNotificationRequest(identifier: "sevenDayStreak", content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request)
+    }
+
+    private func workEndTimeComponents() -> (Int, Int)? {
+        let defaults = UserDefaults.standard
+
+        if let timeString = defaults.string(forKey: "workEndTime") {
+            let parts = timeString.split(separator: ":").map { Int($0) ?? 0 }
+            if parts.count == 2 {
+                return (parts[0], parts[1])
+            }
+        }
+
+        if let date = defaults.object(forKey: "workEndTime") as? Date {
+            let components = Calendar.current.dateComponents([.hour, .minute], from: date)
+            guard let hour = components.hour, let minute = components.minute else { return nil }
+            return (hour, minute)
+        }
+
+        return nil
     }
 
     
