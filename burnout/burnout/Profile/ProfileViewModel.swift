@@ -121,6 +121,7 @@ final class ProfileViewModel: ObservableObject {
         model.userName = userName
         model.workEndTimeString = workEndTimeString
         model.selectedWorkDays = tempSelectedWorkDays
+        NotificationManager.requestAndScheduleDailyReminder(at: tempWorkEndTime)
     }
     
     /// يبدأ/ينهي وضع التعديل (بدون withAnimation - سيتم في View)
