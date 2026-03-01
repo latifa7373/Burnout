@@ -1,9 +1,7 @@
 // =========================
-//  QuestionView.swift ✅ (UPDATED كامل)
-//  fixes:
-//  1) إضافة زر رجوع فعلي + swipe back
-//  2) تكبير منطقة اللمس للرجوع
-//  3) تفعيل swipe back حتى مع navBarBackButtonHidden
+//  QuestionView.swift (UNIFIED)
+//  ✅ بدون زر رجوع (الرجوع موحد من QuestionsFlowView)
+//  ✅ لا تغييرات على التصميم غير الضروري
 // =========================
 
 import SwiftUI
@@ -74,8 +72,6 @@ struct MotionGlowRing: View {
 }
 
 struct QuestionView: View {
-    @Environment(\.dismiss) private var dismiss
-
     let dimension: Dimension
     let question: String
     let onContinue: (Int) -> Void
@@ -102,31 +98,17 @@ struct QuestionView: View {
 
             VStack(spacing: 0) {
 
-                // ✅ Header مع زر رجوع
+                // ✅ نفس الهيدر السابق لكن بدون زر رجوع (الرجوع صار فوق من Toolbar)
                 HStack {
-                    Button { dismiss() } label: {
-                        Image(systemName: "chevron.backward")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 44, height: 44)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-
                     Spacer()
-
                     Text(String(localized: "Today's Check"))
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(.white)
-
                     Spacer()
-
-                    // مكان فاضي عشان العنوان يصير بالنص
-                    Color.clear.frame(width: 44, height: 44)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 10)
-                .padding(.bottom, 20)
+                .padding(.bottom, 30)
 
                 Spacer()
 
@@ -204,6 +186,8 @@ struct QuestionView: View {
         }
         .preferredColorScheme(.dark)
         .navigationBarBackButtonHidden(true)
-        .enableSwipeBack() // ✅ تفعيل السحب من الطرف
+        // ملاحظة: السحب (Swipe back) يعتمد على NavigationStack نفسه.
+        // إذا عندك modifier اسمه enableSwipeBack() خليّه هنا:
+        // .enableSwipeBack()
     }
 }
