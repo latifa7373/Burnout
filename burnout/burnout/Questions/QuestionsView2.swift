@@ -1,9 +1,13 @@
 // =========================
-//  QuestionView.swift
+//  QuestionView.swift ✅ (UPDATED كامل)
+//  fixes:
+//  1) إضافة زر رجوع فعلي + swipe back
+//  2) تكبير منطقة اللمس للرجوع
+//  3) تفعيل swipe back حتى مع navBarBackButtonHidden
 // =========================
+
 import SwiftUI
 
-// MARK: - Motion Glow Ring (tuned: slightly softer + colored)
 struct MotionGlowRing: View {
     var size: CGFloat = 320
     var strength: Double // 0...1
@@ -54,9 +58,7 @@ struct MotionGlowRing: View {
                 Circle()
                     .stroke(glowColor.opacity(rimOpacity), lineWidth: rimWidth)
                     .frame(width: size, height: size)
-                    .shadow(color: glowColor.opacity(shadowOp),
-                            radius: shadowRad,
-                            x: 0, y: 0)
+                    .shadow(color: glowColor.opacity(shadowOp), radius: shadowRad, x: 0, y: 0)
                     .blur(radius: innerBlur)
                     .opacity(0.95)
 
@@ -71,9 +73,6 @@ struct MotionGlowRing: View {
     }
 }
 
-import SwiftUI
-
-// MARK: - QuestionView
 struct QuestionView: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -94,9 +93,7 @@ struct QuestionView: View {
         }
     }
 
-    private var glowStrength: Double {
-        (sliderValue - 1) / 4
-    }
+    private var glowStrength: Double { (sliderValue - 1) / 4 }
 
     var body: some View {
         ZStack {
@@ -104,16 +101,32 @@ struct QuestionView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
+
+                // ✅ Header مع زر رجوع
                 HStack {
+                    Button { dismiss() } label: {
+                        Image(systemName: "chevron.backward")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+
                     Spacer()
+
                     Text(String(localized: "Today's Check"))
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(.white)
+
                     Spacer()
+
+                    // مكان فاضي عشان العنوان يصير بالنص
+                    Color.clear.frame(width: 44, height: 44)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 10)
-                .padding(.bottom, 30)
+                .padding(.bottom, 20)
 
                 Spacer()
 
@@ -132,6 +145,7 @@ struct QuestionView: View {
                             .scaledToFit()
                             .frame(width: 320, height: 320)
                             .frame(maxWidth: .infinity, alignment: .center)
+                            .allowsHitTesting(false)
 
                         Text(question)
                             .font(.system(size: 18, weight: .medium))
@@ -141,6 +155,7 @@ struct QuestionView: View {
                             .minimumScaleFactor(0.75)
                             .padding(.horizontal, 8)
                             .frame(width: 200, alignment: .center)
+                            .allowsHitTesting(false)
                     }
                     .frame(height: 320)
                 }
@@ -179,13 +194,16 @@ struct QuestionView: View {
                                 RoundedRectangle(cornerRadius: 30)
                                     .fill(.white.opacity(0.15))
                             )
+                            .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
                     .padding(.horizontal, 40)
                 }
                 .padding(.bottom, 40)
             }
         }
-        .preferredColorScheme(.dark)   // ✅ هذا اللي يخليها نفس النتيجة دايمًا
+        .preferredColorScheme(.dark)
+        .navigationBarBackButtonHidden(true)
+        .enableSwipeBack() // ✅ تفعيل السحب من الطرف
     }
 }
-

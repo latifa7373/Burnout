@@ -1,37 +1,44 @@
+// =========================
+//  ProfileView.swift ✅ (UPDATED كامل)
+//  fixes:
+//  1) تفعيل swipe back + عدم تعليق زر الرجوع
+//  2) تكبير منطقة لمس زر الرجوع
+//  3) منع عناصر داخلية (Buttons) من التأثير على swipe back بشكل مزعج
+// =========================
+
 import SwiftUI
 
 struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
     @Environment(\.dismiss) var dismiss
 
-    private var insightsAccent: Color { Color(red: 0.30, green: 0.60, blue: 0.60) } // نفس لون عمود Insights
-    
+    private var insightsAccent: Color { Color(red: 0.30, green: 0.60, blue: 0.60) }
+
     var body: some View {
         ZStack {
-            // خلفية ثابتة باللون المطلوب
             Color(hex: viewModel.model.backgroundColorHex)
                 .ignoresSafeArea(.all)
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
+
                     // Header
                     HStack {
                         Spacer()
-                        
+
                         Text(String(localized: "Profile"))
                             .font(.system(size: viewModel.model.headerFontSize, weight: .bold))
                             .foregroundColor(.white)
-                        
+
                         Spacer()
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 10)
                     .padding(.bottom, 30)
-                    
+
                     // صورة البروفايل
                     VStack(spacing: 20) {
                         ZStack {
-                            // حلقة خارجية متوهجة
                             Circle()
                                 .stroke(
                                     LinearGradient(
@@ -47,8 +54,7 @@ struct ProfileView: View {
                                 )
                                 .frame(width: viewModel.model.profileRingSize, height: viewModel.model.profileRingSize)
                                 .shadow(color: .white.opacity(0.3), radius: 10)
-                            
-                            // صورة البروفايل
+
                             Circle()
                                 .fill(
                                     LinearGradient(
@@ -61,12 +67,13 @@ struct ProfileView: View {
                                     )
                                 )
                                 .frame(width: viewModel.model.profileImageSize, height: viewModel.model.profileImageSize)
-                            
+
                             Image(systemName: "person.fill")
                                 .font(.system(size: viewModel.model.profileIconSize))
                                 .foregroundColor(.white)
+                                .allowsHitTesting(false)
                         }
-                        
+
                         // Name
                         if viewModel.isEditing {
                             TextField(String(localized: "Your name"), text: $viewModel.tempUserName)
@@ -80,8 +87,7 @@ struct ProfileView: View {
                                     Capsule()
                                         .fill(Color.white.opacity(0.2))
                                         .background(
-                                            Capsule()
-                                                .fill(.ultraThinMaterial)
+                                            Capsule().fill(.ultraThinMaterial)
                                         )
                                 )
                         } else {
@@ -92,9 +98,10 @@ struct ProfileView: View {
                         }
                     }
                     .padding(.bottom, 40)
-                    
+
                     // بطاقات المعلومات
                     VStack(spacing: 20) {
+
                         // بطاقة الوقت
                         HStack(spacing: 15) {
                             ZStack {
@@ -110,17 +117,18 @@ struct ProfileView: View {
                                         )
                                     )
                                     .frame(width: viewModel.model.cardIconSize, height: viewModel.model.cardIconSize)
-                                
+
                                 Image(systemName: "clock.fill")
                                     .font(.system(size: 22))
                                     .foregroundColor(.white)
+                                    .allowsHitTesting(false)
                             }
-                            
+
                             VStack(alignment: .leading, spacing: 5) {
                                 Text(String(localized: "End of Work Time"))
                                     .font(.system(size: 14))
                                     .foregroundColor(.white.opacity(0.7))
-                                
+
                                 if viewModel.isEditing {
                                     HStack(spacing: 8) {
                                         DatePicker("", selection: $viewModel.tempWorkEndTime, displayedComponents: .hourAndMinute)
@@ -128,7 +136,6 @@ struct ProfileView: View {
                                             .labelsHidden()
                                             .colorScheme(.dark)
                                             .accentColor(.blue)
-                                      
                                     }
                                 } else {
                                     Text(viewModel.formattedTime(for: viewModel.workEndTime))
@@ -136,12 +143,12 @@ struct ProfileView: View {
                                         .foregroundColor(.white)
                                 }
                             }
-                            
+
                             Spacer()
                         }
                         .padding(20)
                         .background(glassCard(RoundedRectangle(cornerRadius: 22)))
-                        
+
                         // بطاقة أيام العمل الأسبوعية
                         VStack(alignment: .leading, spacing: 15) {
                             HStack(spacing: 15) {
@@ -158,45 +165,46 @@ struct ProfileView: View {
                                             )
                                         )
                                         .frame(width: viewModel.model.cardIconSize, height: viewModel.model.cardIconSize)
-                                    
+
                                     Image(systemName: "calendar")
                                         .font(.system(size: 22))
                                         .foregroundColor(.white)
+                                        .allowsHitTesting(false)
                                 }
-                                
+
                                 Text(String(localized: "Weekly Work Days"))
                                     .font(.system(size: 14))
                                     .foregroundColor(.white.opacity(0.7))
-                                
+
                                 Spacer()
                             }
-                            
+
                             if viewModel.isEditing {
                                 VStack(spacing: 10) {
                                     ForEach(Weekday.allCases, id: \.self) { day in
-                                        HStack {
-                                            Button(action: {
-                                                viewModel.toggleWorkDay(day)
-                                            }) {
-                                                HStack(spacing: 12) {
-                                                    Image(systemName: viewModel.tempSelectedWorkDays.contains(day) ? "checkmark.circle.fill" : "circle")
-                                                        .font(.system(size: 20))
-                                                        .foregroundColor(viewModel.tempSelectedWorkDays.contains(day) ? insightsAccent : .white.opacity(0.5))
-                                                    
-                                                    Text(day.localizedName)
-                                                        .font(.system(size: 16, weight: .medium))
-                                                        .foregroundColor(.white)
-                                                    
-                                                    Spacer()
-                                                }
-                                                .padding(.vertical, 8)
-                                                .padding(.horizontal, 12)
-                                                .background(
-                                                    RoundedRectangle(cornerRadius: 12)
-                                                        .fill(viewModel.tempSelectedWorkDays.contains(day) ? insightsAccent.opacity(0.20) : Color.white.opacity(0.08))
-                                                )
+                                        Button {
+                                            viewModel.toggleWorkDay(day)
+                                        } label: {
+                                            HStack(spacing: 12) {
+                                                Image(systemName: viewModel.tempSelectedWorkDays.contains(day) ? "checkmark.circle.fill" : "circle")
+                                                    .font(.system(size: 20))
+                                                    .foregroundColor(viewModel.tempSelectedWorkDays.contains(day) ? insightsAccent : .white.opacity(0.5))
+
+                                                Text(day.localizedName)
+                                                    .font(.system(size: 16, weight: .medium))
+                                                    .foregroundColor(.white)
+
+                                                Spacer()
                                             }
+                                            .padding(.vertical, 8)
+                                            .padding(.horizontal, 12)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 12)
+                                                    .fill(viewModel.tempSelectedWorkDays.contains(day) ? insightsAccent.opacity(0.20) : Color.white.opacity(0.08))
+                                            )
+                                            .contentShape(Rectangle())
                                         }
+                                        .buttonStyle(.plain)
                                     }
                                 }
                             } else {
@@ -212,7 +220,7 @@ struct ProfileView: View {
                                                 Image(systemName: "checkmark.circle.fill")
                                                     .font(.system(size: 14))
                                                     .foregroundColor(insightsAccent)
-                                                
+
                                                 Text(day.localizedName)
                                                     .font(.system(size: 16, weight: .medium))
                                                     .foregroundColor(.white)
@@ -234,16 +242,19 @@ struct ProfileView: View {
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
+            // ✅ زر رجوع: أكبر + يلقط اللمس + placement جديد
+            ToolbarItem(placement: .topBarLeading) {
+                Button { dismiss() } label: {
                     Image(systemName: "chevron.backward")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
+
+            ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     withAnimation(.spring(response: 0.3)) {
                         viewModel.toggleEditing()
@@ -252,13 +263,14 @@ struct ProfileView: View {
                     Image(systemName: viewModel.isEditing ? "checkmark" : "pencil")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }
         }
-        .onAppear {
-            viewModel.loadUserData()
-        }
+        .onAppear { viewModel.loadUserData() }
+        .enableSwipeBack() // ✅ أهم سطر لتفعيل السحب من الطرف
     }
 }
 
@@ -274,10 +286,10 @@ private extension ProfileView {
             endPoint: .bottomTrailing
         )
     }
-    
+
     var glassStroke: Color { .white.opacity(0.10) }
     var glassShadow: Color { .black.opacity(0.18) }
-    
+
     func glassCard<S: Shape>(_ shape: S) -> some View {
         shape
             .fill(glassFill)
@@ -294,11 +306,11 @@ extension Color {
         Scanner(string: hex).scanHexInt64(&int)
         let a, r, g, b: UInt64
         switch hex.count {
-        case 3: // RGB (12-bit)
+        case 3:
             (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
+        case 6:
             (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
+        case 8:
             (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
         default:
             (a, r, g, b) = (1, 1, 1, 0)
@@ -314,9 +326,4 @@ extension Color {
     }
 }
 
-#Preview {
-    ProfileView()
-}
-
-
-
+#Preview { ProfileView() }

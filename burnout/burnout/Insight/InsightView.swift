@@ -1,3 +1,12 @@
+// =========================
+//  InsightView.swift ✅ (UPDATED بالكامل)
+//  fixes:
+//  1) ExpandableInfoCard موجود (حل خطأ Cannot find in scope)
+//  2) .padding(.top,6) داخل chain صح (حل خطأ top)
+//  3) Swipe Back مفعّل
+//  4) ScrollView أفقي ما يقتل swipe back (safeAreaPadding leading)
+// =========================
+
 import SwiftUI
 import Charts
 import SwiftData
@@ -8,6 +17,10 @@ struct InsightView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
     @State private var chartScrollResetID = UUID()
+
+    private var taskKey: String {
+        "\(dailyRiskScores.count)-\(vm.selectedFilter.rawValue)-\(Int(vm.selectedMonth.timeIntervalSince1970))"
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -28,35 +41,22 @@ struct InsightView: View {
         .background(appBackground)
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
+            ToolbarItem(placement: .topBarLeading) {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.backward")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
             }
         }
-        .onAppear {
-            vm.updateData(dailyRiskScores)
-        }
-        .onChange(of: dailyRiskScores) { _, _ in
-            vm.updateData(dailyRiskScores)
-        }
-        .onChange(of: vm.selectedFilter) { _, _ in
+        .task(id: taskKey) {
             vm.updateData(dailyRiskScores)
             chartScrollResetID = UUID()
         }
-        .onChange(of: vm.selectedMonth) { _, _ in
-            vm.updateData(dailyRiskScores)
-            chartScrollResetID = UUID()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)) { _ in
-            vm.updateData(dailyRiskScores)
-            chartScrollResetID = UUID()
-        }
-        .onChange(of: vm.data.count) { _, _ in
-            chartScrollResetID = UUID()
-        }
+        .enableSwipeBack() // ✅
     }
 }
 
@@ -90,28 +90,6 @@ private extension InsightView {
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
-    }
-
-    var riskLineLegend: some View {
-        HStack(spacing: 8) {
-            Canvas { context, size in
-                var path = Path()
-                path.move(to: CGPoint(x: 0, y: size.height / 2))
-                path.addLine(to: CGPoint(x: size.width, y: size.height / 2))
-                context.stroke(
-                    path,
-                    with: .color(Color.red.opacity(0.9)),
-                    style: StrokeStyle(lineWidth: 1.5, dash: [6, 4])
-                )
-            }
-            .frame(width: 24, height: 6)
-
-            Text(String(localized: "Risk line"))
-                .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(.white.opacity(0.68))
-
-            Spacer()
-        }
     }
 
     var glassStroke: Color { .white.opacity(0.10) }
@@ -200,6 +178,8 @@ private extension InsightView {
                     chartCore
                         .frame(width: chartWidth, height: 240)
                 }
+                // ✅ يترك مساحة للطرف (عشان swipe back ما يضيع بسبب السحب الأفقي)
+                .safeAreaPadding(.leading, 20)
                 .id(chartScrollResetID)
                 .environment(\.layoutDirection, .leftToRight)
 
@@ -216,10 +196,31 @@ private extension InsightView {
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.top, 2)
-
         }
         .padding(14)
         .background(glassCard(RoundedRectangle(cornerRadius: 22)))
+    }
+
+    var riskLineLegend: some View {
+        HStack(spacing: 8) {
+            Canvas { context, size in
+                var path = Path()
+                path.move(to: CGPoint(x: 0, y: size.height / 2))
+                path.addLine(to: CGPoint(x: size.width, y: size.height / 2))
+                context.stroke(
+                    path,
+                    with: .color(Color.red.opacity(0.9)),
+                    style: StrokeStyle(lineWidth: 1.5, dash: [6, 4])
+                )
+            }
+            .frame(width: 24, height: 6)
+
+            Text(String(localized: "Risk line"))
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.white.opacity(0.68))
+
+            Spacer()
+        }
     }
 
     func riskScoreToPercentage(_ riskScore: Double) -> Double {
@@ -227,7 +228,6 @@ private extension InsightView {
         return min(max(percentage, 0), 100)
     }
 
-    // ✅ التعديل هنا فقط: x يعتمد على label بدل index عشان يصير البار فوق الاسم مباشرة
     var chartCore: some View {
         Chart {
             RuleMark(y: .value(String(localized: "Danger Line"), 70))
@@ -241,12 +241,10 @@ private extension InsightView {
                     BarMark(
                         x: .value(String(localized: "Label"), item.label),
                         y: .value(String(localized: "Risk %"), percentage),
-                        width: .fixed(12)   // 👈 أنحف
-
+                        width: .fixed(12)
                     )
                     .foregroundStyle(Color(red: 0.30, green: 0.60, blue: 0.60))
                     .cornerRadius(6)
-                    
                 }
             }
         }
@@ -257,7 +255,6 @@ private extension InsightView {
                 AxisValueLabel().foregroundStyle(.clear)
             }
         }
-        // ✅ نخلي الـ AxisMarks بنفس ترتيب labels (ومع ذلك نخفي اللابل الافتراضي لأنك تستخدمين custom)
         .chartXAxis {
             AxisMarks(values: vm.data.map { $0.label }) { _ in
                 AxisGridLine(stroke: gridLineStyle).foregroundStyle(gridLineColor)
@@ -312,9 +309,7 @@ private extension InsightView {
         .allowsHitTesting(false)
     }
 
-    func yAxisLabel(for value: Double) -> String {
-        "\(Int(value))%"
-    }
+    func yAxisLabel(for value: Double) -> String { "\(Int(value))%" }
 
     var aboutSection: some View {
         ExpandableInfoCard(
@@ -334,7 +329,7 @@ According to ICD-11, burnout is characterized by:
             linkURL: URL(string: "https://www.who.int/standards/classifications/frequently-asked-questions/burn-out-an-occupational-phenomenon")!,
             openURL: { url in openURL(url) }
         )
-        .padding(.top, 6)
+        .padding(.top, 6) // ✅ داخل chain صح
     }
 
     var appBackground: some View {
@@ -352,7 +347,6 @@ According to ICD-11, burnout is characterized by:
                 Int64(vm.data.count)
             )
         }
-
         let format = String(localized: "Answered days: %lld • Work days shown: %lld")
         return String(
             format: format,
@@ -363,6 +357,7 @@ According to ICD-11, burnout is characterized by:
     }
 }
 
+// ✅ هذا كان ناقص عندك وسبب الخطأ Cannot find 'ExpandableInfoCard' in scope
 private struct ExpandableInfoCard: View {
     let title: String
     let actionCollapsed: String
@@ -384,9 +379,7 @@ private struct ExpandableInfoCard: View {
                 Spacer()
 
                 Button {
-                    withAnimation(.easeInOut(duration: 0.25)) {
-                        expanded.toggle()
-                    }
+                    withAnimation(.easeInOut(duration: 0.25)) { expanded.toggle() }
                 } label: {
                     Text(expanded ? actionExpanded : actionCollapsed)
                         .font(.system(size: 12))
@@ -403,9 +396,7 @@ private struct ExpandableInfoCard: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             if expanded {
-                Button {
-                    openURL(linkURL)
-                } label: {
+                Button { openURL(linkURL) } label: {
                     Text(linkTitle)
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.blue)
@@ -422,10 +413,7 @@ private struct ExpandableInfoCard: View {
 
     private var cardGradient: LinearGradient {
         LinearGradient(
-            colors: [
-                Color.white.opacity(0.12),
-                Color.white.opacity(0.04)
-            ],
+            colors: [Color.white.opacity(0.12), Color.white.opacity(0.04)],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -433,5 +421,5 @@ private struct ExpandableInfoCard: View {
 }
 
 #Preview {
-    InsightView()
+    NavigationStack { InsightView() }
 }

@@ -1,3 +1,8 @@
+// =========================
+//  StatusView.swift ✅ (UPDATED بالكامل)
+//  الهدف: Swipe Back + زر رجوع يلقط اللمس بسرعة
+// =========================
+
 import SwiftUI
 
 struct StatusView: View {
@@ -17,8 +22,6 @@ struct StatusView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
-
-                    // Header مطابق لصفحة Profile (حجم 22، .bold، متمركز داخل HStack مع نفس الـ paddings)
                     HStack {
                         Spacer()
                         Text(String(localized: "Status"))
@@ -30,13 +33,11 @@ struct StatusView: View {
                     .padding(.top, 10)
                     .padding(.bottom, 30)
 
-                    // ✅ Card 1 (NOW ON TOP): What does Low/Medium/High mean?
                     ExpandableInfoCard(
                         title: String(localized: "What does “Low / Medium / High” mean?"),
                         actionCollapsed: String(localized: "Read more"),
                         actionExpanded: String(localized: "Show less"),
                         bodyText: String(localized: """
-
 Low: Your recent responses indicate stable patterns.
 
 Medium : Your recent responses suggest increased strain. Consider healthy recovery habits.
@@ -47,7 +48,6 @@ Note : Burn-Out provides general insights and is not a medical diagnosis
 """)
                     )
 
-                    // ✅ Card 2 (NOW BELOW): How is this calculated?
                     ExpandableInfoCard(
                         title: String(localized: "How is this calculated?"),
                         actionCollapsed: String(localized: "Read more"),
@@ -55,9 +55,9 @@ Note : Burn-Out provides general insights and is not a medical diagnosis
                         bodyText: String(localized: """
 Your answers use a 1–5 scale from Never (1) to Extremely (5)
 
-Each day, you answer 3 questions then we calculate the daily average: 
+Each day, you answer 3 questions then we calculate the daily average:
 
-(Q1 + Q2 + Q3) ÷ 3 
+(Q1 + Q2 + Q3) ÷ 3
 
 and we label the daily result as:
 
@@ -65,8 +65,7 @@ and we label the daily result as:
   * Medium: 2.5–3
   * High: 3.5–5
 
-Your status changes only after the same level repeats for 3 days in a row. 
-
+Your status changes only after the same level repeats for 3 days in a row.
 """)
                     )
 
@@ -84,14 +83,16 @@ Your status changes only after the same level repeats for 3 days in a row.
                     Image(systemName: "chevron.backward")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
             }
         }
+        .enableSwipeBack() // ✅
     }
 }
 
-
-// MARK: - Reusable Expandable Card (بدون روابط)
 private struct ExpandableInfoCard: View {
     let title: String
     let actionCollapsed: String
@@ -102,7 +103,6 @@ private struct ExpandableInfoCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-
             HStack {
                 Text(title)
                     .font(.system(size: 16, weight: .medium))
@@ -111,9 +111,7 @@ private struct ExpandableInfoCard: View {
                 Spacer()
 
                 Button {
-                    withAnimation(.easeInOut(duration: 0.25)) {
-                        expanded.toggle()
-                    }
+                    withAnimation(.easeInOut(duration: 0.25)) { expanded.toggle() }
                 } label: {
                     Text(expanded ? actionExpanded : actionCollapsed)
                         .font(.system(size: 12))
@@ -138,19 +136,13 @@ private struct ExpandableInfoCard: View {
 
     private var cardGradient: LinearGradient {
         LinearGradient(
-            colors: [
-                Color.white.opacity(0.12),
-                Color.white.opacity(0.04)
-            ],
+            colors: [Color.white.opacity(0.12), Color.white.opacity(0.04)],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
     }
 }
 
-
 #Preview {
-    NavigationStack {
-        StatusView()
-    }
+    NavigationStack { StatusView() }
 }

@@ -1,3 +1,8 @@
+// =========================
+//  InsightViewModel.swift (UPDATED)
+//  التغيير: منع loadData المتكرر داخل setFilter/nextMonth/prevMonth
+//  لأن InsightView صار هو اللي يشغل updateData عبر .task(id:)
+// =========================
 import Foundation
 import Combine
 import SwiftData
@@ -75,7 +80,7 @@ final class InsightViewModel: ObservableObject {
     }
 
     init() {
-        loadData()
+        // لا تعمل loadData هنا؛ أول .task في InsightView راح يستدعي updateData
     }
 
     func updateData(_ riskScores: [DailyRiskScore]) {
@@ -83,19 +88,17 @@ final class InsightViewModel: ObservableObject {
         loadData()
     }
 
+    // ✅ فقط تحديث الحالة، بدون loadData (حتى ما يتكرر شغل الشارت)
     func setFilter(_ filter: TimeFilter) {
         selectedFilter = filter
-        loadData()
     }
 
     func nextMonth() {
         selectedMonth = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonth) ?? selectedMonth
-        loadData()
     }
 
     func prevMonth() {
         selectedMonth = Calendar.current.date(byAdding: .month, value: -1, to: selectedMonth) ?? selectedMonth
-        loadData()
     }
 
     var monthTitle: String {
@@ -110,10 +113,9 @@ final class InsightViewModel: ObservableObject {
 
         switch selectedFilter {
         case .week:
-            // ✅ استخدمي calendar يبدأ من الأحد
             var weekCalendar = Calendar.current
-            weekCalendar.firstWeekday = 1  // 1 = الأحد
-            
+            weekCalendar.firstWeekday = 1
+
             let weekStart = weekCalendar.dateInterval(of: .weekOfYear, for: now)?.start
                 ?? weekCalendar.startOfDay(for: now)
 
@@ -134,21 +136,9 @@ final class InsightViewModel: ObservableObject {
                 let dayLabel = dayFormatter.string(from: dayStart)
 
                 if let score = weekScores.first(where: { weekCalendar.startOfDay(for: $0.date) == dayStart }) {
-                    weekData.append(ChartDataPoint(
-                        label: dayLabel,
-                        riskScore: score.riskScore,
-                        date: dayStart,
-                        isWorkDay: workday,
-                        hasResponse: true
-                    ))
+                    weekData.append(ChartDataPoint(label: dayLabel, riskScore: score.riskScore, date: dayStart, isWorkDay: workday, hasResponse: true))
                 } else {
-                    weekData.append(ChartDataPoint(
-                        label: dayLabel,
-                        riskScore: 0,
-                        date: dayStart,
-                        isWorkDay: workday,
-                        hasResponse: false
-                    ))
+                    weekData.append(ChartDataPoint(label: dayLabel, riskScore: 0, date: dayStart, isWorkDay: workday, hasResponse: false))
                 }
             }
 
@@ -171,21 +161,9 @@ final class InsightViewModel: ObservableObject {
                 let workday = isWorkDay(dayStart)
 
                 if let score = monthScores.first(where: { calendar.startOfDay(for: $0.date) == dayStart }) {
-                    monthData.append(ChartDataPoint(
-                        label: "\(day)",
-                        riskScore: score.riskScore,
-                        date: dayStart,
-                        isWorkDay: workday,
-                        hasResponse: true
-                    ))
+                    monthData.append(ChartDataPoint(label: "\(day)", riskScore: score.riskScore, date: dayStart, isWorkDay: workday, hasResponse: true))
                 } else {
-                    monthData.append(ChartDataPoint(
-                        label: "\(day)",
-                        riskScore: 0,
-                        date: dayStart,
-                        isWorkDay: workday,
-                        hasResponse: false
-                    ))
+                    monthData.append(ChartDataPoint(label: "\(day)", riskScore: 0, date: dayStart, isWorkDay: workday, hasResponse: false))
                 }
             }
 

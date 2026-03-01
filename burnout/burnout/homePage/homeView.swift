@@ -1,3 +1,8 @@
+// =========================
+//  homeView.swift ✅ (UPDATED بالكامل)
+//  الهدف: ضغطة واحدة + ما يعلق + لا تسرق اللمس من عناصر داخل الكروت
+// =========================
+
 import SwiftUI
 import SwiftData
 
@@ -76,8 +81,11 @@ private extension homeView {
                     .font(.system(size: 40, weight: .regular))
                     .foregroundColor(.white.opacity(0.85))
                     .offset(x: 0, y: 8)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+
             Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -128,7 +136,8 @@ private extension homeView {
         .padding(.top, -25)
     }
 
-   var infoCards: some View {
+    // ✅ FIX: ضغطة واحدة على الكروت
+    var infoCards: some View {
         HStack(alignment: .top, spacing: 16) {
             NavigationLink {
                 StatusView()
@@ -140,6 +149,7 @@ private extension homeView {
                     bodyText: viewModel.model.statusCard.bodyText
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle()) // ✅
             }
             .buttonStyle(.plain)
 
@@ -153,15 +163,16 @@ private extension homeView {
                     bodyText: viewModel.model.todayCard.bodyText
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(Rectangle()) // ✅
             }
             .buttonStyle(.plain)
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 168)   // نفس الارتفاع للكاردين
+        .frame(height: 168)
         .padding(.top, 4)
     }
 
-
+    // ✅ FIX: bars ما تسرق اللمس + ضغطة واحدة
     var insightsCard: some View {
         NavigationLink {
             InsightView()
@@ -184,6 +195,7 @@ private extension homeView {
                                 .font(.system(size: 10, weight: .semibold))
                                 .foregroundColor(.white.opacity(0.55))
                         }
+                        .allowsHitTesting(false) // ✅
                     }
 
                     HStack(alignment: .bottom, spacing: 20) {
@@ -221,13 +233,16 @@ private extension homeView {
                                     .frame(width: 14, height: bar.height)
                             }
                         }
+                        .allowsHitTesting(false) // ✅ هذا أهم شيء
                     }
                     .padding(.top, 16)
                 }
                 .padding(16)
+                .allowsHitTesting(false) // ✅ المحتوى كله ما يسرق من اللينك
             }
             .frame(height: 168)
             .padding(.top, 10)
+            .contentShape(Rectangle()) // ✅
         }
         .buttonStyle(.plain)
     }
@@ -289,8 +304,6 @@ private extension homeView {
         }
     }
 
-    // Needle is now a line drawn from pivot to arc direction.
-    // This keeps it always inside gauge bounds for 0...100%.
     private struct GaugeNeedleView: View {
         var value: Double
         var pivotY: CGFloat
@@ -310,7 +323,6 @@ private extension homeView {
             let cx = frameWidth / 2
             let cy = pivotY
 
-            // 0 -> left, 0.5 -> top, 1 -> right
             let angle = Double.pi - (Double(normalizedValue) * Double.pi)
             let needleLength = radius - 10
 
@@ -357,6 +369,7 @@ private extension homeView {
                                 .foregroundColor(.white.opacity(0.55))
                         }
                         .frame(maxWidth: .infinity, alignment: .topTrailing)
+                        .allowsHitTesting(false) // ✅
                     }
 
                     Spacer().frame(height: 8)
@@ -380,6 +393,7 @@ private extension homeView {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 56, height: 48)
+                            .allowsHitTesting(false) // ✅
                     }
                 }
                 .padding(16)
