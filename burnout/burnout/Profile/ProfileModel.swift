@@ -17,7 +17,7 @@ struct ProfileModel {
     var selectedWorkDays: Set<Weekday> = [.sunday, .monday, .tuesday, .wednesday, .thursday]
     
     // إعدادات الواجهة
-    let backgroundColorHex: String = "2C1E2F"
+    let backgroundColorHex: String = "241A2E"
     let profileImageSize: CGFloat = 110
     let profileRingSize: CGFloat = 120
     let profileIconSize: CGFloat = 50

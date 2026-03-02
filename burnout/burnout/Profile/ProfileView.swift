@@ -16,7 +16,7 @@ struct ProfileView: View {
 
     var body: some View {
         ZStack {
-            Color(hex: viewModel.model.backgroundColorHex)
+            Color(red: 0.14, green: 0.10, blue: 0.18)
                 .ignoresSafeArea(.all)
 
             ScrollView(.vertical, showsIndicators: false) {
