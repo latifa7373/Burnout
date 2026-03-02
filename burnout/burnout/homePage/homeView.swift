@@ -167,7 +167,7 @@ private extension homeView {
                 badgeTitle: viewModel.model.statusCard.badgeTitle,
                 bodyText: viewModel.model.statusCard.bodyText
             )
-            .frame(height: 170)
+            .frame(height: 164)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
