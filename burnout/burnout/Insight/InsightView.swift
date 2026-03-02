@@ -29,7 +29,7 @@ struct InsightView: View {
                 .foregroundStyle(.white.opacity(0.95))
                 .frame(maxWidth: .infinity, alignment: .center)
                 .multilineTextAlignment(.center)
-                .padding(.top, 4)
+                .padding(.top, -10)
 
             filterMenu
             chartCard
@@ -37,7 +37,9 @@ struct InsightView: View {
 
             Spacer()
         }
-        .padding()
+        .padding(.horizontal, 16)
+        .padding(.bottom, 16)
+        .padding(.top, -8)
         .background(appBackground)
         .navigationBarBackButtonHidden(true)
         .toolbar {
