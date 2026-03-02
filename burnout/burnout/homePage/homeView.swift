@@ -81,7 +81,7 @@ private extension homeView {
                 Image(systemName: "person.circle")
                     .font(.system(size: 40, weight: .regular))
                     .foregroundColor(.white.opacity(0.85))
-                    .offset(x: 0, y: 8)
+                    .offset(x: 0, y: 18)
                     .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
             }
@@ -90,7 +90,7 @@ private extension homeView {
             Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
-        .padding(.top, 4)
+        .padding(.top, 12)
     }
 
     var header: some View {
