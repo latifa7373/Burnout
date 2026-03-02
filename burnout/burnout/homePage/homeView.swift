@@ -14,7 +14,7 @@ struct homeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(red: 44/255, green: 30/255, blue: 47/255)
+                Color(red: 0.14, green: 0.10, blue: 0.18)
                 .ignoresSafeArea()
 
                 VStack(alignment: .center, spacing: 22) {

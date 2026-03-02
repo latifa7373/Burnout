@@ -335,7 +335,7 @@ According to ICD-11, burnout is characterized by:
     }
 
     var appBackground: some View {
-        Color(red: 44/255, green: 30/255, blue: 47/255).ignoresSafeArea()
+        Color(red: 0.14, green: 0.10, blue: 0.18).ignoresSafeArea()
     }
 
     func summaryText(answeredDaysCount: Int, workDaysCount: Int) -> String {
