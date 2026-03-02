@@ -244,7 +244,7 @@ private extension homeView {
                 .allowsHitTesting(false) // ✅ المحتوى كله ما يسرق من اللينك
             }
             .frame(height: 168)
-            .padding(.top, 10)
+            .padding(.top, 2)
             .contentShape(Rectangle()) // ✅
         }
         .buttonStyle(.plain)
