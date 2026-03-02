@@ -30,8 +30,8 @@ struct StatusView: View {
                         Spacer()
                     }
                     .padding(.horizontal, 20)
-                    .padding(.top, 10)
-                    .padding(.bottom, 30)
+                    .padding(.top, -16)
+                    .padding(.bottom, 20)
 
                     ExpandableInfoCard(
                         title: String(localized: "What does “Low / Medium / High” mean?"),
@@ -72,7 +72,7 @@ Your status changes only after the same level repeats for 3 days in a row.
                     Spacer(minLength: 20)
                 }
                 .padding(.horizontal, 25)
-                .padding(.top, 10)
+                .padding(.top, -16)
                 .padding(.bottom, 30)
             }
         }
