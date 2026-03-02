@@ -186,7 +186,7 @@ private extension homeView {
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
                         Text(String(localized: "Insights"))
-                            .font(.system(size: 20, weight: .medium))
+                            .font(.system(size: 22, weight: .bold))
                             .foregroundColor(.white)
                         Spacer()
                         HStack(spacing: 2) {
@@ -204,21 +204,21 @@ private extension homeView {
                         VStack(alignment: .leading, spacing: 4) {
                             if viewModel.isFirstTimeUser {
                                 Text(String(localized: "No data yet"))
-                                    .font(.system(size: 20))
-                                    .foregroundColor(.white)
+                                    .font(.system(size: 20, weight: .regular))
+                                    .foregroundColor(.white.opacity(0.62))
                                 Text(String(localized: "Start with today's check-in"))
-                                    .font(.system(size: 15))
-                                    .foregroundColor(.white.opacity(0.75))
+                                    .font(.system(size: 16, weight: .light))
+                                    .foregroundColor(.white.opacity(0.62))
                             } else if !viewModel.hasMinimumData {
                                 Text(String(localized: "Pending"))
-                                    .font(.system(size: 28, weight: .semibold))
+                                    .font(.system(size: 20, weight: .regular))
                                     .foregroundColor(.white)
                                 Text(String(localized: "Need 3 days to calculate average"))
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.white.opacity(0.75))
+                                    .font(.system(size: 16, weight: .light))
+                                    .foregroundColor(.white.opacity(0.62))
                             } else {
                                 Text(viewModel.model.insights.averageLabel)
-                                    .font(.system(size: 14, weight: .medium))
+                                    .font(.system(size: 14, weight: .regular))
                                     .foregroundColor(.white.opacity(0.8))
                                 Text("\(viewModel.model.insights.averagePercent)%")
                                     .font(.system(size: 32, weight: .semibold))
@@ -357,7 +357,7 @@ private extension homeView {
                 VStack(alignment: .leading, spacing: -3) {
                     ZStack(alignment: .topLeading) {
                         Text(title)
-                            .font(.system(size: 22, weight: .medium))
+                            .font(.system(size: 22, weight: .bold))
                             .foregroundColor(.white)
                             .lineLimit(2)
                             .fixedSize(horizontal: false, vertical: true)
@@ -374,17 +374,24 @@ private extension homeView {
                         .allowsHitTesting(false) // ✅
                     }
 
-                    Spacer().frame(height: 8)
+                    Spacer().frame(height: 16)
 
                     Text(badgeTitle)
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundColor(.white.opacity(0.7))
+                        .font(.system(size: 20, weight: .regular))
+                        .foregroundColor(
+                            badgeTitle == String(localized: "No Status Yet")
+                            ? .white.opacity(0.62)
+                            : .white.opacity(0.86)
+                        )
 
                     Spacer().frame(height: 8)
 
                     Text(bodyText)
-                        .font(.system(size: 16))
-                        .foregroundColor(.white.opacity(0.7))
+                        .font(.system(size: 16, weight: .light))
+                        .foregroundColor(.white.opacity(0.62))
+                        .frame(maxWidth: 250, alignment: .leading)
+                        .multilineTextAlignment(.leading)
+                        .lineSpacing(2)
                         .fixedSize(horizontal: false, vertical: true)
 
                     Spacer()
