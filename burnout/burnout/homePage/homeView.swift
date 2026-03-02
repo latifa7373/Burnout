@@ -87,14 +87,13 @@ private extension homeView {
             }
             .buttonStyle(.plain)
 
-            Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .padding(.top, 12)
     }
 
     var header: some View {
-        VStack(alignment: .center, spacing: 6) {
+        VStack(alignment: .center, spacing: 4) {
             Text(String(format: String(localized: "Hello, %@"), locale: Locale.current, viewModel.model.userName))
                 .font(.system(size: 28, weight: .regular))
                 .foregroundColor(.white)
@@ -110,7 +109,7 @@ private extension homeView {
     }
 
     var gaugeSection: some View {
-        VStack(alignment: .center, spacing: 14) {
+        VStack(alignment: .center, spacing: 4) {
             BurnoutGaugeView(value: gaugeValue)
                 .frame(height: 140)
 
@@ -121,7 +120,7 @@ private extension homeView {
             Text(
                 viewModel.hasMinimumData
                 ? String(localized: "your average on the past 3 days looks")
-                : String(localized: "Complete 3 check-ins to unlock your average")
+                : String(localized: "Complete 3 days check-ins to unlock your average")
             )
             .font(.system(size: 15))
             .foregroundColor(.white.opacity(0.6))
@@ -139,7 +138,7 @@ private extension homeView {
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(Color(red: 0.23, green: 0.12, blue: 0.30))
                 .frame(maxWidth: .infinity)
-                .frame(height: 40)
+                .frame(height: 50)
                 .background(
                     Capsule(style: .continuous)
                         .fill(
@@ -168,7 +167,7 @@ private extension homeView {
                 badgeTitle: viewModel.model.statusCard.badgeTitle,
                 bodyText: viewModel.model.statusCard.bodyText
             )
-            .frame(height: 168)
+            .frame(height: 170)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -186,13 +185,13 @@ private extension homeView {
 
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
-                        Text(String(localized: "Burnout Insights"))
-                            .font(.system(size: 16, weight: .medium))
+                        Text(String(localized: "Insights"))
+                            .font(.system(size: 20, weight: .medium))
                             .foregroundColor(.white)
                         Spacer()
                         HStack(spacing: 2) {
                             Text(String(localized: "View details"))
-                                .font(.system(size: 10))
+                                .font(.system(size: 14))
                                 .foregroundColor(.white.opacity(0.55))
                             Image(systemName: "chevron.forward")
                                 .font(.system(size: 10, weight: .semibold))
@@ -205,10 +204,10 @@ private extension homeView {
                         VStack(alignment: .leading, spacing: 4) {
                             if viewModel.isFirstTimeUser {
                                 Text(String(localized: "No data yet"))
-                                    .font(.system(size: 28, weight: .semibold))
+                                    .font(.system(size: 20))
                                     .foregroundColor(.white)
                                 Text(String(localized: "Start with today's check-in"))
-                                    .font(.system(size: 12))
+                                    .font(.system(size: 15))
                                     .foregroundColor(.white.opacity(0.75))
                             } else if !viewModel.hasMinimumData {
                                 Text(String(localized: "Pending"))
