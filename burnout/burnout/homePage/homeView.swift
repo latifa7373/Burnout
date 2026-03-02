@@ -28,7 +28,8 @@ struct homeView: View {
                     topBar
                     header
                     gaugeSection
-                    infoCards
+                    checkInButton
+                    statusCard
                     insightsCard
                 }
                 .padding(.horizontal, 25)
@@ -116,12 +117,6 @@ private extension homeView {
             Text(viewModel.model.riskLabel)
                 .font(.system(size: 18, weight: .medium))
                 .foregroundColor(.white)
-                .padding(.horizontal, 36)
-                .padding(.vertical, 8)
-                .background(
-                    Capsule()
-                        .fill(Color.gray.opacity(0.1))
-                )
 
             Text(
                 viewModel.hasMinimumData
@@ -136,40 +131,48 @@ private extension homeView {
         .padding(.top, -25)
     }
 
-    // ✅ FIX: ضغطة واحدة على الكروت
-    var infoCards: some View {
-        HStack(alignment: .top, spacing: 16) {
-            NavigationLink {
-                StatusView()
-            } label: {
-                SmallInfoCard(
-                    title: viewModel.model.statusCard.title,
-                    actionText: viewModel.model.statusCard.actionText,
-                    badgeTitle: viewModel.model.statusCard.badgeTitle,
-                    bodyText: viewModel.model.statusCard.bodyText
+    var checkInButton: some View {
+        NavigationLink {
+            QuestionsFlowView()
+        } label: {
+            Text(String(localized: "Check-In Now"))
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(Color(red: 0.23, green: 0.12, blue: 0.30))
+                .frame(maxWidth: .infinity)
+                .frame(height: 40)
+                .background(
+                    Capsule(style: .continuous)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.95),
+                                    Color(red: 0.72, green: 0.58, blue: 0.78).opacity(0.95)
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
                 )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .contentShape(Rectangle()) // ✅
-            }
-            .buttonStyle(.plain)
-
-            NavigationLink {
-                QuestionsFlowView()
-            } label: {
-                SmallInfoCard(
-                    title: viewModel.model.todayCard.title,
-                    actionText: viewModel.model.todayCard.actionText,
-                    badgeTitle: viewModel.model.todayCard.badgeTitle,
-                    bodyText: viewModel.model.todayCard.bodyText
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .contentShape(Rectangle()) // ✅
-            }
-            .buttonStyle(.plain)
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 168)
-        .padding(.top, 4)
+        .buttonStyle(.plain)
+        .padding(.horizontal, 70)
+    }
+
+    var statusCard: some View {
+        NavigationLink {
+            StatusView()
+        } label: {
+            SmallInfoCard(
+                title: viewModel.model.statusCard.title,
+                actionText: viewModel.model.statusCard.actionText,
+                badgeTitle: viewModel.model.statusCard.badgeTitle,
+                bodyText: viewModel.model.statusCard.bodyText
+            )
+            .frame(height: 168)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .padding(.top, 2)
     }
 
     // ✅ FIX: bars ما تسرق اللمس + ضغطة واحدة
@@ -355,17 +358,17 @@ private extension homeView {
                 VStack(alignment: .leading, spacing: -3) {
                     ZStack(alignment: .topLeading) {
                         Text(title)
-                            .font(.system(size: 16, weight: .medium))
+                            .font(.system(size: 22, weight: .medium))
                             .foregroundColor(.white)
                             .lineLimit(2)
                             .fixedSize(horizontal: false, vertical: true)
 
                         HStack(spacing: 2) {
                             Text(actionText)
-                                .font(.system(size: 10))
+                                .font(.system(size: 14))
                                 .foregroundColor(.white.opacity(0.55))
                             Image(systemName: "chevron.forward")
-                                .font(.system(size: 10, weight: .semibold))
+                                .font(.system(size: 14, weight: .semibold))
                                 .foregroundColor(.white.opacity(0.55))
                         }
                         .frame(maxWidth: .infinity, alignment: .topTrailing)
@@ -375,13 +378,13 @@ private extension homeView {
                     Spacer().frame(height: 8)
 
                     Text(badgeTitle)
-                        .font(.system(size: 14, weight: .medium))
+                        .font(.system(size: 20, weight: .medium))
                         .foregroundColor(.white.opacity(0.7))
 
                     Spacer().frame(height: 8)
 
                     Text(bodyText)
-                        .font(.system(size: 12))
+                        .font(.system(size: 16))
                         .foregroundColor(.white.opacity(0.7))
                         .fixedSize(horizontal: false, vertical: true)
 
