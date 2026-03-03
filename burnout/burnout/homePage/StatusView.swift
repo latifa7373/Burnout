@@ -10,11 +10,21 @@ struct StatusView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
                     
-                    header
-                    
+                    // Header (نفس Profile بس مرفوع أكثر)
+                    HStack {
+                        Spacer()
+                        Text(String(localized: "Status"))
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, -40)      // ✅ رفعناه لفوق
+                    .padding(.bottom, 30)
+
                     StatusLevelsCard(
                         title: String(localized: "Status"),
-                note: String(localized: "Note : We Provide general insights not a medical diagnosis"),
+                        note: String(localized: "Note : We Provide general insights not a medical diagnosis"),
                         items: [
                             .init(color: .green,
                                   title: String(localized: "Low"),
@@ -22,7 +32,7 @@ struct StatusView: View {
                             .init(color: .yellow,
                                   title: String(localized: "Medium"),
                                   subtitle: String(localized: "Increased Strain")),
-                            .init(color: .red, // ✅ High صار أحمر
+                            .init(color: .red,
                                   title: String(localized: "High"),
                                   subtitle: String(localized: "Elevated Strain"))
                         ]
@@ -89,19 +99,6 @@ private extension StatusView {
         )
         .ignoresSafeArea()
     }
-    
-    var header: some View {
-        HStack {
-            Spacer()
-            Text(String(localized: "Status"))
-                .font(.system(size: 22, weight: .bold))
-                .foregroundColor(.white)
-            Spacer()
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 10)
-        .padding(.bottom, 14)
-    }
 }
 
 // MARK: - Shared Card Style
@@ -147,15 +144,13 @@ private struct StatusLevelsCard: View {
                 .foregroundColor(.white)
             
             VStack(spacing: 20) {
-                ForEach(Array(items.enumerated()), id: \.element.id) { idx, item in
+                ForEach(items) { item in
                     LevelRow(
                         dotColor: item.color,
                         title: item.title,
                         subtitle: item.subtitle,
                         leadingIconWidth: leadingIconWidth
                     )
-                    
-                    
                 }
             }
             
@@ -175,11 +170,12 @@ private struct LevelRow: View {
     let leadingIconWidth: CGFloat
     
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
             Circle()
                 .fill(dotColor)
                 .frame(width: 14, height: 14)
                 .frame(width: leadingIconWidth, alignment: .leading)
+                .offset(y: 2) // ✅ نفس مستوى عنوان Low/Medium/High
             
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
@@ -278,7 +274,6 @@ private struct StepRow: View {
     }
 }
 
-// MARK: - Divider Line
 private struct DividerLine: View {
     var body: some View {
         Rectangle()
