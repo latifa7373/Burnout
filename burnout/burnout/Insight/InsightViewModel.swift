@@ -157,7 +157,7 @@ final class InsightViewModel: ObservableObject {
             var monthData: [ChartDataPoint] = []
 
             for day in range {
-                let targetDate = calendar.date(bySetting: .day, value: day, of: monthStart) ?? monthStart
+                let targetDate = calendar.date(byAdding: .day, value: day - 1, to: monthStart) ?? monthStart
                 let dayStart = calendar.startOfDay(for: targetDate)
                 let workday = isWorkDay(dayStart)
 
