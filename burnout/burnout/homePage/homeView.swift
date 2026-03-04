@@ -14,21 +14,15 @@ struct homeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.18, green: 0.12, blue: 0.22),
-                        Color(red: 0.14, green: 0.10, blue: 0.18)
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
+                Color(red: 0.14, green: 0.10, blue: 0.18)
                 .ignoresSafeArea()
 
                 VStack(alignment: .center, spacing: 22) {
                     topBar
                     header
                     gaugeSection
-                    infoCards
+                    checkInButton
+                    statusCard
                     insightsCard
                 }
                 .padding(.horizontal, 25)
@@ -80,20 +74,19 @@ private extension homeView {
                 Image(systemName: "person.circle")
                     .font(.system(size: 40, weight: .regular))
                     .foregroundColor(.white.opacity(0.85))
-                    .offset(x: 0, y: 8)
+                    .offset(x: 0, y: 18)
                     .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
 
-            Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
-        .padding(.top, 4)
+        .padding(.top, 12)
     }
 
     var header: some View {
-        VStack(alignment: .center, spacing: 6) {
+        VStack(alignment: .center, spacing: 4) {
             Text(String(format: String(localized: "Hello, %@"), locale: Locale.current, viewModel.model.userName))
                 .font(.system(size: 28, weight: .regular))
                 .foregroundColor(.white)
@@ -109,24 +102,18 @@ private extension homeView {
     }
 
     var gaugeSection: some View {
-        VStack(alignment: .center, spacing: 14) {
+        VStack(alignment: .center, spacing: 4) {
             BurnoutGaugeView(value: gaugeValue)
                 .frame(height: 140)
 
             Text(viewModel.model.riskLabel)
                 .font(.system(size: 18, weight: .medium))
                 .foregroundColor(.white)
-                .padding(.horizontal, 36)
-                .padding(.vertical, 8)
-                .background(
-                    Capsule()
-                        .fill(Color.gray.opacity(0.1))
-                )
 
             Text(
                 viewModel.hasMinimumData
                 ? String(localized: "your average on the past 3 days looks")
-                : String(localized: "Complete 3 check-ins to unlock your average")
+                : String(localized: "Complete 3 days check-ins to unlock your average")
             )
             .font(.system(size: 15))
             .foregroundColor(.white.opacity(0.6))
@@ -136,40 +123,48 @@ private extension homeView {
         .padding(.top, -25)
     }
 
-    // ✅ FIX: ضغطة واحدة على الكروت
-    var infoCards: some View {
-        HStack(alignment: .top, spacing: 16) {
-            NavigationLink {
-                StatusView()
-            } label: {
-                SmallInfoCard(
-                    title: viewModel.model.statusCard.title,
-                    actionText: viewModel.model.statusCard.actionText,
-                    badgeTitle: viewModel.model.statusCard.badgeTitle,
-                    bodyText: viewModel.model.statusCard.bodyText
+    var checkInButton: some View {
+        NavigationLink {
+            QuestionsFlowView()
+        } label: {
+            Text(String(localized: "Check-In Now"))
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(Color(red: 0.23, green: 0.12, blue: 0.30))
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+                .background(
+                    Capsule(style: .continuous)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.95),
+                                    Color(red: 0.72, green: 0.58, blue: 0.78).opacity(0.95)
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
                 )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .contentShape(Rectangle()) // ✅
-            }
-            .buttonStyle(.plain)
-
-            NavigationLink {
-                QuestionsFlowView()
-            } label: {
-                SmallInfoCard(
-                    title: viewModel.model.todayCard.title,
-                    actionText: viewModel.model.todayCard.actionText,
-                    badgeTitle: viewModel.model.todayCard.badgeTitle,
-                    bodyText: viewModel.model.todayCard.bodyText
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .contentShape(Rectangle()) // ✅
-            }
-            .buttonStyle(.plain)
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 168)
-        .padding(.top, 4)
+        .buttonStyle(.plain)
+        .padding(.horizontal, 70)
+    }
+
+    var statusCard: some View {
+        NavigationLink {
+            StatusView()
+        } label: {
+            SmallInfoCard(
+                title: viewModel.model.statusCard.title,
+                actionText: viewModel.model.statusCard.actionText,
+                badgeTitle: viewModel.model.statusCard.badgeTitle,
+                bodyText: viewModel.model.statusCard.bodyText
+            )
+            .frame(height: 164)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .padding(.top, 2)
     }
 
     // ✅ FIX: bars ما تسرق اللمس + ضغطة واحدة
@@ -183,13 +178,13 @@ private extension homeView {
 
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
-                        Text(String(localized: "Burnout Insights"))
-                            .font(.system(size: 16, weight: .medium))
+                        Text(String(localized: "Insights"))
+                            .font(.system(size: 22, weight: .bold))
                             .foregroundColor(.white)
                         Spacer()
                         HStack(spacing: 2) {
                             Text(String(localized: "View details"))
-                                .font(.system(size: 10))
+                                .font(.system(size: 14))
                                 .foregroundColor(.white.opacity(0.55))
                             Image(systemName: "chevron.forward")
                                 .font(.system(size: 10, weight: .semibold))
@@ -202,21 +197,21 @@ private extension homeView {
                         VStack(alignment: .leading, spacing: 4) {
                             if viewModel.isFirstTimeUser {
                                 Text(String(localized: "No data yet"))
-                                    .font(.system(size: 28, weight: .semibold))
-                                    .foregroundColor(.white)
+                                    .font(.system(size: 20, weight: .regular))
+                                    .foregroundColor(.white.opacity(0.62))
                                 Text(String(localized: "Start with today's check-in"))
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.white.opacity(0.75))
+                                    .font(.system(size: 16, weight: .light))
+                                    .foregroundColor(.white.opacity(0.62))
                             } else if !viewModel.hasMinimumData {
                                 Text(String(localized: "Pending"))
-                                    .font(.system(size: 28, weight: .semibold))
+                                    .font(.system(size: 20, weight: .regular))
                                     .foregroundColor(.white)
                                 Text(String(localized: "Need 3 days to calculate average"))
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.white.opacity(0.75))
+                                    .font(.system(size: 16, weight: .light))
+                                    .foregroundColor(.white.opacity(0.62))
                             } else {
                                 Text(viewModel.model.insights.averageLabel)
-                                    .font(.system(size: 14, weight: .medium))
+                                    .font(.system(size: 14, weight: .regular))
                                     .foregroundColor(.white.opacity(0.8))
                                 Text("\(viewModel.model.insights.averagePercent)%")
                                     .font(.system(size: 32, weight: .semibold))
@@ -241,7 +236,7 @@ private extension homeView {
                 .allowsHitTesting(false) // ✅ المحتوى كله ما يسرق من اللينك
             }
             .frame(height: 168)
-            .padding(.top, 10)
+            .padding(.top, 2)
             .contentShape(Rectangle()) // ✅
         }
         .buttonStyle(.plain)
@@ -355,34 +350,41 @@ private extension homeView {
                 VStack(alignment: .leading, spacing: -3) {
                     ZStack(alignment: .topLeading) {
                         Text(title)
-                            .font(.system(size: 16, weight: .medium))
+                            .font(.system(size: 22, weight: .bold))
                             .foregroundColor(.white)
                             .lineLimit(2)
                             .fixedSize(horizontal: false, vertical: true)
 
                         HStack(spacing: 2) {
                             Text(actionText)
-                                .font(.system(size: 10))
+                                .font(.system(size: 14))
                                 .foregroundColor(.white.opacity(0.55))
                             Image(systemName: "chevron.forward")
-                                .font(.system(size: 10, weight: .semibold))
+                                .font(.system(size: 14, weight: .semibold))
                                 .foregroundColor(.white.opacity(0.55))
                         }
                         .frame(maxWidth: .infinity, alignment: .topTrailing)
                         .allowsHitTesting(false) // ✅
                     }
 
-                    Spacer().frame(height: 8)
+                    Spacer().frame(height: 16)
 
                     Text(badgeTitle)
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.white.opacity(0.7))
+                        .font(.system(size: 20, weight: .regular))
+                        .foregroundColor(
+                            badgeTitle == String(localized: "No Status Yet")
+                            ? .white.opacity(0.62)
+                            : .white.opacity(0.86)
+                        )
 
                     Spacer().frame(height: 8)
 
                     Text(bodyText)
-                        .font(.system(size: 12))
-                        .foregroundColor(.white.opacity(0.7))
+                        .font(.system(size: 16, weight: .light))
+                        .foregroundColor(.white.opacity(0.62))
+                        .frame(maxWidth: 250, alignment: .leading)
+                        .multilineTextAlignment(.leading)
+                        .lineSpacing(2)
                         .fixedSize(horizontal: false, vertical: true)
 
                     Spacer()

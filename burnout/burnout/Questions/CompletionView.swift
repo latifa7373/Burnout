@@ -6,7 +6,7 @@ struct CompletionView: View {
     var body: some View {
         ZStack {
             // ✅ نفس الخلفية الثابتة (مثل Insight/Question)
-            Color(red: 44/255, green: 30/255, blue: 47/255)
+            Color(red: 0.14, green: 0.10, blue: 0.18)
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {

@@ -24,7 +24,7 @@ struct QuestionsFlowView: View {
 
     var body: some View {
         ZStack {
-            Color(red: 0.18, green: 0.12, blue: 0.22)
+            Color(red: 0.14, green: 0.10, blue: 0.18)
                 .ignoresSafeArea()
 
             if hasAlreadyAnswered || isComplete {
