@@ -148,7 +148,12 @@ final class InsightViewModel: ObservableObject {
         case .month:
             let calendar = Calendar.current
             let range = calendar.range(of: .day, in: .month, for: selectedMonth) ?? (1..<31)
-            let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: selectedMonth)) ?? selectedMonth
+            var monthComponents = calendar.dateComponents([.year, .month], from: selectedMonth)
+            monthComponents.day = 1
+            monthComponents.hour = 0
+            monthComponents.minute = 0
+            monthComponents.second = 0
+            let monthStart = calendar.date(from: monthComponents) ?? selectedMonth
 
             let monthScores = dailyRiskScores.filter {
                 calendar.isDate($0.date, equalTo: selectedMonth, toGranularity: .month)
