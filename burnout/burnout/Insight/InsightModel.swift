@@ -1,5 +1,4 @@
 import Foundation
-
 struct ChartDataPoint: Identifiable {
     let id = UUID()
     let label: String
@@ -8,13 +7,10 @@ struct ChartDataPoint: Identifiable {
     let isWorkDay: Bool
     let hasResponse: Bool
 }
-
 enum TimeFilter: String, CaseIterable, Identifiable {
     case week = "Week"
     case month = "Month"
-
     var id: String { rawValue }
-
     var localizedTitle: String {
         switch self {
         case .week:
@@ -23,4 +19,4 @@ enum TimeFilter: String, CaseIterable, Identifiable {
             return String(localized: "Month")
         }
     }
-}
+} 
